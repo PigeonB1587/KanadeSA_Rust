@@ -96,7 +96,8 @@ async fn main() {
         background.draw();
 
         booth.update(get_frame_time());
-        if let Err(error) = booth.render(1280, 720, false) {
+        let (canvas_width, canvas_height) = booth_ui.output_size(1280);
+        if let Err(error) = booth.render(canvas_width, canvas_height, false) {
             booth_ui.status = error;
         }
 
@@ -251,7 +252,8 @@ async fn main() {
             && !booth_ui.blocks_input()
         {
             if is_key_pressed(KeyCode::F12) {
-                match booth.capture(1920, 1080) {
+                let (width, height) = booth_ui.output_size(1920);
+                match booth.capture(width, height) {
                     Ok(path) => booth_ui.status = format!("Photo saved: {}", path.display()),
                     Err(error) => booth_ui.status = error,
                 }

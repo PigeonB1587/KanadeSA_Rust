@@ -93,7 +93,7 @@ impl Settings {
             button.y + (button.h - text.height) * 0.5 + text.offset_y,
             13,
             bold,
-            if self.open { ORANGE } else { LIGHTGRAY },
+            WHITE,
         );
         if !self.open && !self.transition.visible() {
             self.dropdown_transition.update(false);

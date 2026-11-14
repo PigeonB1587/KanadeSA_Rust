@@ -36,10 +36,11 @@ pub fn popup_header(panel: Rect, title: &str, _font: &Font, bold: &Font) -> Rect
         close.h,
         Color::new(0.12, 0.125, 0.16, 1.0),
     );
+    let text = measure_text("Close", Some(bold), 12, 1.0);
     paint::draw_text_ex(
         "Close",
-        close.x + 8.0,
-        close.y + close.h * 0.5 + 5.0,
+        close.x + (close.w - text.width) * 0.5,
+        close.y + (close.h - text.height) * 0.5 + text.offset_y,
         TextParams {
             font: Some(bold),
             font_size: 12,

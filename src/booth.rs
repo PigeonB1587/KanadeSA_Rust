@@ -67,7 +67,7 @@ pub fn perspective(background: &Background, y: f32) -> f32 {
 }
 /// Rectangle in a top-left pixel canvas from Unity's bottom-left sprite pivot.
 pub fn sprite_rect(meta: &SpriteMeta, position: [f32; 2], scale: [f32; 2], size: Vec2) -> Rect {
-    let pixels = size.y / 10.0;
+    let pixels = size.y / (2.0 * camera_half_height(size));
     let width = meta.size[0] as f32 / meta.pixels_per_unit * scale[0].abs() * pixels;
     let height = meta.size[1] as f32 / meta.pixels_per_unit * scale[1].abs() * pixels;
     Rect::new(
@@ -77,16 +77,22 @@ pub fn sprite_rect(meta: &SpriteMeta, position: [f32; 2], scale: [f32; 2], size:
         height,
     )
 }
+// Match Unity's CameraOrthographicMatchWidth without stretching scene geometry.
+fn camera_half_height(size: Vec2) -> f32 {
+    5.0 * ((16.0 / 9.0) / (size.x / size.y)).min(1.0)
+}
 pub fn world_to_canvas(position: [f32; 2], size: Vec2) -> Vec2 {
+    let pixels = size.y / (2.0 * camera_half_height(size));
     vec2(
-        size.x * 0.5 + position[0] * size.y / 10.0,
-        size.y * 0.5 - position[1] * size.y / 10.0,
+        size.x * 0.5 + position[0] * pixels,
+        size.y * 0.5 - position[1] * pixels,
     )
 }
 pub fn canvas_to_world(point: Vec2, size: Vec2) -> [f32; 2] {
+    let units = 2.0 * camera_half_height(size) / size.y;
     [
-        (point.x - size.x * 0.5) * 10.0 / size.y,
-        (size.y * 0.5 - point.y) * 10.0 / size.y,
+        (point.x - size.x * 0.5) * units,
+        (size.y * 0.5 - point.y) * units,
     ]
 }
 
@@ -363,7 +369,7 @@ impl Booth {
             let scale = perspective(&bg, p.position[1]) * 0.9 * p.scale;
             let center = world_to_canvas(p.position, size);
             if let Some((texture, _)) = self.sprites.get("booth/shadow.png") {
-                let extent = vec2(2.59, 0.62) * scale * size.y / 10.0;
+                let extent = vec2(2.59, 0.62) * scale * size.y / (2.0 * camera_half_height(size));
                 draw_texture_ex(
                     texture,
                     center.x - extent.x * 0.5,
@@ -394,11 +400,12 @@ impl Booth {
         // Stable ordering matches Unity at equal depth; smaller Z draws last.
         sorted.sort_by(|a, b| a.0.total_cmp(&b.0));
         sorted.reverse();
+        let half_height = camera_half_height(size);
         let view = Mat4::orthographic_rh_gl(
-            -5.0 * size.x / size.y,
-            5.0 * size.x / size.y,
-            -5.0,
-            5.0,
+            -half_height * size.x / size.y,
+            half_height * size.x / size.y,
+            -half_height,
+            half_height,
             -1.0,
             1.0,
         );

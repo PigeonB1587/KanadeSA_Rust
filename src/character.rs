@@ -93,8 +93,8 @@ impl Bounds {
     }
 }
 
-/// Match the previous Preview's 42%-height scale and 20% bottom margin.
-/// Accessories can reduce that scale to fit, but never enlarge the character.
+/// Start at 42% of window height and shrink to fit character/pet content.
+/// The decorative spring platform is excluded from framing bounds.
 fn preview_framing(
     reference: Bounds,
     content: Bounds,
@@ -112,7 +112,6 @@ fn preview_framing(
         screen[1] * 0.80
     };
     let mut scale = screen[1] * 0.42 / (reference.max_y - reference.min_y).max(0.01);
-    // Keep the original framing unless content would leave the Preview area.
     for (space, extent) in [
         (preview.w * gui_scale * 0.40, center_x - content.min_x),
         (preview.w * gui_scale * 0.40, content.max_x - center_x),
@@ -143,6 +142,8 @@ pub struct Character {
     config: &'static CharacterConfig,
     controller: SkeletonController,
     pet: SkeletonController,
+    preview_platform: Option<SkeletonController>,
+    preview_scale: Option<f32>,
     renderer: SpineRenderer,
     bounds: Bounds,
     animation_names: Arc<Vec<String>>,
@@ -252,6 +253,8 @@ impl Character {
             config,
             controller,
             pet,
+            preview_platform: None,
+            preview_scale: None,
             renderer,
             bounds,
             animation_names: Arc::new(animation_names),
@@ -294,6 +297,8 @@ impl Character {
             config: self.config,
             controller,
             pet: Self::new_pet(&self.assets),
+            preview_platform: None,
+            preview_scale: None,
             renderer: SpineRenderer::new(
                 self.controller.settings.premultiplied_alpha,
                 self.config.backface_culling,
@@ -322,6 +327,29 @@ impl Character {
             ..Placement::default()
         };
         preview.set_action(crate::model::Action::Idle);
+        let atlas = Arc::new(
+            Atlas::new_from_file("spineAssets/spring_platform/skeleton.atlas")
+                .map_err(|e| format!("Preview platform atlas: {e:?}"))?,
+        );
+        let pma = atlas.pages().any(|p| p.pma());
+        let data = Arc::new(
+            SkeletonBinary::new(atlas)
+                .read_skeleton_data_file("spineAssets/spring_platform/skeleton.skel.bytes")
+                .map_err(|e| format!("Preview platform skeleton: {e:?}"))?,
+        );
+        let state = Arc::new(AnimationStateData::new(data.clone()));
+        let mut platform =
+            SkeletonController::new(data, state).with_settings(SkeletonControllerSettings {
+                premultiplied_alpha: pma,
+                cull_direction: CullDirection::CounterClockwise,
+                color_space: ColorSpace::SRGB,
+            });
+        platform
+            .animation_state
+            .set_animation_by_name(0, "idle", true)
+            .map_err(|e| format!("Preview platform animation: {e:?}"))?;
+        platform.update(0.0, Physics::Update);
+        preview.preview_platform = Some(platform);
         preview.update(0.0);
         Ok(preview)
     }
@@ -474,6 +502,9 @@ impl Character {
     }
 
     pub fn update(&mut self, delta_seconds: f32) {
+        if let Some(platform) = &mut self.preview_platform {
+            platform.update(delta_seconds, Physics::Update);
+        }
         self.animation_runtime
             .update(&mut self.controller, &mut self.animation, delta_seconds);
         if let Some(mut target) = self.controller.skeleton.find_bone_mut("TARGET") {
@@ -558,6 +589,18 @@ impl Character {
         let world = self.world_matrix(1.0);
         let reference = self.bounds.transformed(world);
         let mut bounds = reference;
+        // Unity uses SkeletonData scale 0.01 and Transform scale 0.9.
+        // Keep the platform in the same framing as the character, at its feet.
+        let platform_world = Mat4::from_translation(Vec3::new(
+            self.placement.position[0],
+            self.placement.height - 0.10 * self.placement.scale,
+            0.0,
+        )) * Mat4::from_scale(Vec3::splat(0.009 * self.placement.scale));
+        let mut platform_renderables = self
+            .preview_platform
+            .as_mut()
+            .map(|p| p.combined_renderables())
+            .unwrap_or_default();
         if let Some(current) = bounds_of(&renderables) {
             bounds.include(current.transformed(world));
         }
@@ -587,7 +630,11 @@ impl Character {
             });
         // Fade generated vertices without changing the entity's persistent color.
         // Premultiplied-alpha meshes also need their RGB faded.
-        for mesh in renderables.iter_mut().chain(pet_renderables.iter_mut()) {
+        for mesh in renderables
+            .iter_mut()
+            .chain(pet_renderables.iter_mut())
+            .chain(platform_renderables.iter_mut())
+        {
             for color in &mut mesh.colors {
                 color[3] *= opacity;
                 if mesh.premultiplied_alpha {
@@ -605,6 +652,22 @@ impl Character {
             gui_scale,
             crate::gui_scale::compact(),
         );
+        // Frame-rate-independent easing, anchored at the feet so zooming does
+        // not make the character slide. Initialize directly on first display.
+        let previous_scale = self.preview_scale.unwrap_or(scale);
+        let blend = 1.0 - (-2.0_f32 * macroquad::prelude::get_frame_time().min(0.1)).exp();
+        let smoothed_scale = previous_scale + (scale - previous_scale) * blend;
+        self.preview_scale = Some(smoothed_scale);
+        let anchor = framing.transform_point3(Vec3::new(
+            (reference.min_x + reference.max_x) * 0.5,
+            reference.min_y,
+            0.0,
+        ));
+        let framing = Mat4::from_translation(anchor)
+            * Mat4::from_scale(Vec3::splat(smoothed_scale / scale.max(0.000001)))
+            * Mat4::from_translation(-anchor)
+            * framing;
+        let scale = smoothed_scale;
         let offset = crate::gui::widgets::paint::offset();
         let shifted_framing =
             Mat4::from_translation(Vec3::new(offset.x * gui_scale, -offset.y * gui_scale, 0.0))
@@ -628,6 +691,14 @@ impl Character {
             (preview.h * gui_scale * sy) as i32,
         ]);
         let viewport = [physical.0 as i32, physical.1 as i32];
+        self.renderer.draw_to(
+            view * shifted_framing,
+            platform_world,
+            &platform_renderables,
+            None,
+            viewport,
+            clip,
+        );
         self.renderer.draw_to(
             view * shifted_framing,
             world,

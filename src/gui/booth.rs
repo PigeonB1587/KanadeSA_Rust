@@ -10,10 +10,25 @@ use macroquad::prelude::*;
 const ACCENT: Color = Color::new(0.925, 0.604, 0.361, 1.0);
 const SURFACE: Color = Color::new(0.078, 0.082, 0.11, 0.97);
 const CONTROL: Color = Color::new(0.12, 0.125, 0.16, 1.0);
+const RATIOS: [(&str, u32, u32); 8] = [
+    ("16:9", 16, 9),
+    ("16:10", 16, 10),
+    ("4:3", 4, 3),
+    ("3:2", 3, 2),
+    ("1:1", 1, 1),
+    ("4:5", 4, 5),
+    ("3:4", 3, 4),
+    ("9:16", 9, 16),
+];
 
 pub struct BoothUi {
     pub preview: bool,
     pub status: String,
+    ratio: usize,
+    ratio_open: bool,
+    ratio_transition: super::widgets::Transition,
+    ratio_scroll: f32,
+    ratio_drag: DragScroll,
     tab: usize,
     inspector: bool,
     scroll: f32,
@@ -45,6 +60,11 @@ impl Default for BoothUi {
         Self {
             preview: false,
             status: String::new(),
+            ratio: 0,
+            ratio_open: false,
+            ratio_transition: super::widgets::Transition::default(),
+            ratio_scroll: 0.0,
+            ratio_drag: DragScroll::default(),
             tab: 0,
             inspector: true,
             scroll: 0.0,
@@ -200,8 +220,85 @@ fn regions(size: Vec2, inspector: bool) -> (Rect, Rect) {
 }
 
 impl BoothUi {
+    fn draw_ratio_picker(&mut self, font: &Font, bold: &Font, mouse: Vec2, blocked: bool) {
+        self.ratio_transition.update(self.ratio_open);
+        if !self.ratio_open && !self.ratio_transition.visible() {
+            return;
+        }
+        let size = super::layout::size();
+        let panel = self.ratio_transition.panel(
+            self.ratio_open,
+            Rect::new(
+                120.0,
+                98.0,
+                116.0,
+                (size.y - 110.0).min(RATIOS.len() as f32 * 34.0).max(1.0),
+            ),
+        );
+        let mouse = self.ratio_transition.mouse(
+            self.ratio_open,
+            if blocked {
+                vec2(-10000.0, -10000.0)
+            } else {
+                mouse
+            },
+        );
+        if super::widgets::dismiss_except(
+            panel,
+            Rect::new(-10000.0, -10000.0, 0.0, 0.0),
+            Rect::new(120.0, 56.0, 78.0, 38.0),
+            mouse,
+        ) {
+            self.ratio_open = false;
+            self.ratio_drag.cancel();
+        }
+        let tapped = super::widgets::scroll(
+            panel,
+            mouse,
+            &mut self.ratio_scroll,
+            (RATIOS.len() as f32 * 34.0 - panel.h).max(0.0),
+            &mut self.ratio_drag,
+        );
+        let _opacity = self.ratio_transition.scope();
+        draw_rectangle(panel.x, panel.y, panel.w, panel.h, SURFACE);
+        super::layout::clip(panel);
+        for (i, (title, _, _)) in RATIOS.iter().enumerate() {
+            let r = Rect::new(
+                panel.x,
+                panel.y + i as f32 * 34.0 - self.ratio_scroll,
+                panel.w,
+                34.0,
+            );
+            if r.bottom() <= panel.y || r.y >= panel.bottom() {
+                continue;
+            }
+            let hit = panel.contains(mouse) && r.contains(mouse);
+            if i == self.ratio || hit {
+                draw_rectangle(r.x, r.y, r.w, r.h, CONTROL);
+            }
+            label(
+                title,
+                r.x + 12.0,
+                r.y + 22.0,
+                12,
+                bold,
+                if i == self.ratio { ACCENT } else { WHITE },
+                r.w - 24.0,
+            );
+            if tapped && hit {
+                self.ratio = i;
+                self.ratio_open = false;
+                self.actor_drag = None;
+                super::audio::click();
+            }
+        }
+        super::layout::end_clip();
+        let _ = font;
+    }
     pub fn blocks_input(&self) -> bool {
         self.color_picker.visible()
+            || self.ratio_open
+            || self.ratio_transition.visible()
             || self.scene_picker
             || self.scene_transition.visible()
             || self.preset_transition.visible()
@@ -211,7 +308,42 @@ impl BoothUi {
             || self.modal_this_frame
     }
     pub fn rects(&self) -> (Rect, Rect) {
-        regions(super::layout::size(), self.inspector)
+        let size = super::layout::size();
+        let (_, panel) = regions(size, self.inspector);
+        let side = size.x >= 700.0 || (size.x >= 460.0 && size.y < 500.0);
+        let right = if self.inspector && side {
+            panel.x - 12.0
+        } else {
+            size.x - 12.0
+        };
+        let bottom = if self.inspector && !side {
+            panel.y - 8.0
+        } else {
+            size.y - 44.0
+        };
+        let area = Rect::new(
+            12.0,
+            100.0,
+            (right - 12.0).max(1.0),
+            (bottom - 100.0).max(1.0),
+        );
+        let (_, rw, rh) = RATIOS[self.ratio];
+        let scale = (area.w / rw as f32).min(area.h / rh as f32);
+        let (w, h) = (rw as f32 * scale, rh as f32 * scale);
+        (
+            Rect::new(
+                area.x + (area.w - w) * 0.5,
+                area.y + (area.h - h) * 0.5,
+                w,
+                h,
+            ),
+            panel,
+        )
+    }
+    pub fn output_size(&self, longest: u32) -> (u32, u32) {
+        let (_, w, h) = RATIOS[self.ratio];
+        let max = w.max(h);
+        ((longest * w / max).max(1), (longest * h / max).max(1))
     }
     pub fn draw_canvas(&self, booth: &Booth) {
         let (canvas, _) = self.rects();
@@ -276,6 +408,8 @@ impl BoothUi {
     }
     pub fn draw(&mut self, booth: &mut Booth, font: &Font, bold: &Font, blocked: bool) {
         self.modal_this_frame = self.scene_picker
+            || self.ratio_open
+            || self.ratio_transition.visible()
             || self.color_picker.visible()
             || self.scene_transition.visible()
             || self.preset_transition.visible()
@@ -303,7 +437,36 @@ impl BoothUi {
                 1 | 2 => booth.selected.is_some(),
                 _ => true,
             };
-            if button(title, r, bold, mouse, enabled, i == 4 && self.inspector) {
+            let centered = i >= 2;
+            let clicked = button(
+                if centered { "" } else { title },
+                r,
+                bold,
+                mouse,
+                enabled,
+                i == 4 && self.inspector,
+            );
+            if centered {
+                let text = measure_text(title, Some(bold), 12, 1.0);
+                draw_text_ex(
+                    title,
+                    r.x + (r.w - text.width) * 0.5,
+                    r.y + (r.h - text.height) * 0.5 + text.offset_y,
+                    TextParams {
+                        font: Some(bold),
+                        font_size: 12,
+                        color: if i == 4 && self.inspector {
+                            ACCENT
+                        } else if enabled {
+                            WHITE
+                        } else {
+                            GRAY
+                        },
+                        ..Default::default()
+                    },
+                );
+            }
+            if clicked {
                 match i {
                     0 => {
                         let result = booth.add_or_restore();
@@ -390,7 +553,7 @@ impl BoothUi {
                     TextParams {
                         font: Some(bold),
                         font_size: 12,
-                        color: LIGHTGRAY,
+                        color: WHITE,
                         ..Default::default()
                     },
                 );
@@ -403,7 +566,7 @@ impl BoothUi {
         if !self.status.is_empty() {
             label(
                 &self.status,
-                118.0,
+                210.0,
                 80.0,
                 11,
                 font,
@@ -412,7 +575,7 @@ impl BoothUi {
                     output_right - 3.0 * right_w
                 } else {
                     self.rects().0.right()
-                } - 130.0)
+                } - 222.0)
                     .max(1.0),
             );
         }
@@ -430,6 +593,19 @@ impl BoothUi {
                 },
             );
         }
+        let ratio_button = Rect::new(120.0, 56.0, 78.0, 38.0);
+        if button_with_fill(
+            &format!("{}  v", RATIOS[self.ratio].0),
+            ratio_button,
+            bold,
+            mouse,
+            true,
+            false,
+            Color::new(0.078, 0.082, 0.11, 0.97),
+        ) {
+            self.ratio_open = true;
+        }
+        self.draw_ratio_picker(font, bold, raw_mouse, blocked);
         self.color_picker.draw(booth, font, bold, blocked);
         if self.scene_picker || self.scene_transition.visible() {
             self.draw_scene_picker(
@@ -478,7 +654,8 @@ impl BoothUi {
                     self.result(r, "Scene restored");
                 }
                 2 => {
-                    let r = booth.capture(1920, 1080);
+                    let (width, height) = self.output_size(1920);
+                    let r = booth.capture(width, height);
                     if let Some(path) = self.result(r, "") {
                         self.status = format!("Photo saved: {}", path.display());
                     }
@@ -740,7 +917,16 @@ impl BoothUi {
                 w,
             );
             y += 20.0;
-            label("Photo: 1920 × 1080 · excludes GUI", x, y, 11, font, GRAY, w);
+            let (width, height) = self.output_size(1920);
+            label(
+                &format!("Photo: {width} × {height} · excludes GUI"),
+                x,
+                y,
+                11,
+                font,
+                GRAY,
+                w,
+            );
             y += 28.0;
             if button(
                 "Save folder…",
@@ -780,7 +966,12 @@ impl BoothUi {
                     y + 5.0,
                     26.0,
                     26.0,
-                    Color::new(c.placement.color[0], c.placement.color[1], c.placement.color[2], c.placement.color[3]),
+                    Color::new(
+                        c.placement.color[0],
+                        c.placement.color[1],
+                        c.placement.color[2],
+                        c.placement.color[3],
+                    ),
                 );
                 y += 48.0;
                 let p = &mut c.placement;
@@ -1065,7 +1256,9 @@ impl BoothUi {
             );
         }
         self.inspector_heights[self.tab] = (y + self.scroll - area.y + 12.0).max(0.0);
-        self.scroll = self.scroll.clamp(0.0, (self.inspector_heights[self.tab] - area.h).max(0.0));
+        self.scroll = self
+            .scroll
+            .clamp(0.0, (self.inspector_heights[self.tab] - area.h).max(0.0));
         super::layout::end_clip();
         CONTENT_BUTTONS.with(|value| value.set(false));
         CONTENT_TAP.with(|value| value.set(false));
