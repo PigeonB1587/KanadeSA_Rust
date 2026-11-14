@@ -1,0 +1,5983 @@
+[
+	{
+		"inventoryID": "Hat_**Null**",
+		"icon": "UI/InventoryIcons/inventory-none"
+	},
+	{
+		"inventoryID": "HatBaseballRed",
+		"icon": "UI/InventoryIcons/hat_baseball_red",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat1",
+				"template": "baseball",
+				"region": "costumes/hat/baseball_red"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatBaseballBlue",
+		"icon": "UI/InventoryIcons/hat_baseball_blue",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat1",
+				"template": "baseball",
+				"region": "costumes/hat/baseball_blue"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatBaseballYellow",
+		"icon": "UI/InventoryIcons/hat_baseball_yellow",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat1",
+				"template": "baseball",
+				"region": "costumes/hat/baseball_yellow"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatBaseballSARTonight",
+		"icon": "UI/InventoryIcons/hat_baseball_SARtonight",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat1",
+				"template": "baseball",
+				"region": "costumes/hat/baseball_SARtonight"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatBeanieBlue",
+		"icon": "UI/InventoryIcons/hat_beanie_beta",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "beanie_LSD",
+				"region": "costumes/hat/beanie_beta"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatBeanieRed",
+		"icon": "UI/InventoryIcons/hat_beanie_red",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "beanie_red",
+				"region": "costumes/hat/beanie"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatBeanieYellow",
+		"icon": "UI/InventoryIcons/hat_beanie_yellow",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "beanie_yellow",
+				"region": "costumes/hat/beanie"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatBeanieGrey",
+		"icon": "UI/InventoryIcons/hat_beanie_grey",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "beanie_grey",
+				"region": "costumes/hat/beanie"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatBeanieBluePlain",
+		"icon": "UI/InventoryIcons/hat_beanie_blue",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "beanie_blue",
+				"region": "costumes/hat/beanie"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatSuitBlack",
+		"icon": "UI/InventoryIcons/hat_suit_black",
+		"hideHair1": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat1",
+				"template": "tophat",
+				"region": "costumes/hat/tophat_black"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatTopHatGreen",
+		"icon": "UI/InventoryIcons/hat_tophat_green",
+		"hideHair1": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat1",
+				"template": "tophat",
+				"region": "costumes/hat/tophat_green"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatSuitPinstripe",
+		"icon": "UI/InventoryIcons/hat_suit_pinstripe",
+		"hideHair1": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat1",
+				"template": "bowler",
+				"region": "costumes/hat/bowler_black"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatHalo",
+		"icon": "UI/InventoryIcons/hat_halo",
+		"useCosmeticsAnimTrack": true,
+		"spineParts": [
+			{
+				"skin": "default",
+				"slot": "costumes_hat1",
+				"template": "halo",
+				"region": "costumes/hat/halo"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatHelmetMilitary",
+		"icon": "UI/InventoryIcons/hat_helmet_military",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat1",
+				"template": "helmet_military",
+				"region": "extras/helmet_military"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatHelmetSAW",
+		"icon": "UI/InventoryIcons/hat_helmet_SAW",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat1",
+				"template": "helmet_military",
+				"region": "extras/helmet_SAW"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatHelmetRebellion",
+		"icon": "UI/InventoryIcons/hat_helmet_rebellion",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat1",
+				"template": "helmet_military",
+				"region": "costumes/hat/helmet_rebellion"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatHelmetMedic",
+		"icon": "UI/InventoryIcons/hat_helmet_medic",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat1",
+				"template": "helmet_military",
+				"region": "extras/helmet_medic"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatHelmetCamo",
+		"icon": "UI/InventoryIcons/hat_helmet_camo",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat1",
+				"template": "helmet_military",
+				"region": "costumes/hat/helmet_camo"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatUshanka",
+		"icon": "UI/InventoryIcons/hat_ushanka",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "ushanka",
+				"region": "costumes/hat/ushanka"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatSanta",
+		"icon": "UI/InventoryIcons/hat_santa",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "hat_santa",
+				"region": "costumes/hat/hat_santa"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatMohawkRed",
+		"icon": "UI/InventoryIcons/hat_mohawk_red",
+		"hideHair1": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "mohawk",
+				"region": "costumes/hat/mohawk_red"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatMohawkBlack",
+		"icon": "UI/InventoryIcons/hat_mohawk_black",
+		"hideHair1": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "mohawk",
+				"region": "costumes/hat/mohawk_black"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatCaptain",
+		"icon": "UI/InventoryIcons/hat_captain",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat1",
+				"template": "captain",
+				"region": "costumes/hat/captain"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatMilitaryBeige",
+		"icon": "UI/InventoryIcons/hat_military_beige",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "military",
+				"region": "costumes/hat/military_beige"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatMilitaryBlue",
+		"icon": "UI/InventoryIcons/hat_military_blue",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "military",
+				"region": "costumes/hat/military_blue"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatMilitaryGreen",
+		"icon": "UI/InventoryIcons/hat_military_green",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "military",
+				"region": "extras/military_green"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatMilitaryRebellion",
+		"icon": "UI/InventoryIcons/hat_military_rebellion",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "military",
+				"region": "costumes/hat/military_rebellion"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatVisorBlue",
+		"icon": "UI/InventoryIcons/hat_visor_blue",
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat1",
+				"template": "visor_blue",
+				"region": "costumes/hat/visor"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatVisorGreen",
+		"icon": "UI/InventoryIcons/hat_visor_green",
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat1",
+				"template": "visor_green",
+				"region": "costumes/hat/visor"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatVisorOrange",
+		"icon": "UI/InventoryIcons/hat_visor_orange",
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat1",
+				"template": "visor_orange",
+				"region": "costumes/hat/visor"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatVisorPink",
+		"icon": "UI/InventoryIcons/hat_visor_pink",
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat1",
+				"template": "visor_pink",
+				"region": "costumes/hat/visor"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatVisorRed",
+		"icon": "UI/InventoryIcons/hat_visor_red",
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat1",
+				"template": "visor_red",
+				"region": "costumes/hat/visor"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatVisorTeal",
+		"icon": "UI/InventoryIcons/hat_visor_teal",
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat1",
+				"template": "visor_teal",
+				"region": "costumes/hat/visor"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatDevilHorns",
+		"icon": "UI/InventoryIcons/hat_devil_horns",
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "devil_horns",
+				"region": "costumes/hat/devil_horns"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatPropellerHat",
+		"icon": "UI/InventoryIcons/hat_propeller",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat1",
+				"template": "propeller",
+				"region": "extras/propeller"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatPirate",
+		"icon": "UI/InventoryIcons/hat_pirate",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "hat_pirate",
+				"region": "costumes/hat/hat_pirate"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatBeanieBear",
+		"icon": "UI/InventoryIcons/hat_beanies_bear",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "animal_beanie",
+				"region": "costumes/hat/beanies_bear",
+				"regionCut": "costumes/hat/beanies_bear_cut"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatBeanieDeer",
+		"icon": "UI/InventoryIcons/hat_beanies_deer",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "animal_beanie",
+				"region": "costumes/hat/beanies_deer",
+				"regionCut": "costumes/hat/beanies_deer_cut"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatBeanieFox",
+		"icon": "UI/InventoryIcons/hat_beanies_fox",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "animal_beanie",
+				"region": "costumes/hat/beanies_fox",
+				"regionCut": "costumes/hat/beanies_fox_cut"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatBeaniePanda",
+		"icon": "UI/InventoryIcons/hat_beanies_panda",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "animal_beanie",
+				"region": "costumes/hat/beanies_panda",
+				"regionCut": "costumes/hat/beanies_panda_cut"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatBeanieRaccoon",
+		"icon": "UI/InventoryIcons/hat_beanies_raccoon",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "animal_beanie",
+				"region": "costumes/hat/beanies_raccoon",
+				"regionCut": "costumes/hat/beanies_raccoon_cut"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatBeanieSkullcat",
+		"icon": "UI/InventoryIcons/hat_beanies_skullcat",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "animal_beanie",
+				"region": "costumes/hat/beanies_skullcat",
+				"regionCut": "costumes/hat/beanies_skullcat_cut"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatBeanieTiger",
+		"icon": "UI/InventoryIcons/hat_beanies_tiger",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "animal_beanie",
+				"region": "costumes/hat/beanies_tiger",
+				"regionCut": "costumes/hat/beanies_tiger_cut"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatBeanieCatler",
+		"icon": "UI/InventoryIcons/hat_beanies_catler",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "animal_beanie",
+				"region": "costumes/hat/beanies_catler",
+				"regionCut": "costumes/hat/beanies_catler_cut"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatBeanieLSD",
+		"icon": "UI/InventoryIcons/hat_beanie_LSD",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "beanie_LSD",
+				"region": "costumes/hat/beanie_LSD"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatBeanieSkull",
+		"icon": "UI/InventoryIcons/hat_beanie_skull",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "beanie_LSD",
+				"region": "costumes/hat/beanie_skull"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatCrownSmall",
+		"icon": "UI/InventoryIcons/hat_crown_small",
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "crown_small",
+				"region": "costumes/hat/crown_small"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatCrown",
+		"icon": "UI/InventoryIcons/hat_crown",
+		"hideHair1": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "crown",
+				"region": "costumes/hat/crown"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatSafari",
+		"icon": "UI/InventoryIcons/hat_safari",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat1",
+				"template": "safari",
+				"region": "costumes/hat/safari"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatLunarNewYearBlack",
+		"icon": "UI/InventoryIcons/hat_chinese_black",
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "chinese",
+				"region": "costumes/hat/chinese_black"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatLunarNewYearRed",
+		"icon": "UI/InventoryIcons/hat_chinese_red",
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "chinese",
+				"region": "extras/chinese_red"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatJuiceHat",
+		"icon": "UI/InventoryIcons/hat_juice_hat",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat1",
+				"template": "juice_hat",
+				"region": "costumes/hat/juice_hat"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatGeologist",
+		"icon": "UI/InventoryIcons/hat_geologist",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "geologist",
+				"region": "costumes/hat/geologist"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatBlueJayZ",
+		"icon": "UI/InventoryIcons/hat_BlueJayZ",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat1",
+				"template": "hat_BlueJayZ",
+				"region": "costumes/hat/hat_BlueJayZ"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatCawCaw",
+		"icon": "UI/InventoryIcons/hat_CawCaw",
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat1",
+				"template": "hat_CawCaw",
+				"region": "costumes/hat/hat_CawCaw"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatChocoTaco",
+		"icon": "UI/InventoryIcons/hat_chocotaco",
+		"hideHair1": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "hat_taco",
+				"region": "costumes/hat/hat_chocotaco"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatBunnyEars",
+		"icon": "UI/InventoryIcons/hat_bunnyears",
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "bunnyears",
+				"region": "costumes/hat/bunnyears"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatPolice",
+		"icon": "UI/InventoryIcons/hat_police",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat1",
+				"template": "police",
+				"region": "extras/police"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatSteampunkGoggles",
+		"icon": "UI/InventoryIcons/hat_steampunk_goggles",
+		"hideHair1": false,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "steampunk_goggles",
+				"region": "costumes/hat/steampunk_goggles"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatUnicorn",
+		"icon": "UI/InventoryIcons/hat_unicorn",
+		"hideHair1": false,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "unicorn",
+				"region": "costumes/hat/unicorn"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatBaseballRainbow",
+		"icon": "UI/InventoryIcons/hat_baseball_rainbow",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat1",
+				"template": "baseball",
+				"region": "extras/baseball_rainbow"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatMountie",
+		"icon": "UI/InventoryIcons/hat_mountie",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat1",
+				"template": "hat_mountie",
+				"region": "costumes/hat/hat_mountie"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatUncleSam",
+		"icon": "UI/InventoryIcons/hat_unclesam",
+		"hideHair1": true,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat1",
+				"template": "tophat",
+				"region": "costumes/hat/tophat_unclesam"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatBananaPeel",
+		"icon": "UI/InventoryIcons/hat_banana_peel",
+		"hideHair1": true,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "banana_peel",
+				"region": "costumes/hat/banana_peel"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatSkunk",
+		"icon": "UI/InventoryIcons/hat_skunk",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "hat_skunk",
+				"region": "extras/hat_skunk"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatHeadbandShia",
+		"icon": "UI/InventoryIcons/hat_headband_shia",
+		"hideHair1": false,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "headband_shia",
+				"region": "costumes/hat/headband_shia"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatFruit",
+		"icon": "UI/InventoryIcons/hat_tuttifrutti_hat",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "tuttifrutti",
+				"region": "costumes/hat/tuttifrutti_hat"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatNewsboyPink",
+		"icon": "UI/InventoryIcons/hat_newsboy_pink",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat1",
+				"template": "newsboy",
+				"region": "costumes/hat/newsboy_pink"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatSquid",
+		"icon": "UI/InventoryIcons/hat_squid",
+		"hideHair1": true,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "squid",
+				"region": "costumes/hat/squid"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatGraduate",
+		"icon": "UI/InventoryIcons/hat_graduate",
+		"hideHair1": true,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "graduate_hat",
+				"region": "costumes/hat/graduate_hat"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatMariachi",
+		"icon": "UI/InventoryIcons/hat_mariachi",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat1",
+				"template": "hat_mariachi",
+				"region": "costumes/hat/hat_mariachi"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatWitch",
+		"icon": "UI/InventoryIcons/hat_witch",
+		"hideHair1": true,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat1",
+				"template": "hat_witch",
+				"region": "costumes/hat/hat_witch"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatPizzaSlice",
+		"icon": "UI/InventoryIcons/hat_pizzaslice",
+		"hideHair1": true,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "pizzaslice",
+				"region": "costumes/hat/pizzaslice"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatStraw",
+		"icon": "UI/InventoryIcons/hat_straw",
+		"hideHair1": true,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat1",
+				"template": "hat_straw",
+				"region": "costumes/hat/hat_straw"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatPumpkin",
+		"icon": "UI/InventoryIcons/hat_pumpkin",
+		"hideHair1": false,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat1",
+				"template": "hat_pumpkin",
+				"region": "costumes/hat/hat_pumpkin"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatThomas",
+		"icon": "UI/InventoryIcons/hat_thomas",
+		"hideHair1": true,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat1",
+				"template": "tophat",
+				"region": "extras/tophat_Thomas"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatChef",
+		"icon": "UI/InventoryIcons/hat_chef",
+		"hideHair1": true,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "hat_chef",
+				"region": "costumes/hat/hat_chef"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatThanksgiving",
+		"icon": "UI/InventoryIcons/hat_thanksgiving",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat1",
+				"template": "hat_thanksgiving",
+				"region": "costumes/hat/hat_thanksgiving"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatFez",
+		"icon": "UI/InventoryIcons/hat_fez",
+		"hideHair1": false,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "fez",
+				"region": "costumes/hat/fez"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatAntlers",
+		"icon": "UI/InventoryIcons/hat_antlers",
+		"hideHair1": false,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "antlers",
+				"region": "costumes/hat/antlers"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatChristmasElf",
+		"icon": "UI/InventoryIcons/hat_christmas_elf",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "hat_christmas_elf",
+				"region": "costumes/hat/hat_christmas_elf"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatHolly",
+		"icon": "UI/InventoryIcons/hat_holly",
+		"hideHair1": false,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "holly",
+				"region": "costumes/hat/holly"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatMoosevelt",
+		"icon": "UI/InventoryIcons/hat_moosevelt",
+		"hideHair1": true,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat1",
+				"template": "tophat",
+				"region": "costumes/hat/tophat_Moosevelt"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatNewYears",
+		"icon": "UI/InventoryIcons/hat_new_years",
+		"hideHair1": false,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "party_newyear",
+				"region": "costumes/hat/party_newyear"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatPartyPixile",
+		"icon": "UI/InventoryIcons/hat_party_pixile",
+		"hideHair1": false,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "party",
+				"region": "costumes/hat/party_Pixile"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatBeaniePomBlue",
+		"icon": "UI/InventoryIcons/hat_pombeanie_blue",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "bobblehat",
+				"region": "costumes/hat/bobblehat_blue"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatBeaniePomOrange",
+		"icon": "UI/InventoryIcons/hat_pombeanie_orange",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "bobblehat",
+				"region": "costumes/hat/bobblehat_orange"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatMandarin",
+		"icon": "UI/InventoryIcons/hat_mandarin",
+		"hideHair1": true,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "mandarin",
+				"region": "costumes/hat/hat_mandarin"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatRicePaddy",
+		"icon": "UI/InventoryIcons/hat_ricepaddy",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat1",
+				"template": "hat_ricepaddy",
+				"region": "costumes/hat/hat_ricepaddy"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatFlowerClipPink",
+		"icon": "UI/InventoryIcons/hat_flower_pink",
+		"hideHair1": false,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "flower",
+				"region": "costumes/hat/flower_pink"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatFlowerClipPurple",
+		"icon": "UI/InventoryIcons/hat_flower_purple",
+		"hideHair1": false,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "flower",
+				"region": "costumes/hat/flower_lilac"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatFlowerClipRed",
+		"icon": "UI/InventoryIcons/hat_flower_red",
+		"hideHair1": false,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "flower",
+				"region": "costumes/hat/flower_red"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatFlowerClipWhite",
+		"icon": "UI/InventoryIcons/hat_flower_white",
+		"hideHair1": false,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "flower",
+				"region": "costumes/hat/flower_white"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatFlowerClipYellow",
+		"icon": "UI/InventoryIcons/hat_flower_yellow",
+		"hideHair1": false,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "flower",
+				"region": "costumes/hat/flower_yellow"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatRancher",
+		"icon": "UI/InventoryIcons/hat_rancher",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat1",
+				"template": "hat_cowboy",
+				"region": "costumes/hat/hat_cowboy_ranch"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatLuckyBow",
+		"icon": "UI/InventoryIcons/hat_lucky_bow",
+		"hideHair1": false,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "bigbow",
+				"region": "costumes/hat/bigbow_shamrock"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatSkydiveCam",
+		"icon": "UI/InventoryIcons/hat_skydive_camera",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat1",
+				"template": "helmet_skydive_camera",
+				"region": "costumes/hat/helmet_skydive_camera"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatFlowerCrown",
+		"icon": "UI/InventoryIcons/hat_flower_crown",
+		"hideHair1": false,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "flower_crown",
+				"region": "costumes/hat/flower_crown"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatEasterSun",
+		"icon": "UI/InventoryIcons/hat_easter_sun",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat1",
+				"template": "hat_bow",
+				"region": "costumes/hat/hat_bow"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatEggshell",
+		"icon": "UI/InventoryIcons/hat_eggshell",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "eggshell",
+				"region": "costumes/hat/eggshell"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatAtefCrown",
+		"icon": "UI/InventoryIcons/hat_atef_crown",
+		"hideHair1": false,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "crown_atef",
+				"region": "costumes/hat/crown_atef"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatHathorCrown",
+		"icon": "UI/InventoryIcons/hat_hathor_crown",
+		"hideHair1": false,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "crown_Hathor",
+				"region": "costumes/hat/crown_Hathor"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatFlowerLily",
+		"icon": "UI/InventoryIcons/hat_flower_lily",
+		"hideHair1": false,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "flower_lily",
+				"region": "costumes/hat/flower_lily"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatCowboyV2",
+		"icon": "UI/InventoryIcons/hat_cowboy",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat1",
+				"template": "hat_cowboy",
+				"region": "costumes/hat/hat_cowboy"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatCowboyPink",
+		"icon": "UI/InventoryIcons/hat_cowboy_pink",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat1",
+				"template": "hat_cowboy",
+				"region": "costumes/hat/hat_cowboy_pink"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatLightbulb",
+		"icon": "UI/InventoryIcons/hat_lightbulb",
+		"useCosmeticsAnimTrack": true,
+		"hideHair1": false,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "default",
+				"slot": "costumes_hat1",
+				"template": "bulb",
+				"region": "extras/bulb"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatHeadbandRainbow",
+		"icon": "UI/InventoryIcons/hat_headband_rainbow",
+		"hideHair1": false,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "headband",
+				"region": "costumes/hat/headband_rainbow"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatArtistBeret",
+		"icon": "UI/InventoryIcons/hat_artist",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "artist",
+				"region": "costumes/hat/artist"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatArcher",
+		"icon": "UI/InventoryIcons/hat_archer",
+		"hideHair1": true,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "hat_archer",
+				"region": "costumes/hat/hat_archer"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatBeanieCat",
+		"icon": "UI/InventoryIcons/hat_beanie_cat",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "animal_beanie",
+				"region": "costumes/hat/beanies_cat",
+				"regionCut": "costumes/hat/beanies_cat_cut"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatBeanieDog",
+		"icon": "UI/InventoryIcons/hat_beanie_dog",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "animal_beanie",
+				"region": "costumes/hat/beanies_dog",
+				"regionCut": "costumes/hat/beanies_dog_cut"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatBeanieSlothBeauty",
+		"icon": "UI/InventoryIcons/hat_beanie_beauty_sloth",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "animal_beanie",
+				"region": "extras/beanies_sloth_beauty",
+				"regionCut": "extras/beanies_sloth_beauty_cut"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatHeadbandBlack",
+		"icon": "UI/InventoryIcons/hat_headband_black",
+		"hideHair1": false,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "headband_black",
+				"region": "costumes/hat/headband"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatHeadbandRed",
+		"icon": "UI/InventoryIcons/hat_headband_red",
+		"hideHair1": false,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "headband_red",
+				"region": "costumes/hat/headband"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatHeadbandBanana",
+		"icon": "UI/InventoryIcons/hat_headband_banana",
+		"hideHair1": false,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "headband",
+				"region": "costumes/hat/headband_banana"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatNapoleon",
+		"icon": "UI/InventoryIcons/hat_napoleon",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "napoleon",
+				"region": "costumes/hat/napoleon"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatPaperWhite",
+		"icon": "UI/InventoryIcons/hat_paperhat_white",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat1",
+				"template": "paperhat",
+				"region": "costumes/hat/paperhat"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatTophatBroken",
+		"icon": "UI/InventoryIcons/hat_tophat_broken",
+		"hideHair1": true,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat1",
+				"template": "tophat",
+				"region": "costumes/hat/tophat_broken"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatBeanieRedPanda",
+		"icon": "UI/InventoryIcons/hat_beanies_redpanda",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "animal_beanie",
+				"region": "costumes/hat/beanies_redpanda",
+				"regionCut": "costumes/hat/beanies_redpanda_cut"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatHeadbandPaisleyBlack",
+		"icon": "UI/InventoryIcons/hat_headband_paisley_black",
+		"hideHair1": false,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "headband",
+				"region": "costumes/hat/headband_paisley_black"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatHeadbandPaisleyBlue",
+		"icon": "UI/InventoryIcons/hat_headband_paisley_blue",
+		"hideHair1": false,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "headband",
+				"region": "costumes/hat/headband_paisley_blue"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatHeadbandPaisleyGreen",
+		"icon": "UI/InventoryIcons/hat_headband_paisley_green",
+		"hideHair1": false,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "headband",
+				"region": "costumes/hat/headband_paisley_green"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatHeadbandPaisleyRed",
+		"icon": "UI/InventoryIcons/hat_headband_paisley_red",
+		"hideHair1": false,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "headband",
+				"region": "costumes/hat/headband_paisley_red"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatNewspaper",
+		"icon": "UI/InventoryIcons/hat_paperhat_newspaper",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat1",
+				"template": "paperhat",
+				"region": "costumes/hat/paperhat_newspaper"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatBeanieShiba",
+		"icon": "UI/InventoryIcons/hat_beanies_shiba",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "animal_beanie",
+				"region": "costumes/hat/beanies_shiba",
+				"regionCut": "costumes/hat/beanies_shiba_cut"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatBeanieSloth",
+		"icon": "UI/InventoryIcons/hat_beanies_sloth",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "animal_beanie",
+				"region": "costumes/hat/beanies_sloth",
+				"regionCut": "costumes/hat/beanies_sloth_cut"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatPilot",
+		"icon": "UI/InventoryIcons/hat_aviator",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "animal_beanie",
+				"region": "costumes/hat/hat_aviator",
+				"regionCut": "costumes/hat/hat_aviator_cut"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatStacked",
+		"icon": "UI/InventoryIcons/hat_stack",
+		"hideHair1": true,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat1",
+				"template": "stack",
+				"region": "extras/hat_stack"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatBolts",
+		"icon": "UI/InventoryIcons/hat_bolts",
+		"hideHair1": false,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "bolts",
+				"region": "costumes/hat/bolts"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatBowSkull",
+		"icon": "UI/InventoryIcons/hat_bow_skull",
+		"hideHair1": false,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "bow",
+				"region": "costumes/hat/bow_skull"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatNewsboyTwilight",
+		"icon": "UI/InventoryIcons/hat_newsboy_stars",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat1",
+				"template": "newsboy",
+				"region": "costumes/hat/newsboy_stars"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatBucketFlower",
+		"icon": "UI/InventoryIcons/hat_bucket_flowers",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "hat_fisherman",
+				"region": "costumes/hat/hat_bucket_flowers"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatDaintyBlue",
+		"icon": "UI/InventoryIcons/hat_dainty_blue",
+		"hideHair1": true,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "hat_lady",
+				"region": "costumes/hat/hat_lady"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatLeopardYellow",
+		"icon": "UI/InventoryIcons/hat_leopard_yellow",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "hat_fisherman",
+				"region": "costumes/hat/hat_leopard"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatLeopardPink",
+		"icon": "UI/InventoryIcons/hat_leopard_pink",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "hat_fisherman",
+				"region": "costumes/hat/hat_leopard_red"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatMohawkBlue",
+		"icon": "UI/InventoryIcons/hat_mohawk_blue",
+		"hideHair1": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "mohawk",
+				"region": "costumes/hat/mohawk_blue"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatMohawkGreen",
+		"icon": "UI/InventoryIcons/hat_mohawk_green",
+		"hideHair1": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "mohawk",
+				"region": "costumes/hat/mohawk_green"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatMohawkPurple",
+		"icon": "UI/InventoryIcons/hat_mohawk_purple",
+		"hideHair1": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "mohawk",
+				"region": "costumes/hat/mohawk_purple"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatHeadbandDisco",
+		"icon": "UI/InventoryIcons/hat_headband_disco",
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "headband2",
+				"region": "costumes/hat/headband_SARturday"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatBeanieFisherman",
+		"icon": "UI/InventoryIcons/hat_beanie_fisherman",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "beanie_fisherman",
+				"region": "costumes/hat/beanie_fisherman"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatSailorWhite",
+		"icon": "UI/InventoryIcons/hat_sailor_white",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "hat_navy",
+				"region": "extras/hat_navy"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatChineseLion",
+		"icon": "UI/InventoryIcons/hat_chinese_lion",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "animal_beanie",
+				"region": "extras/beanies_chinese_lion",
+				"regionCut": "extras/beanies_chinese_lion_cut"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatHelmetDynasty",
+		"icon": "UI/InventoryIcons/hat_helmet_dynasty",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "helmet_chinese",
+				"region": "extras/helmet_chinese"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatMandarin2021",
+		"icon": "UI/InventoryIcons/hat_mandarin_2021",
+		"hideHair1": false,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "mandarin2",
+				"region": "costumes/hat/hat_mandarin2"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatMushroom",
+		"icon": "UI/InventoryIcons/hat_mushroom",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat1",
+				"template": "hat_mushroom",
+				"region": "costumes/hat/hat_mushroom"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatBeanieBunny",
+		"icon": "UI/InventoryIcons/hat_beanies_bunny",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "animal_beanie",
+				"region": "costumes/hat/beanies_bunny",
+				"regionCut": "costumes/hat/beanies_bunny_cut"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatBowPinkPolkaDot",
+		"icon": "UI/InventoryIcons/hat_pink_polkadot_bow",
+		"hideHair1": false,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "bigbow",
+				"region": "costumes/hat/bigbow_easter"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatSpringPlaid",
+		"icon": "UI/InventoryIcons/hat_spring_plaid",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat1",
+				"template": "hat_easter2021",
+				"region": "costumes/hat/hat_easter2021"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatBunnyEarsBlue",
+		"icon": "UI/InventoryIcons/hat_bunnyears_blue",
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "bunnyears",
+				"region": "costumes/hat/bunnyears_blue"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatFlatcap",
+		"icon": "UI/InventoryIcons/hat_flatcap",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "flatcap",
+				"region": "costumes/hat/flatcap"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatEasterBirdsNest",
+		"icon": "UI/InventoryIcons/hat_easter_nest",
+		"hideHair1": false,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "nest",
+				"region": "costumes/hat/nest"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatDetective",
+		"icon": "UI/InventoryIcons/hat_detective",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "hat_detective",
+				"region": "costumes/hat/hat_detective"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatCrab",
+		"icon": "UI/InventoryIcons/hat_crab",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "crab",
+				"region": "costumes/hat/crab"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatMarchingBand",
+		"icon": "UI/InventoryIcons/hat_marchingband",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "hat_marchingband",
+				"region": "costumes/hat/hat_marchingband"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatHopperfield",
+		"icon": "UI/InventoryIcons/hat_tophat_magician",
+		"hideHair1": true,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat1",
+				"template": "tophat",
+				"region": "extras/tophat_magician"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatFishing",
+		"icon": "UI/InventoryIcons/hat_fisherman",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "hat_fisherman",
+				"region": "costumes/hat/hat_fisherman"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatBoater",
+		"icon": "UI/InventoryIcons/hat_boater_hat",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat1",
+				"template": "boater_hat",
+				"region": "costumes/hat/boater_hat"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatVikingHelmet",
+		"icon": "UI/InventoryIcons/hat_viking_helmet",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "viking_helmet",
+				"region": "costumes/hat/viking_helmet"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatBeachBlue",
+		"icon": "UI/InventoryIcons/hat_beach_blue",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat1",
+				"template": "hat_beach",
+				"region": "costumes/hat/hat_beach"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatVisorStarfish",
+		"icon": "UI/InventoryIcons/hat_visor_starfish",
+		"hideHair1": false,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat1",
+				"template": "visor_starfish",
+				"region": "costumes/hat/visor_starfish"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatCherry",
+		"icon": "UI/InventoryIcons/hat_cherries",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat1",
+				"template": "hat_cherries",
+				"region": "costumes/hat/hat_cherries"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatChefSushi",
+		"icon": "UI/InventoryIcons/hat_chef_sushi",
+		"hideHair1": true,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "chef_sushi",
+				"region": "costumes/hat/chef_sushi"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatCupcake",
+		"icon": "UI/InventoryIcons/hat_cupcake",
+		"hideHair1": false,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "cupcake",
+				"region": "costumes/hat/cupcake"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatFries",
+		"icon": "UI/InventoryIcons/hat_fries",
+		"hideHair1": false,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "fries",
+				"region": "extras/fries"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatPieSlice",
+		"icon": "UI/InventoryIcons/hat_pie_slice",
+		"hideHair1": false,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "pie_slice",
+				"region": "costumes/hat/pie_slice"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatTophatBearlesque",
+		"icon": "UI/InventoryIcons/hat_tophat_bearlesque",
+		"hideHair1": false,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat1",
+				"template": "tophat_bearlesque",
+				"region": "extras/tophat_bearlesque"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatExplorer",
+		"icon": "UI/InventoryIcons/hat_explorer",
+		"hideHair1": true,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "safari_hat",
+				"region": "costumes/hat/safari_hat"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatTophatHeart",
+		"icon": "UI/InventoryIcons/hat_tophat_heart",
+		"hideHair1": true,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat1",
+				"template": "tophat",
+				"region": "extras/tophat_heart"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatHeartAntennas",
+		"icon": "UI/InventoryIcons/hat_heart_antennas",
+		"hideHair1": false,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "antlers",
+				"region": "costumes/hat/heart_antennas"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatBeaniePenguinWinged",
+		"icon": "UI/InventoryIcons/hat_beanies_penguin_wings",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "animal_beanie",
+				"region": "extras/beanies_penguin_wings",
+				"regionCut": "extras/beanies_penguin_wings_cut"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatBowVwbBB",
+		"icon": "UI/InventoryIcons/hat_bow_vwbBB",
+		"hideHair1": false,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "hairband_bow",
+				"region": "costumes/hat/bow_wvbBB"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatFedoraBeige",
+		"icon": "UI/InventoryIcons/hat_fedora_beige",
+		"hideHair1": true,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "panama_hat",
+				"region": "extras/fedora_beige"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatPancake",
+		"icon": "UI/InventoryIcons/hat_pancake",
+		"hideHair1": false,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "pancake",
+				"region": "costumes/hat/pancake"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatVampireHunter",
+		"icon": "UI/InventoryIcons/hat_vampire_hunter",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat1",
+				"template": "hat_vampire_hunter",
+				"region": "extras/hat_vampire_hunter"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatDevilHornsBlue",
+		"icon": "UI/InventoryIcons/hat_devil_horns_blue",
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "devil_horns",
+				"region": "costumes/hat/devil_horns_blue"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatHalloweenCap",
+		"icon": "UI/InventoryIcons/hat_baseball_halloween",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat1",
+				"template": "baseball",
+				"region": "extras/baseball_halloween"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatHaunted",
+		"icon": "UI/InventoryIcons/tophat_eyes",
+		"hideHair1": true,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat1",
+				"template": "tophat",
+				"region": "extras/tophat_eyes"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatClown",
+		"icon": "UI/InventoryIcons/hat_scary_clown",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "hat_scary_clown",
+				"region": "costumes/hat/hat_scary_clown"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatSpider",
+		"icon": "UI/InventoryIcons/hat_spider",
+		"hideHair1": true,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat1",
+				"template": "hat_spider",
+				"region": "costumes/hat/hat_spider"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatWinterFur",
+		"icon": "UI/InventoryIcons/hat_fur_hat",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "fur_hat",
+				"region": "costumes/hat/fur_hat"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatRedPomBeanie",
+		"icon": "UI/InventoryIcons/hat_pombeanie_christmas",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "bobblehat",
+				"region": "costumes/hat/bobblehat_christmas"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatStrainer",
+		"icon": "UI/InventoryIcons/hat_colander",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "colander",
+				"region": "costumes/hat/colander"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatHardhat",
+		"icon": "UI/InventoryIcons/hat_hardhat",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat1",
+				"template": "hardhat",
+				"region": "costumes/hat/hardhat"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatCaverHelmet",
+		"icon": "UI/InventoryIcons/hat_helmet_cave",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat1",
+				"template": "helmet_military",
+				"region": "extras/helmet_cave"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatBlueprint",
+		"icon": "UI/InventoryIcons/hat_paperhat_blueprint",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat1",
+				"template": "paperhat",
+				"region": "costumes/hat/paperhat_blueprint"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatStickyNote",
+		"icon": "UI/InventoryIcons/hat_post-it",
+		"hideHair1": false,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "post-it",
+				"region": "costumes/hat/post-it"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatBeeAntennae",
+		"icon": "UI/InventoryIcons/hat_bee_antennas",
+		"hideHair1": false,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "antlers",
+				"region": "costumes/hat/bee_antennas"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatFroggy",
+		"icon": "UI/InventoryIcons/hat_froggy",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "hat_froggy",
+				"region": "costumes/hat/hat_froggy"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatBunnyEarsOhmwrecker",
+		"icon": "UI/InventoryIcons/hat_bunnyears_Ohmwrecker",
+		"hideHair1": false,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "bunnyears",
+				"region": "costumes/hat/bunnyears_Ohmwrecker"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatHelmetGuanYu",
+		"icon": "UI/InventoryIcons/hat_helmet_GuanYu",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "helmet_GuanYu",
+				"region": "costumes/hat/helmet_GuanYu"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatMing",
+		"icon": "UI/InventoryIcons/hat_ming",
+		"hideHair1": true,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "hat_ming",
+				"region": "costumes/hat/hat_ming"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatGoldYuanbao",
+		"icon": "UI/InventoryIcons/hat_gold_ingot_chinese",
+		"hideHair1": false,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "gold_ingot_chinese",
+				"region": "costumes/hat/gold_ingot_chinese"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatPeachBlossom",
+		"icon": "UI/InventoryIcons/hat_peach_blossom",
+		"hideHair1": false,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "peach_blossom",
+				"region": "costumes/hat/peach_blossom"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatHeadbandLunar",
+		"icon": "UI/InventoryIcons/hat_headband_lunar",
+		"hideHair1": false,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "headband_lunar",
+				"region": "costumes/hat/headband_lunar"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatFlowerLunar",
+		"icon": "UI/InventoryIcons/hat_lunar_flower",
+		"hideHair1": false,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "flower",
+				"region": "costumes/hat/red_flower"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatDesertCamoCap",
+		"icon": "UI/InventoryIcons/hat_desert",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat1",
+				"template": "hat_desert",
+				"region": "costumes/hat/hat_desert"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatGeneralSAW",
+		"icon": "UI/InventoryIcons/hat_SAW_kepi",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "hat_SAW_kepi",
+				"region": "costumes/hat/hat_SAW_kepi"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatGeneralRebel",
+		"icon": "UI/InventoryIcons/hat_dictator",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat1",
+				"template": "hat_desert",
+				"region": "costumes/hat/hat_dictator"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatLaurelCrown",
+		"icon": "UI/InventoryIcons/hat_laurel_crown",
+		"hideHair1": false,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "laurel_crown",
+				"region": "costumes/hat/laurel_crown"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatBlueBlackCap",
+		"icon": "UI/InventoryIcons/hat_baseball_PS",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat1",
+				"template": "baseball",
+				"region": "costumes/hat/baseball_PS"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatGreenBlackCap",
+		"icon": "UI/InventoryIcons/hat_baseball_Xbox",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat1",
+				"template": "baseball",
+				"region": "costumes/hat/baseball_Xbox"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatEasterBonnet",
+		"icon": "UI/InventoryIcons/hat_bonnet_easter",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat1",
+				"template": "bonnet_easter",
+				"region": "costumes/hat/bonnet_easter"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatFlower",
+		"icon": "UI/InventoryIcons/hat_big_flower",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat1",
+				"template": "hat_big_flower",
+				"region": "costumes/hat/hat_big_flower"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatNightcapBlueBlack",
+		"icon": "UI/InventoryIcons/hat_nightcap_PS",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "nightcap",
+				"region": "costumes/hat/nightcap_PS"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatNightcapGreenBlack",
+		"icon": "UI/InventoryIcons/hat_nightcap_Xbox",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "nightcap",
+				"region": "costumes/hat/nightcap_Xbox"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatAntlersFuchs",
+		"icon": "UI/InventoryIcons/hat_antlers_dragon",
+		"hideHair1": false,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "antlers_dragon",
+				"region": "costumes/hat/antlers_dragon"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatSunflower",
+		"icon": "UI/InventoryIcons/hat_sun",
+		"hideHair1": true,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat1",
+				"template": "hat_straw",
+				"region": "costumes/hat/hat_sun"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatPanama",
+		"icon": "UI/InventoryIcons/hat_panama",
+		"hideHair1": true,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "panama_hat",
+				"region": "costumes/hat/panama_hat"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatBeanieGiantMole",
+		"icon": "UI/InventoryIcons/hat_beanies_mole_boss",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "animal_beanie",
+				"region": "costumes/hat/beanies_mole_boss",
+				"regionCut": "costumes/hat/beanies_mole_boss_cut"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatGeckoBucket",
+		"icon": "UI/InventoryIcons/hat_bucket_lizards",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "hat_fisherman",
+				"region": "costumes/hat/hat_bucket_lizards"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatSnakeskin",
+		"icon": "UI/InventoryIcons/hat_cowboy_snakeskin",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat1",
+				"template": "hat_cowboy",
+				"region": "costumes/hat/hat_cowboy_snakeskin"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatScaleMailHelmet",
+		"icon": "UI/InventoryIcons/hat_helmet_scale",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "helmet_scale",
+				"region": "costumes/hat/helmet_scale"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatMolemanCap",
+		"icon": "UI/InventoryIcons/hat_moleman",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat1",
+				"template": "hat_moleman",
+				"region": "costumes/hat/hat_moleman"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatTophatTiny",
+		"icon": "UI/InventoryIcons/hat_tiny",
+		"hideHair1": false,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat1",
+				"template": "hat_tiny",
+				"region": "costumes/hat/hat_tiny"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatGamingSweatband",
+		"icon": "UI/InventoryIcons/hat_sweatband_esports",
+		"hideHair1": false,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "sweatband",
+				"region": "costumes/hat/sweatband_esports"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatHatchet",
+		"icon": "UI/InventoryIcons/hat_hatchet",
+		"hideHair1": false,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "hatchet",
+				"region": "costumes/hat/hatchet"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatDuckCap",
+		"icon": "UI/InventoryIcons/hat_duck_cap",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat1",
+				"template": "duck_cap",
+				"region": "costumes/hat/duck_cap"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatChickenComb",
+		"icon": "UI/InventoryIcons/hat_crest",
+		"hideHair1": true,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "crest",
+				"region": "costumes/hat/crest"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatStewardess",
+		"icon": "UI/InventoryIcons/hat_airlines",
+		"hideHair1": false,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "hat_airlines",
+				"region": "costumes/hat/hat_airlines"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatCatHeadband",
+		"icon": "UI/InventoryIcons/hat_cat_ears",
+		"hideHair1": false,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "cat_ears",
+				"region": "costumes/hat/cat_ears"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatBatTophat",
+		"icon": "UI/InventoryIcons/hat_tophat_bat",
+		"hideHair1": false,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat1",
+				"template": "tophat_bat",
+				"region": "costumes/hat/tophat_bat"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatNutcracker",
+		"icon": "UI/InventoryIcons/hat_nutcracker",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "hat_marchingband",
+				"region": "costumes/hat/hat_nutcracker"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatBeanieRudolph",
+		"icon": "UI/InventoryIcons/hat_beanies_rudolph",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "animal_beanie",
+				"region": "costumes/hat/beanies_rudolph",
+				"regionCut": "costumes/hat/beanies_rudolph_cut"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatLilypad",
+		"icon": "UI/InventoryIcons/hat_lilypad",
+		"hideHair1": false,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "lilypad",
+				"region": "costumes/hat/lilypad"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatHermit",
+		"icon": "UI/InventoryIcons/hat_hillbilly",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat1",
+				"template": "hat_hillbilly",
+				"region": "costumes/hat/hat_hillbilly"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatCrocodileTooth",
+		"icon": "UI/InventoryIcons/hat_crocodile_teeth",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat1",
+				"template": "hat_crocodile_teeth",
+				"region": "costumes/hat/hat_crocodile_teeth"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatVisorCroc",
+		"icon": "UI/InventoryIcons/hat_visor_croc",
+		"hideHair1": false,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat1",
+				"template": "visor_croc",
+				"region": "costumes/hat/visor_croc"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatSnail",
+		"icon": "UI/InventoryIcons/hat_snail",
+		"hideHair1": false,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "snail",
+				"region": "costumes/hat/snail"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatBeanieSnowman",
+		"icon": "UI/InventoryIcons/hat_snowman",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "animal_beanie",
+				"region": "costumes/hat/hat_snowman",
+				"regionCut": "costumes/hat/hat_snowman_cut"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatSteamedBun",
+		"icon": "UI/InventoryIcons/hat_steamed_bao",
+		"hideHair1": true,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "steamed_bao",
+				"region": "costumes/hat/steamed_bao"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatPizzaToast",
+		"icon": "UI/InventoryIcons/hat_nest_pizzatoast",
+		"hideHair1": false,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "nest",
+				"region": "costumes/hat/nest_pizzatoast"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatTeacup",
+		"icon": "UI/InventoryIcons/hat_teacup",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "teacup",
+				"region": "costumes/hat/teacup"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatBunnyEarsLunar",
+		"icon": "UI/InventoryIcons/hat_bunnyears_zodiac",
+		"hideHair1": false,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "bunnyears",
+				"region": "costumes/hat/bunnyears_zodiac"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatHanfu",
+		"icon": "UI/InventoryIcons/hat_hanfu",
+		"hideHair1": true,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "hat_hanfu",
+				"region": "costumes/hat/hat_hanfu"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatLunar2023",
+		"icon": "UI/InventoryIcons/hat_chinese_wealth",
+		"hideHair1": false,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "hat_chinese_wealth",
+				"region": "costumes/hat/hat_chinese_wealth"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatBandages",
+		"icon": "UI/InventoryIcons/hat_bandages",
+		"hideHair1": false,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "bandages",
+				"region": "costumes/hat/bandages"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatCapLifeguard",
+		"icon": "UI/InventoryIcons/hat_cap_lifeguard",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat1",
+				"template": "baseball",
+				"region": "costumes/hat/cap_lifeguard"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatHealthFruit",
+		"icon": "UI/InventoryIcons/hat_health_fruit",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "health_fruit",
+				"region": "costumes/hat/health_fruit"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatNurse",
+		"icon": "UI/InventoryIcons/hat_nurse",
+		"hideHair1": true,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "hat_nurse",
+				"region": "costumes/hat/hat_nurse"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatJester",
+		"icon": "UI/InventoryIcons/hat_jester",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "hat_jester",
+				"region": "costumes/hat/hat_jester"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatBaseballHelmet",
+		"icon": "UI/InventoryIcons/hat_helmet_baseball",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat1",
+				"template": "helmet_baseball",
+				"region": "costumes/hat/helmet_baseball"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatAcupuncture",
+		"icon": "UI/InventoryIcons/hat_acupuncture",
+		"hideHair1": false,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "acupuncture",
+				"region": "costumes/hat/acupuncture"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatCapGMO",
+		"icon": "UI/InventoryIcons/hat_cap_GMO",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat1",
+				"template": "baseball",
+				"region": "costumes/hat/cap_GMO"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatPirateSkull",
+		"icon": "UI/InventoryIcons/hat_bandana_pirate",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "bandana",
+				"region": "costumes/hat/bandana_pirate"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatCapWatermelon",
+		"icon": "UI/InventoryIcons/hat_cap_watermelon",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat1",
+				"template": "baseball",
+				"region": "costumes/hat/cap_watermelon"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatShark",
+		"icon": "UI/InventoryIcons/hat_shark",
+		"hideHair1": false,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "hat_shark",
+				"region": "costumes/hat/hat_shark"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatWhaleBucket",
+		"icon": "UI/InventoryIcons/hat_bucket_whale",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "hat_fisherman",
+				"region": "costumes/hat/hat_bucket_whale"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatBowHalloween",
+		"icon": "UI/InventoryIcons/hat_bow_halloween",
+		"hideHair1": false,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "bow",
+				"region": "costumes/hat/bow_halloween"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatTurnipLeaves",
+		"icon": "UI/InventoryIcons/hat_turnip_leaves",
+		"hideHair1": false,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "turnip_leaves",
+				"region": "costumes/hat/turnip_leaves"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatPartyPS",
+		"icon": "UI/InventoryIcons/hat_party_PS",
+		"hideHair1": false,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "party",
+				"region": "costumes/hat/party_PS"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatPartyXbox",
+		"icon": "UI/InventoryIcons/hat_party_Xbox",
+		"hideHair1": false,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "party",
+				"region": "costumes/hat/party_Xbox"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatPartyBlue",
+		"icon": "UI/InventoryIcons/hat_party_blue",
+		"hideHair1": false,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "party",
+				"region": "costumes/hat/party_blue"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatPartyGreen",
+		"icon": "UI/InventoryIcons/hat_party_green",
+		"hideHair1": false,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "party",
+				"region": "costumes/hat/party_green"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatPartyYellow",
+		"icon": "UI/InventoryIcons/hat_party_yellow",
+		"hideHair1": false,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "party",
+				"region": "costumes/hat/party_yellow"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatHitaikakushi",
+		"icon": "UI/InventoryIcons/hat_hitaikakushi",
+		"hideHair1": false,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "hitaikakushi",
+				"region": "costumes/hat/hitaikakushi"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatKitsuneMask",
+		"icon": "UI/InventoryIcons/hat_kitsune_mask",
+		"hideHair1": false,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "kitsune_mask",
+				"region": "costumes/hat/kitsune_mask"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatHarlequin",
+		"icon": "UI/InventoryIcons/hat_harlequin",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "hat_harlequin",
+				"region": "costumes/hat/hat_harlequin"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatHeadbandFlapper",
+		"icon": "UI/InventoryIcons/hat_headband_flapper",
+		"hideHair1": false,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "headband_flapper",
+				"region": "costumes/hat/headband_flapper"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatPierrot",
+		"icon": "UI/InventoryIcons/hat_pierrot",
+		"hideHair1": true,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "hat_pierrot",
+				"region": "costumes/hat/hat_pierrot"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatMacarons",
+		"icon": "UI/InventoryIcons/hat_macarons",
+		"hideHair1": false,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "macarons",
+				"region": "costumes/hat/macarons"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatRoadCone",
+		"icon": "UI/InventoryIcons/hat_road_cone",
+		"hideHair1": true,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "road_cone",
+				"region": "costumes/hat/road_cone"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatDiner",
+		"icon": "UI/InventoryIcons/hat_diner",
+		"hideHair1": true,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "hat_diner",
+				"region": "costumes/hat/hat_diner"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatTrainConductor",
+		"icon": "UI/InventoryIcons/hat_conductor",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat1",
+				"template": "hat_conductor",
+				"region": "costumes/hat/hat_conductor"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatJiangshi",
+		"icon": "UI/InventoryIcons/hat_jiangshi",
+		"hideHair1": true,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "hat_jiangshi",
+				"region": "costumes/hat/hat_jiangshi"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatWizard",
+		"icon": "UI/InventoryIcons/hat_wizard",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat1",
+				"template": "hat_wizard",
+				"region": "costumes/hat/hat_wizard"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatRenaissance",
+		"icon": "UI/InventoryIcons/hat_renaissance",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "hat_renaissance",
+				"region": "costumes/hat/hat_renaissance"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatMinstrel",
+		"icon": "UI/InventoryIcons/hat_minstrel",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "hat_minstrel",
+				"region": "costumes/hat/hat_minstrel"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatBarbarianHelmet",
+		"icon": "UI/InventoryIcons/hat_barbarian_helmet",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "barbarian_helmet",
+				"region": "costumes/hat/barbarian_helmet"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatBowTartanRed",
+		"icon": "UI/InventoryIcons/hat_bow_tartan_red",
+		"hideHair1": false,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "hairband_bow",
+				"region": "costumes/hat/bow_tartan_red"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatTophatPresent",
+		"icon": "UI/InventoryIcons/hat_tophat_present",
+		"hideHair1": true,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat1",
+				"template": "tophat_present",
+				"region": "costumes/hat/tophat_present"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatElfTiara",
+		"icon": "UI/InventoryIcons/hat_tiara_elf",
+		"hideHair1": false,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "tiara_elf",
+				"region": "costumes/hat/tiara_elf"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatTophatNewYear",
+		"icon": "UI/InventoryIcons/hat_tophat_newyear",
+		"hideHair1": true,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat1",
+				"template": "tophat",
+				"region": "costumes/hat/tophat_newyear"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatDragonHeadband",
+		"icon": "UI/InventoryIcons/hat_dragon_horns_headband",
+		"hideHair1": false,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "antlers",
+				"region": "costumes/hat/dragon_horns_headband"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatDaisyFlowerCrown",
+		"icon": "UI/InventoryIcons/hat_flower_crown_daisy",
+		"hideHair1": false,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "flower_crown_daisy",
+				"region": "costumes/hat/flower_crown_daisy"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatWhiteHachimaki",
+		"icon": "UI/InventoryIcons/hat_hachimaki_white",
+		"hideHair1": false,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "hachimaki",
+				"region": "costumes/hat/hachimaki_white"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatBobblehatPS",
+		"icon": "UI/InventoryIcons/hat_bobblehat_PS",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "bobblehat",
+				"region": "costumes/hat/bobblehat_PS"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatBobblehatXbox",
+		"icon": "UI/InventoryIcons/hat_bobblehat_Xbox",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "bobblehat",
+				"region": "costumes/hat/bobblehat_Xbox"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatScrooge",
+		"icon": "UI/InventoryIcons/hat_scrooge",
+		"hideHair1": true,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat1",
+				"template": "tophat",
+				"region": "costumes/hat/tophat_scrooge"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatCardboard",
+		"icon": "UI/InventoryIcons/hat_crown_cardboard",
+		"hideHair1": true,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "crown_cardboard",
+				"region": "costumes/hat/crown_cardboard"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatTowel",
+		"icon": "UI/InventoryIcons/hat_towel",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "towel",
+				"region": "costumes/hat/towel"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatMime",
+		"icon": "UI/InventoryIcons/hat_mime",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "artist",
+				"region": "costumes/hat/hat_mime"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatTinfoil",
+		"icon": "UI/InventoryIcons/hat_tin_foil",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "hat_tin_foil",
+				"region": "costumes/hat/hat_tin_foil"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatNewsboyPS",
+		"icon": "UI/InventoryIcons/hat_newsboy_PS_2",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat1",
+				"template": "newsboy",
+				"region": "costumes/hat/newsboy_PS"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatNewsboyXbox",
+		"icon": "UI/InventoryIcons/hat_newsboy_Xbox_2",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat1",
+				"template": "newsboy",
+				"region": "costumes/hat/newsboy_Xbox"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatHelmetWatermelon",
+		"icon": "UI/InventoryIcons/hat_helmet_watermelon",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "helmet_watermelon",
+				"region": "costumes/hat/helmet_watermelon"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatIdolBow",
+		"icon": "UI/InventoryIcons/hat_bow_idol",
+		"hideHair1": false,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "hairband_idol",
+				"region": "costumes/hat/bow_idol"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatPlagueDoctor",
+		"icon": "UI/InventoryIcons/hat_plague_doctor",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat1",
+				"template": "hat_plague_doctor",
+				"region": "costumes/hat/hat_plague_doctor"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatBeanieTeddy",
+		"icon": "UI/InventoryIcons/hat_beanie_teddy",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "beanie_teddy",
+				"region": "costumes/hat/beanie_teddy"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatWildWest",
+		"icon": "UI/InventoryIcons/hat_gambler",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat1",
+				"template": "hat_gambler",
+				"region": "costumes/hat/hat_gambler"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatTrashcan",
+		"icon": "UI/InventoryIcons/hat_trashcan_lid",
+		"hideHair1": true,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "trashcan_lid",
+				"region": "costumes/hat/trashcan_lid"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatCaterpillar",
+		"icon": "UI/InventoryIcons/hat_caterpillar_antennas",
+		"hideHair1": false,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "antlers",
+				"region": "costumes/hat/caterpillar_antennas"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatButterflyBow",
+		"icon": "UI/InventoryIcons/hat_bow_butterfly",
+		"hideHair1": false,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "bow",
+				"region": "costumes/hat/bow_butterfly"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatHamball",
+		"icon": "UI/InventoryIcons/hat_hamsterball",
+		"hideHair1": false,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "hamsterball",
+				"region": "costumes/hat/hamsterball"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatFishHook",
+		"icon": "UI/InventoryIcons/hat_fishing_hook",
+		"hideHair1": false,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "fishing_hook",
+				"region": "costumes/hat/fishing_hook"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatBeanieGoth",
+		"icon": "UI/InventoryIcons/hat_beanie_emo",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "beanie_emo",
+				"region": "costumes/hat/beanie_emo"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatBeanieFish",
+		"icon": "UI/InventoryIcons/hat_beanie_fish",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "beanie_fish",
+				"region": "costumes/hat/beanie_fish"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatSunflowerBow",
+		"icon": "UI/InventoryIcons/hat_bow_sunflower",
+		"hideHair1": false,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "bow_sunflower",
+				"region": "costumes/hat/bow_sunflower"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatNightVision",
+		"icon": "UI/InventoryIcons/hat_night_vision_goggles",
+		"hideHair1": false,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "night_vision_goggles",
+				"region": "costumes/hat/night_vision_goggles"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatBeanieYtzRedPanda",
+		"icon": "UI/InventoryIcons/hat_beanie_youtooz_redpanda",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "beanie_youtooz",
+				"region": "costumes/hat/beanie_youtooz_redpanda1"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatBeanieYtzFox",
+		"icon": "UI/InventoryIcons/hat_beanie_youtooz_fox",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "beanie_youtooz",
+				"region": "costumes/hat/beanie_youtooz_fox1"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatGhostBride",
+		"icon": "UI/InventoryIcons/hat_headband_ghost_bride",
+		"hideHair1": false,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat1",
+				"template": "headband_ghost_bride",
+				"region": "costumes/hat/headband_ghost_bride"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatBeanieFishMonster",
+		"icon": "UI/InventoryIcons/hat_beanie_monster_fish",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "beanie_monster_fish",
+				"region": "costumes/hat/beanie_monster_fish"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatMariachiWhite",
+		"icon": "UI/InventoryIcons/hat_mariachi_white",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat1",
+				"template": "hat_mariachi",
+				"region": "costumes/hat/hat_mariachi_white"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatNightcapHalloween",
+		"icon": "UI/InventoryIcons/hat_nightcap_halloween",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "nightcap",
+				"region": "costumes/hat/nightcap_halloween"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatWisp",
+		"useCosmeticsAnimTrack": true,
+		"icon": "UI/InventoryIcons/hat_wisp",
+		"hideHair1": false,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "default",
+				"slot": "costumes_hat1",
+				"template": "wisp",
+				"region": "costumes/hat/wisp"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatWitchGreen",
+		"icon": "UI/InventoryIcons/hat_witch_green",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat1",
+				"template": "hat_witch_green",
+				"region": "costumes/hat/hat_witch_green"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatFurTartan",
+		"icon": "UI/InventoryIcons/hat_fur_tartan",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "fur_tartan_hat",
+				"region": "costumes/hat/fur_tartan_hat"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatTophatSnowflake",
+		"icon": "UI/InventoryIcons/hat_tophat_snowflakes",
+		"hideHair1": true,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat1",
+				"template": "tophat",
+				"region": "costumes/hat/tophat_snowflakes"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatChristmasTreeTopper",
+		"icon": "UI/InventoryIcons/hat_christmas_tree_topper",
+		"hideHair1": false,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "christmas_tree_topper",
+				"region": "costumes/hat/christmas_tree_topper"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatLunarPompom",
+		"icon": "UI/InventoryIcons/hat_pompom_chinese",
+		"hideHair1": false,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "pompom_chinese",
+				"region": "costumes/hat/pompom_chinese"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatOrange",
+		"icon": "UI/InventoryIcons/hat_orange",
+		"hideHair1": false,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "orange",
+				"region": "costumes/hat/orange"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatOrchidHairpin",
+		"icon": "UI/InventoryIcons/hat_flower_orchid",
+		"hideHair1": false,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "flower_lily",
+				"region": "costumes/hat/flower_orchid"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatSantaYellow",
+		"icon": "UI/InventoryIcons/hat_santa_yellow",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "hat_santa",
+				"region": "costumes/hat/hat_santa_yellow"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatSantaPink",
+		"icon": "UI/InventoryIcons/hat_santa_pink",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "hat_santa",
+				"region": "costumes/hat/hat_santa_pink"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatSantaGreen",
+		"icon": "UI/InventoryIcons/hat_santa_green",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "hat_santa",
+				"region": "costumes/hat/hat_santa_green"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatSnake",
+		"icon": "UI/InventoryIcons/hat_snake",
+		"hideHair1": false,
+		"hideHair2": false,
+		"useCosmeticsAnimTrack": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "snake",
+				"region": "costumes/hat/snake"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatCupNoodle",
+		"icon": "UI/InventoryIcons/hat_instant_noodles",
+		"hideHair1": true,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "instant_noodles",
+				"region": "costumes/hat/instant_noodles"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatEggSplat",
+		"icon": "UI/InventoryIcons/hat_egg",
+		"hideHair1": true,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "egg",
+				"region": "costumes/hat/egg"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatNightcapBunny",
+		"icon": "UI/InventoryIcons/hat_nightcap_bunny",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "nightcap",
+				"region": "costumes/hat/nightcap_bunny"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatVisorSakura",
+		"icon": "UI/InventoryIcons/hat_visor_sakura",
+		"hideHair1": false,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat1",
+				"template": "visor_sakura",
+				"region": "costumes/hat/visor_sakura"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatFirefighterHelmet",
+		"icon": "UI/InventoryIcons/hat_firefighter_red",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat1",
+				"template": "helmet_firefighter",
+				"region": "costumes/hat/helmet_firefighter_red"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatParrot",
+		"icon": "UI/InventoryIcons/hat_parrot",
+		"hideHair1": false,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "parrot",
+				"region": "costumes/hat/parrot"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatVisorPS",
+		"icon": "UI/InventoryIcons/hat_visor_PS",
+		"hideHair1": false,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat1",
+				"template": "visor_sakura",
+				"region": "costumes/hat/visor_PS"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatVisorXbox",
+		"icon": "UI/InventoryIcons/hat_visor_xbox",
+		"hideHair1": false,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat1",
+				"template": "visor_sakura",
+				"region": "costumes/hat/visor_xbox"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatVisorNvidia",
+		"icon": "UI/InventoryIcons/hat_visor_nvidia",
+		"hideHair1": false,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat1",
+				"template": "visor_sakura",
+				"region": "costumes/hat/visor_nvidia"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatBeretApple",
+		"icon": "UI/InventoryIcons/hat_basque_apple",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "artist",
+				"region": "costumes/hat/basque_apple"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatMadScientistGoggles",
+		"icon": "UI/InventoryIcons/hat_mad_scientist_goggles",
+		"hideHair1": false,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "steampunk_goggles",
+				"region": "costumes/hat/mad_scientist_goggles"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatPartyHalloween",
+		"icon": "UI/InventoryIcons/hat_party_halloween",
+		"hideHair1": false,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "party",
+				"region": "costumes/hat/party_halloween"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatAcorn",
+		"icon": "UI/InventoryIcons/hat_acorn_cap",
+		"hideHair1": false,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat1",
+				"template": "hat_pumpkin",
+				"region": "costumes/hat/acorn_cap"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatAutumn",
+		"icon": "UI/InventoryIcons/hat_autumn",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat1",
+				"template": "hat_autumn",
+				"region": "costumes/hat/hat_autumn"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatBaseballRebelDIY",
+		"icon": "UI/InventoryIcons/hat_baseball_rebel_DIY",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat1",
+				"template": "baseball",
+				"region": "costumes/hat/baseball_rebel_DIY"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatBucketBugs",
+		"icon": "UI/InventoryIcons/hat_bucket_bugs",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "hat_fisherman",
+				"region": "costumes/hat/hat_bucket_bugs"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatMiniCaterpillar",
+		"icon": "UI/InventoryIcons/hat_caterpillar",
+		"hideHair1": false,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "caterpillar",
+				"region": "costumes/hat/caterpillar"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatBaseballRacing",
+		"icon": "UI/InventoryIcons/hat_baseball_racing",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat1",
+				"template": "baseball",
+				"region": "costumes/hat/baseball_racing"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatLadybugBow",
+		"icon": "UI/InventoryIcons/hat_bow_ladybug",
+		"hideHair1": false,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "bow_sunflower",
+				"region": "costumes/hat/bow_ladybug"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatChristmasElfRed",
+		"icon": "UI/InventoryIcons/hat_christmas_elf_red",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "hat_christmas_elf_red",
+				"region": "costumes/hat/hat_christmas_elf_red"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatMiniSnowman",
+		"icon": "UI/InventoryIcons/hat_mini_snowman",
+		"hideHair1": false,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "snowman",
+				"region": "costumes/hat/snowman"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatBeaniePS",
+		"icon": "UI/InventoryIcons/hat_beanie_PS",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "beanie_LSD",
+				"region": "costumes/hat/beanie_PS"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatBeanieXbox",
+		"icon": "UI/InventoryIcons/hat_beanie_Xbox",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "beanie_LSD",
+				"region": "costumes/hat/beanie_Xbox"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatHeadbandRebel",
+		"icon": "UI/InventoryIcons/hat_headband_rebellion",
+		"hideHair1": false,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "headband_lunar",
+				"region": "costumes/hat/headband_rebellion"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatHeadbandSAW",
+		"icon": "UI/InventoryIcons/hat_headband_SAW",
+		"hideHair1": false,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "headband_lunar",
+				"region": "costumes/hat/headband_SAW"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatTophatCarl",
+		"icon": "UI/InventoryIcons/hat_tophat_Carl",
+		"hideHair1": true,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat1",
+				"template": "tophat",
+				"region": "costumes/hat/tophat_Carl"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatRosedoodleHairpin",
+		"icon": "UI/InventoryIcons/hat_hairpin_Rose",
+		"hideHair1": false,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "hairpin_Rose",
+				"region": "costumes/hat/hairpin_Rose"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatCharson",
+		"icon": "UI/InventoryIcons/hat_Charson",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat1",
+				"template": "hat_Charson",
+				"region": "costumes/hat/hat_Charson"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatBeanieLabrador",
+		"icon": "UI/InventoryIcons/hat_beanies_labrador",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "animal_beanie",
+				"region": "costumes/hat/beanies_labrador",
+				"regionCut": "costumes/hat/beanies_labrador_cut"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatClayLid",
+		"icon": "UI/InventoryIcons/hat_clay_lid",
+		"hideHair1": true,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "hat_clay_lid",
+				"region": "costumes/hat/hat_clay_lid"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatZombieComb",
+		"icon": "UI/InventoryIcons/hat_crest_zombie",
+		"hideHair1": true,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "crest",
+				"region": "costumes/hat/crest_zombie"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatDuckTarget",
+		"icon": "UI/InventoryIcons/hat_duck_target",
+		"hideHair1": false,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "duck_target",
+				"region": "costumes/hat/duck_target"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatQuillson",
+		"icon": "UI/InventoryIcons/hat_entomologist",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat1",
+				"template": "hat_entomologist",
+				"region": "costumes/hat/hat_entomologist"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatMushroomBlue",
+		"icon": "UI/InventoryIcons/hat_mushroom_blue",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat1",
+				"template": "hat_mushroom",
+				"region": "costumes/hat/hat_mushroom_blue"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatMushroomSkunk",
+		"icon": "UI/InventoryIcons/hat_mushroom_skunk",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat1",
+				"template": "hat_mushroom",
+				"region": "costumes/hat/hat_mushroom_skunk"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatSergeant",
+		"icon": "UI/InventoryIcons/hat_sergeant",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat1",
+				"template": "hat_mountie",
+				"region": "costumes/hat/hat_sergeant"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatTiaraPearl",
+		"icon": "UI/InventoryIcons/hat_tiara_pearl",
+		"hideHair1": false,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "tiara_pearl",
+				"region": "costumes/hat/tiara_pearl"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatSledisonShop",
+		"icon": "UI/InventoryIcons/hat_baseball_Sledison",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat1",
+				"template": "baseball",
+				"region": "costumes/hat/baseball_Sledison"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatCrownBlackPearl",
+		"icon": "UI/InventoryIcons/hat_crown_blackpearl",
+		"hideHair1": false,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "crown",
+				"region": "costumes/hat/crown_blackpearl"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatBowPasta",
+		"icon": "UI/InventoryIcons/hat_bow_pasta",
+		"hideHair1": false,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "bow",
+				"region": "costumes/hat/bow_pasta"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatGoldenTopHat",
+		"icon": "UI/InventoryIcons/hat_tophat_golden",
+		"useCosmeticsAnimTrack": true,
+		"hideHair1": true,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat1",
+				"template": "tophat_golden",
+				"region": "costumes/hat/tophat_golden_shine"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatBowLNY",
+		"icon": "UI/InventoryIcons/hat_bow_LNY",
+		"hideHair1": false,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "bow_sunflower",
+				"region": "costumes/hat/bow_LNY"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatFlatcapStable",
+		"icon": "UI/InventoryIcons/hat_flatcap_stableboy",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "flatcap",
+				"region": "costumes/hat/flatcap_stableboy"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatFlowerCrownLilies",
+		"icon": "UI/InventoryIcons/hat_flower_crown_lilies",
+		"hideHair1": false,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "flower_crown_lilies",
+				"region": "costumes/hat/flower_crown_lilies"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatPeach",
+		"icon": "UI/InventoryIcons/hat_peach",
+		"hideHair1": false,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "peach",
+				"region": "costumes/hat/peach"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatShamrock",
+		"icon": "UI/InventoryIcons/hat_shamrock",
+		"hideHair1": false,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "rose",
+				"region": "costumes/hat/shamrock"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatZombieJoe",
+		"icon": "UI/InventoryIcons/hat_zombieJoe",
+		"hideHair1": false,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "hat_zombieJoe",
+				"region": "costumes/hat/hat_zombieJoe"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatZombieJoeRed",
+		"icon": "UI/InventoryIcons/hat_zombieJoe_red",
+		"hideHair1": false,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "hat_zombieJoe",
+				"region": "costumes/hat/hat_zombieJoe_red"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatAlienAntennas",
+		"icon": "UI/InventoryIcons/hat_alien_antennas",
+		"hideHair1": false,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "antlers",
+				"region": "costumes/hat/alien_antennas"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatAntennasBigNoseBug",
+		"icon": "UI/InventoryIcons/hat_antennas_BigNoseBug",
+		"hideHair1": false,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "antlers",
+				"region": "costumes/hat/antennas_BigNoseBug"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatAtom",
+		"icon": "UI/InventoryIcons/hat_atom",
+		"useCosmeticsAnimTrack": true,
+		"hideHair1": false,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "default",
+				"slot": "costumes_hat1",
+				"template": "atom",
+				"region": "costumes/hat/atom"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatBowHairbandAlienware",
+		"icon": "UI/InventoryIcons/hat_bow_hairband_Alienware",
+		"hideHair1": false,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "hairband_idol",
+				"region": "costumes/hat/bow_hairband_Alienware"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatBowHairbandNvidia",
+		"icon": "UI/InventoryIcons/hat_bow_hairband_Nvidia",
+		"hideHair1": false,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "hairband_idol",
+				"region": "costumes/hat/bow_hairband_Nvidia"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatBowHairbandPS",
+		"icon": "UI/InventoryIcons/hat_bow_hairband_PS",
+		"hideHair1": false,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "hairband_idol",
+				"region": "costumes/hat/bow_hairband_PS"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatBowHairbandXbox",
+		"icon": "UI/InventoryIcons/hat_bow_hairband_Xbox",
+		"hideHair1": false,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "hairband_idol",
+				"region": "costumes/hat/bow_hairband_Xbox"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatBowMissLala",
+		"icon": "UI/InventoryIcons/hat_bow_MissLala",
+		"hideHair1": false,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "hairband_bow",
+				"region": "costumes/hat/bow_MissLala"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatBowSpace",
+		"icon": "UI/InventoryIcons/hat_bow_space",
+		"hideHair1": false,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "bow_sunflower",
+				"region": "costumes/hat/bow_space"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatFlyingSaucer",
+		"icon": "UI/InventoryIcons/hat_flying_saucer",
+		"useCosmeticsAnimTrack": true,
+		"hideHair1": false,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "default",
+				"slot": "costumes_hat1",
+				"template": "flying_saucer",
+				"region": "costumes/hat/flying_saucer"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatHandkerchief",
+		"icon": "UI/InventoryIcons/hat_handkerchief",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "handkerchief",
+				"region": "costumes/hat/handkerchief"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatHeadMirror",
+		"icon": "UI/InventoryIcons/hat_headmirror",
+		"hideHair1": false,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "headmirror",
+				"region": "costumes/hat/headmirror"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatHelmetLED",
+		"icon": "UI/InventoryIcons/hat_helmet_led",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "helmet_watermelon",
+				"region": "costumes/hat/helmet_led"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatNightCapSpace",
+		"icon": "UI/InventoryIcons/hat_nightcap_space",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "nightcap",
+				"region": "costumes/hat/nightcap_space"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatRobot",
+		"icon": "UI/InventoryIcons/hat_robot",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "hat_robot",
+				"region": "costumes/hat/hat_robot"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatUmbrella",
+		"icon": "UI/InventoryIcons/hat_umbrella",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat1",
+				"template": "hat_umbrella",
+				"region": "costumes/hat/hat_umbrella"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatBucketAlien",
+		"icon": "UI/InventoryIcons/hat_bucket_alien",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "hat_fisherman",
+				"region": "costumes/hat/hat_bucket_alien"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatCrownAlienLord",
+		"icon": "UI/InventoryIcons/hat_crown_alien_lord",
+		"hideHair1": false,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "crown_alien_lord",
+				"region": "costumes/hat/crown_alien_lord"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatSteampunkApprentice",
+		"icon": "UI/InventoryIcons/hat_steampunk_apprentice",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat1",
+				"template": "hat_autumn",
+				"region": "costumes/hat/hat_steampunk_apprentice"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatTopHatPS",
+		"icon": "UI/InventoryIcons/hat_tophat_PS",
+		"hideHair1": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat1",
+				"template": "tophat",
+				"region": "costumes/hat/tophat_PS"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatTopHatXbox",
+		"icon": "UI/InventoryIcons/hat_tophat_Xbox",
+		"hideHair1": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat1",
+				"template": "tophat",
+				"region": "costumes/hat/tophat_Xbox"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatCapScout",
+		"icon": "UI/InventoryIcons/hat_cap_scout",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat1",
+				"template": "cap_scout",
+				"region": "costumes/hat/cap_scout"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatHelmetRebelMedic",
+		"icon": "UI/InventoryIcons/helmet_rebellion_medic",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat1",
+				"template": "helmet_military",
+				"region": "costumes/hat/helmet_rebellion_medic"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatHelmetRebelAssault",
+		"icon": "UI/InventoryIcons/helmet_rebellion_assault",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat1",
+				"template": "helmet_military",
+				"region": "costumes/hat/helmet_rebellion_assault"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatHelmetRebelHeavy",
+		"icon": "UI/InventoryIcons/helmet_rebellion_heavy",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat1",
+				"template": "helmet_military",
+				"region": "costumes/hat/helmet_rebellion_heavy"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatHelmetRebelScout",
+		"icon": "UI/InventoryIcons/helmet_rebellion_scout",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat1",
+				"template": "helmet_military",
+				"region": "costumes/hat/helmet_rebellion_scout"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatHelmetRebelSniper",
+		"icon": "UI/InventoryIcons/helmet_rebellion_sniper",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat1",
+				"template": "helmet_military",
+				"region": "costumes/hat/helmet_rebellion_sniper"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatHelmetSAWMedic",
+		"icon": "UI/InventoryIcons/helmet_SAW_medic",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat1",
+				"template": "helmet_military",
+				"region": "costumes/hat/helmet_SAW_medic"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatHelmetSAWAssault",
+		"icon": "UI/InventoryIcons/helmet_SAW_assault",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat1",
+				"template": "helmet_military",
+				"region": "costumes/hat/helmet_SAW_assault"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatHelmetSAWHeavy",
+		"icon": "UI/InventoryIcons/helmet_SAW_heavy",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat1",
+				"template": "helmet_military",
+				"region": "costumes/hat/helmet_SAW_heavy"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatHelmetSAWScout",
+		"icon": "UI/InventoryIcons/helmet_SAW_scout",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat1",
+				"template": "helmet_military",
+				"region": "costumes/hat/helmet_SAW_scout"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatHelmetSAWSniper",
+		"icon": "UI/InventoryIcons/helmet_SAW_sniper",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat1",
+				"template": "helmet_military",
+				"region": "costumes/hat/helmet_SAW_sniper"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatCottage",
+		"icon": "UI/InventoryIcons/hat_cottage",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat1",
+				"template": "hat_cherries",
+				"region": "costumes/hat/hat_cottage"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatBaseballAquarium",
+		"icon": "UI/InventoryIcons/hat_baseball_aquarium",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat1",
+				"template": "baseball",
+				"region": "costumes/hat/baseball_aquarium"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatFishbowl",
+		"icon": "UI/InventoryIcons/hat_fishbowl",
+		"hideHair1": false,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "fishbowl",
+				"region": "costumes/hat/fishbowl"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatHairpinStarfish",
+		"icon": "UI/InventoryIcons/hat_hairpin_starfish",
+		"hideHair1": false,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "rose",
+				"region": "costumes/hat/hairpin_starfish"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatBeehive",
+		"icon": "UI/InventoryIcons/hat_beehive",
+		"hideHair1": false,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "hat_beehive",
+				"region": "costumes/hat/hat_beehive"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatCapLadybug",
+		"icon": "UI/InventoryIcons/hat_cap_ladybug",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat1",
+				"template": "cap_bee",
+				"region": "costumes/hat/cap_ladybug"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatCapBee",
+		"icon": "UI/InventoryIcons/hat_cap_bee",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat1",
+				"template": "cap_bee",
+				"region": "costumes/hat/cap_bee"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatAntennaeLadybug",
+		"icon": "UI/InventoryIcons/hat_ladybug_antennas",
+		"hideHair1": false,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "antlers",
+				"region": "costumes/hat/ladybug_antennas"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatAntennaeCockroach",
+		"icon": "UI/InventoryIcons/hat_antennae_cockroach",
+		"hideHair1": true,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "antennae_cockroach",
+				"region": "costumes/hat/antennae_cockroach"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatOktoberfest",
+		"icon": "UI/InventoryIcons/hat_oktoberfest",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat1",
+				"template": "hat_oktoberfest",
+				"region": "costumes/hat/hat_oktoberfest"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatAntennaeButterfly",
+		"icon": "UI/InventoryIcons/hat_antennae_butterfly",
+		"hideHair1": false,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "antlers",
+				"region": "costumes/hat/antennae_butterfly"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatStrawShells",
+		"icon": "UI/InventoryIcons/hat_shells",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat1",
+				"template": "hat_crocodile_teeth",
+				"region": "costumes/hat/hat_shells"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatLantern",
+		"icon": "UI/InventoryIcons/hat_lantern",
+		"hideHair1": false,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "lantern",
+				"region": "costumes/hat/lantern"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatMegaEars",
+		"icon": "UI/InventoryIcons/hat_headband_ears_mega",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "headband_ears",
+				"region": "costumes/hat/headband_ears_Mega"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatBaseballSoccer",
+		"icon": "UI/InventoryIcons/hat_baseball_soccer",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat1",
+				"template": "baseball",
+				"region": "costumes/hat/baseball_soccer"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatHighlandTammy",
+		"icon": "UI/InventoryIcons/hat_highland_tammy",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "artist",
+				"region": "costumes/hat/highland_tammy"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatPudding",
+		"icon": "UI/InventoryIcons/hat_pudding",
+		"hideHair1": false,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "pudding",
+				"region": "costumes/hat/pudding"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatSombrero",
+		"icon": "UI/InventoryIcons/hat_mexican",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat1",
+				"template": "hat_mexican",
+				"region": "costumes/hat/hat_mexican"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatHelmetBiker",
+		"icon": "UI/InventoryIcons/hat_helmet_biker",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat1",
+				"template": "helmet_biker",
+				"region": "costumes/hat/helmet_biker"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatSheriff",
+		"icon": "UI/InventoryIcons/hat_sheriff",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat1",
+				"template": "hat_sheriff",
+				"region": "costumes/hat/hat_sheriff"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatCapBrain",
+		"icon": "UI/InventoryIcons/hat_cap_brain",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat1",
+				"template": "cap_bee",
+				"region": "costumes/hat/cap_brain"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatDevilHornsCandyCorn",
+		"icon": "UI/InventoryIcons/hat_devil_horns_candycorn",
+		"hideHair1": false,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "devil_horns",
+				"region": "costumes/hat/devil_horns_candycorn"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatFrankensteinBride",
+		"icon": "UI/InventoryIcons/hat_frankenstein_bride",
+		"hideHair1": false,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "frankenstein_bride",
+				"region": "costumes/hat/frankenstein_bride"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatFrankenstein",
+		"icon": "UI/InventoryIcons/hat_frankenstein",
+		"hideHair1": false,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "frankenstein",
+				"region": "costumes/hat/frankenstein"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatBucketStrawberry",
+		"icon": "UI/InventoryIcons/hat_bucket_strawberry",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "hat_fisherman",
+				"region": "costumes/hat/hat_bucket_strawberry"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatHeadbandKnife",
+		"icon": "UI/InventoryIcons/hat_headband_knife",
+		"hideHair1": false,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "antlers",
+				"region": "costumes/hat/headband_knife"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatBeanieSpider",
+		"icon": "UI/InventoryIcons/hat_beanie_spider",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "beanie_spider",
+				"region": "costumes/hat/beanie_spider"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatSaucepan",
+		"icon": "UI/InventoryIcons/hat_saucepan",
+		"hideHair1": false,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "saucepan",
+				"region": "costumes/hat/saucepan"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatHeadbandBatWings",
+		"icon": "UI/InventoryIcons/hat_headband_bat_wings",
+		"hideHair1": false,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "headband_bat_wings",
+				"region": "costumes/hat/headband_bat_wings"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatBowPS",
+		"icon": "UI/InventoryIcons/hat_bow_PS",
+		"hideHair1": false,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "bow_sunflower",
+				"region": "costumes/hat/bow_PS"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatBowXbox",
+		"icon": "UI/InventoryIcons/hat_bow_Xbox",
+		"hideHair1": false,
+		"hideHair2": false,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat2",
+				"template": "bow_sunflower",
+				"region": "costumes/hat/bow_Xbox"
+			}
+		]
+	},
+	{
+		"inventoryID": "HatBaseballZombie",
+		"icon": "UI/InventoryIcons/hat_baseball_zombie",
+		"hideHair1": true,
+		"hideHair2": true,
+		"spineParts": [
+			{
+				"skin": "#BASE_ANIMAL",
+				"slot": "costumes_hat1",
+				"template": "baseball",
+				"region": "costumes/hat/baseball_zombie"
+			}
+		]
+	}
+]

@@ -4,4 +4,26 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
-macroquad = "0.4.16"
+glam = "0.27"
+macroquad = { version = "0.4.16", features = ["audio"] }
+rusty_spine = "0.8.0"
+chrono = { version = "0.4", default-features = false, features = ["clock"] }
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+tracing-appender = "0.2"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+unicode-normalization = "0.1"
+inputbox = "0.1.5"
+
+[patch.crates-io]
+rusty_spine = { path = "vendor/rusty_spine" }
+
+# Dependencies are optimized even in debug builds: parsing the large skeleton and decoding the
+# 4096x4096 PNG pages in unoptimized dependencies would otherwise take tens of seconds on the
+# first frame.
+[profile.dev.package."*"]
+opt-level = 2
+
+[profile.dev.package.rusty_spine]
+opt-level = 3
