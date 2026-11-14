@@ -1,3 +1,7 @@
+use super::widgets::{
+    self,
+    paint::{draw_rectangle, draw_text_ex},
+};
 use crate::{character::Character, gui_scale, version};
 use macroquad::prelude::*;
 
@@ -18,51 +22,63 @@ pub const LANGUAGES: [(&str, &str); 12] = [
 
 #[derive(Default)]
 pub struct Settings {
+    pub booth_mode: bool,
     open: bool,
-    progress: f32,
-    from: f32,
-    started: f64,
+    transition: super::widgets::Transition,
     dropdown: bool,
+    dropdown_transition: super::widgets::Transition,
     scroll: f32,
     content_drag: crate::drag_scroll::DragScroll,
+    modal_this_frame: bool,
 }
 impl Settings {
     pub fn is_visible(&self) -> bool {
-        self.open || self.progress > 0.001
+        self.open || self.transition.visible() || self.modal_this_frame
     }
     pub fn blocks_input(&self) -> bool {
-        self.is_visible() || self.button().contains(gui_scale::mouse())
+        self.is_visible()
+            || (is_mouse_button_pressed(MouseButton::Left)
+                && self.button().contains(gui_scale::mouse()))
     }
     fn button(&self) -> Rect {
         Rect::new(
-            gui_scale::size().x - if gui_scale::compact() { 166.0 } else { 106.0 },
+            gui_scale::size().x
+                - if gui_scale::compact() && !self.booth_mode {
+                    166.0
+                } else {
+                    94.0
+                },
             10.0,
             82.0,
             32.0,
         )
     }
     fn toggle(&mut self) {
-        super::audio::click();
-        self.from = self.progress;
-        self.started = get_time();
         self.open = !self.open;
         self.dropdown = false;
         self.content_drag.cancel();
     }
-    pub fn draw(&mut self, character: &mut Character, font: &Font, bold: &Font) {
+    pub fn draw(
+        &mut self,
+        character: &mut Character,
+        font: &Font,
+        bold: &Font,
+        input_blocked: bool,
+    ) {
         let size = gui_scale::size();
-        let mouse = gui_scale::mouse();
-        let click = is_mouse_button_pressed(MouseButton::Left);
+        self.modal_this_frame = self.open || self.transition.visible();
+        let mouse = if input_blocked {
+            vec2(-10000.0, -10000.0)
+        } else {
+            gui_scale::mouse()
+        };
+        let click = !input_blocked && is_mouse_button_pressed(MouseButton::Left);
         let button = self.button();
         if click && button.contains(mouse) {
+            super::audio::click();
             self.toggle();
         }
-        if self.open && is_key_pressed(KeyCode::Escape) {
-            self.toggle();
-        }
-        let t = ((get_time() - self.started) / 0.28).clamp(0.0, 1.0) as f32;
-        let eased = 1.0 - (1.0 - t).powi(3);
-        self.progress = self.from + ((if self.open { 1.0 } else { 0.0 }) - self.from) * eased;
+        self.transition.update(self.open);
         draw_rectangle(
             button.x,
             button.y,
@@ -70,82 +86,61 @@ impl Settings {
             button.h,
             Color::from_rgba(30, 31, 40, 255),
         );
+        let text = measure_text("SETTINGS", Some(bold), 13, 1.0);
         label(
-            "settings",
-            button.x + 12.0,
-            button.y + 21.0,
+            "SETTINGS",
+            button.x + (button.w - text.width) * 0.5,
+            button.y + (button.h - text.height) * 0.5 + text.offset_y,
             13,
             bold,
             if self.open { ORANGE } else { LIGHTGRAY },
         );
-        if self.progress < 0.001 {
+        if !self.open && !self.transition.visible() {
+            self.dropdown_transition.update(false);
             return;
         }
-        draw_rectangle(
-            0.0,
-            0.0,
-            size.x,
-            size.y,
-            Color::new(0.0, 0.0, 0.0, self.progress * 0.55),
-        );
+        self.transition.backdrop();
         let width = (size.x - 32.0).min(440.0);
-        let height = (size.y - 80.0).min(430.0);
+        let height = (size.y - 80.0).clamp(1.0, 430.0);
         let x = (size.x - width) * 0.5;
-        let y = 56.0 + (size.y - 80.0 - height) * 0.5 + (1.0 - self.progress) * 60.0;
-        let panel = Rect::new(x, y, width, height);
-        let faded = |mut color: Color| {
-            color.a *= self.progress;
-            color
-        };
-        draw_rectangle(
-            x,
-            y,
-            width,
-            height,
-            faded(Color::from_rgba(20, 21, 28, 255)),
+        let panel = self.transition.panel(
+            self.open,
+            Rect::new(x, 56.0 + (size.y - 80.0 - height) * 0.5, width, height),
         );
-        label("Settings", x + 20.0, y + 30.0, 20, bold, faded(WHITE));
-        let close = Rect::new(x + width - 70.0, y + 10.0, 54.0, 30.0);
-        label("close", close.x, close.y + 20.0, 13, font, faded(GRAY));
-        if self.open
-            && click
-            && (close.contains(mouse) || (!panel.contains(mouse) && !button.contains(mouse)))
-        {
+        let y = panel.y;
+        let mouse = self.transition.mouse(self.open, mouse);
+        let _opacity = self.transition.scope();
+        draw_rectangle(x, y, width, height, widgets::SURFACE);
+        let close = widgets::popup_header(panel, "Settings", font, bold);
+        let child_active = self.dropdown || self.dropdown_transition.visible();
+        let close_parent =
+            self.open && widgets::dismiss_layer(panel, close, button, mouse, !child_active);
+        if close_parent {
             self.toggle();
         }
-        let faded = |mut color: Color| {
-            color.a *= self.progress;
-            color
-        };
-        label("Language", x + 20.0, y + 65.0, 13, font, faded(GRAY));
+        let mouse = if self.open { mouse } else { widgets::BLOCKED };
+        label("Language", x + 20.0, y + 65.0, 13, font, GRAY);
         let field = Rect::new(x + 20.0, y + 76.0, width - 40.0, 34.0);
         draw_rectangle(
             field.x,
             field.y,
             field.w,
             field.h,
-            faded(Color::from_rgba(36, 37, 47, 255)),
+            Color::from_rgba(36, 37, 47, 255),
         );
         let current = LANGUAGES
             .iter()
             .find(|(key, _)| *key == character.wardrobe().language)
             .map(|(_, name)| *name)
             .unwrap_or(&character.wardrobe().language);
-        label(
-            current,
-            field.x + 10.0,
-            field.y + 23.0,
-            14,
-            font,
-            faded(WHITE),
-        );
+        label(current, field.x + 10.0, field.y + 23.0, 14, font, WHITE);
         label(
             "v",
             field.x + field.w - 22.0,
             field.y + 23.0,
             13,
             font,
-            faded(GRAY),
+            GRAY,
         );
         if self.open && click && field.contains(mouse) {
             super::audio::click();
@@ -160,21 +155,24 @@ impl Settings {
         .iter()
         .enumerate()
         {
-            label(
-                line,
-                x + 20.0,
-                y + 145.0 + i as f32 * 24.0,
-                12,
-                font,
-                faded(GRAY),
-            );
+            label(line, x + 20.0, y + 145.0 + i as f32 * 24.0, 12, font, GRAY);
         }
-        if self.dropdown {
+        self.dropdown_transition.update(self.dropdown);
+        if self.dropdown || self.dropdown_transition.visible() {
+            let dropdown_panel = self.dropdown_transition.panel(
+                self.dropdown,
+                Rect::new(
+                    field.x,
+                    field.y + field.h + 4.0,
+                    field.w,
+                    (y + height - field.y - field.h - 16.0).max(32.0),
+                ),
+            );
             let list = Rect::new(
-                field.x,
-                field.y + field.h + 4.0,
-                field.w,
-                (y + height - field.y - field.h - 16.0).max(32.0),
+                dropdown_panel.x,
+                dropdown_panel.y,
+                dropdown_panel.w,
+                dropdown_panel.h,
             );
             let languages: Vec<(&str, &str)> = character
                 .wardrobe()
@@ -193,38 +191,36 @@ impl Settings {
                 .collect();
             let row_height = 40.0;
             let max = (languages.len() as f32 * row_height - list.h).max(0.0);
-            let tapped = self.content_drag.update(
-                list,
-                mouse,
-                click,
-                is_mouse_button_down(MouseButton::Left),
-                is_mouse_button_released(MouseButton::Left),
-                &mut self.scroll,
-                max,
-            );
-            if list.contains(mouse) {
-                self.scroll = (self.scroll - mouse_wheel().1 * 30.0).clamp(0.0, max);
+            let mouse = self
+                .dropdown_transition
+                .mouse(self.dropdown && self.open, mouse);
+            if self.dropdown
+                && widgets::dismiss_except(
+                    dropdown_panel,
+                    Rect::new(-10000.0, -10000.0, 0.0, 0.0),
+                    field,
+                    mouse,
+                )
+            {
+                self.dropdown = false;
             }
+            let mouse = if self.dropdown {
+                mouse
+            } else {
+                widgets::BLOCKED
+            };
+            let tapped =
+                widgets::scroll(list, mouse, &mut self.scroll, max, &mut self.content_drag);
+            let _opacity = self.dropdown_transition.scope();
             draw_rectangle(
-                list.x,
-                list.y,
-                list.w,
-                list.h,
-                faded(Color::from_rgba(36, 37, 47, 255)),
+                dropdown_panel.x,
+                dropdown_panel.y,
+                dropdown_panel.w,
+                dropdown_panel.h,
+                Color::from_rgba(36, 37, 47, 255),
             );
             let mut chosen = None;
-            // QuadGl scissor coordinates are top-left framebuffer pixels, not GUI units.
-            let sx = screen_width() * screen_dpi_scale() / gui_scale::size().x;
-            let sy = screen_height() * screen_dpi_scale() / gui_scale::size().y;
-            let clip = (
-                (list.x * sx).floor() as i32,
-                (list.y * sy).floor() as i32,
-                (list.w * sx).ceil() as i32,
-                (list.h * sy).ceil() as i32,
-            );
-            unsafe {
-                get_internal_gl().quad_gl.scissor(Some(clip));
-            }
+            super::layout::clip(list);
             for (i, (key, name)) in languages.iter().enumerate() {
                 let row = Rect::new(
                     list.x,
@@ -241,7 +237,7 @@ impl Settings {
                         row.y,
                         row.w,
                         row.h,
-                        faded(Color::from_rgba(53, 44, 41, 255)),
+                        Color::from_rgba(53, 44, 41, 255),
                     );
                 }
                 label(
@@ -250,19 +246,22 @@ impl Settings {
                     row.y + 21.0,
                     14,
                     font,
-                    faded(if *key == character.wardrobe().language {
+                    if *key == character.wardrobe().language {
                         ORANGE
                     } else {
                         WHITE
-                    }),
+                    },
                 );
-                if self.open && tapped && row.contains(mouse) {
+                if self.open
+                    && self.dropdown
+                    && tapped
+                    && list.contains(mouse)
+                    && row.contains(mouse)
+                {
                     chosen = Some((*key).to_owned());
                 }
             }
-            unsafe {
-                get_internal_gl().quad_gl.scissor(None);
-            }
+            super::layout::end_clip();
             if let Some(key) = chosen {
                 super::audio::click();
                 character.set_language(&key);

@@ -98,9 +98,9 @@ impl Color {
 
     pub fn clamp(&mut self) -> &mut Self {
         self.r = self.r.clamp(0., 1.);
-        self.g = self.r.clamp(0., 1.);
-        self.b = self.r.clamp(0., 1.);
-        self.a = self.r.clamp(0., 1.);
+        self.g = self.g.clamp(0., 1.);
+        self.b = self.b.clamp(0., 1.);
+        self.a = self.a.clamp(0., 1.);
         self
     }
 

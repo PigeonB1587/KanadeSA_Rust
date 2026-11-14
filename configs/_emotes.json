@@ -1,0 +1,678 @@
+[
+	{
+		"inventoryID": "EmoteDanceBasic",
+		"emoteSpineKey": "emotes/emote_defaultdance",
+		"icon": "UI/InventoryIcons/emote-dance1",
+		"loops": true,
+		"allowSkeletonFlip": false,
+		"playMusic": "Sounds/SAR_Dance1(Default)",
+		"hasMusic": true,
+		"isDance": true,
+		"petAnim": "dance1"
+	},
+	{
+		"inventoryID": "EmoteWave",
+		"emoteSpineKey": "emotes/emote_waving",
+		"icon": "UI/InventoryIcons/emote-wave",
+		"loops": false,
+		"allowSkeletonFlip": true,
+		"hasVoice": true
+	},
+	{
+		"inventoryID": "EmoteDanceFloss",
+		"emoteSpineKey": "emotes/emote_floss",
+		"icon": "UI/InventoryIcons/emote-floss",
+		"loops": true,
+		"allowSkeletonFlip": false,
+		"playMusic": "Sounds/SAR_Dance2(Floss)",
+		"hasMusic": true,
+		"isDance": true,
+		"petAnim": "dance2"
+	},
+	{
+		"inventoryID": "EmoteCheer",
+		"emoteSpineKey": "emotes/emote_cheer",
+		"icon": "UI/InventoryIcons/emote-cheer",
+		"loops": false,
+		"allowSkeletonFlip": true,
+		"hasVoice": true
+	},
+	{
+		"inventoryID": "EmoteClapping",
+		"emoteSpineKey": "emotes/emote_clap",
+		"icon": "UI/InventoryIcons/emote-clap",
+		"loops": true,
+		"allowSkeletonFlip": true,
+		"playMusic": "Sounds/SAR_EmoteClap"
+	},
+	{
+		"inventoryID": "EmoteHeelClick",
+		"emoteSpineKey": "emotes/emote_heelclick",
+		"icon": "UI/InventoryIcons/emote-heelclick",
+		"loops": false,
+		"allowSkeletonFlip": true,
+		"playMusic": "Sounds/SAR_EmoteHeelclick"
+	},
+	{
+		"inventoryID": "EmoteHandStand",
+		"emoteSpineKey": "emotes/emote_handstand",
+		"icon": "UI/InventoryIcons/emote-handstand",
+		"loops": false,
+		"allowSkeletonFlip": true,
+		"playMusic": "Sounds/SAR_EmoteHandstand",
+		"hasMusic": true
+	},
+	{
+		"inventoryID": "EmoteJuggling",
+		"emoteSpineKey": "emotes/emote_juggle",
+		"icon": "UI/InventoryIcons/emote-juggle",
+		"loops": true,
+		"allowSkeletonFlip": true,
+		"playMusic": "Sounds/SAR_EmoteJuggling",
+		"hasMusic": true
+	},
+	{
+		"inventoryID": "EmoteDab",
+		"emoteSpineKey": "emotes/emote_dab",
+		"icon": "UI/InventoryIcons/emote-dab",
+		"loops": false,
+		"allowSkeletonFlip": true,
+		"playMusic": "Sounds/SAR_EmoteDab"
+	},
+	{
+		"inventoryID": "EmoteGolf",
+		"emoteSpineKey": "emotes/emote_golf",
+		"icon": "UI/InventoryIcons/emote-golf",
+		"loops": false,
+		"allowSkeletonFlip": false,
+		"hasVoice": true
+	},
+	{
+		"inventoryID": "EmoteDanceRussian",
+		"emoteSpineKey": "emotes/emote_russian",
+		"icon": "UI/InventoryIcons/emote-russian",
+		"loops": true,
+		"allowSkeletonFlip": true,
+		"playMusic": "Sounds/SAR_DanceRussian",
+		"hasMusic": true,
+		"isDance": true,
+		"petAnim": "dance2"
+	},
+	{
+		"inventoryID": "EmoteLaugh",
+		"emoteSpineKey": "emotes/emote_laugh",
+		"icon": "UI/InventoryIcons/emote-laugh",
+		"loops": true,
+		"allowSkeletonFlip": true,
+		"hasMusic": true,
+		"hasVoice": true
+	},
+	{
+		"inventoryID": "EmotePraiseBanan",
+		"emoteSpineKey": "emotes/emote_praisebanan",
+		"icon": "UI/InventoryIcons/emote-praise-banan",
+		"loops": false,
+		"allowSkeletonFlip": true,
+		"playMusic": "Sounds/SAR_EmotePraiseBanan"
+	},
+	{
+		"inventoryID": "EmoteGem",
+		"emoteSpineKey": "emotes/emote_gem",
+		"icon": "UI/InventoryIcons/emote-gem",
+		"loops": false,
+		"allowSkeletonFlip": true,
+		"hasVoice": true
+	},
+	{
+		"inventoryID": "EmoteBananas",
+		"emoteSpineKey": "emotes/emote_bananas",
+		"icon": "UI/InventoryIcons/emote-bananas",
+		"loops": false,
+		"allowSkeletonFlip": true,
+		"hasVoice": true
+	},
+	{
+		"inventoryID": "EmotePBJT",
+		"emoteSpineKey": "emotes/emote_bpjt",
+		"icon": "UI/InventoryIcons/emote-pbjt",
+		"loops": true,
+		"allowSkeletonFlip": false,
+		"playMusic": "Sounds/SAR_EmotePBJT",
+		"hasMusic": true,
+		"isDance": true,
+		"petAnim": "dance2"
+	},
+	{
+		"inventoryID": "EmoteTapDance",
+		"emoteSpineKey": "emotes/emote_tapdance",
+		"icon": "UI/InventoryIcons/emote-tapdance",
+		"loops": true,
+		"allowSkeletonFlip": false,
+		"playMusic": "Sounds/SAR_EmoteTapdance",
+		"hasMusic": true,
+		"isDance": true,
+		"petAnim": "dance2"
+	},
+	{
+		"inventoryID": "EmoteBlowKiss",
+		"emoteSpineKey": "emotes/emote_blowkiss",
+		"icon": "UI/InventoryIcons/emote-blowkiss",
+		"loops": false,
+		"allowSkeletonFlip": true,
+		"playMusic": "Sounds/SAR_EmoteBlowKiss"
+	},
+	{
+		"inventoryID": "EmoteYawn",
+		"emoteSpineKey": "emotes/emote_yawn",
+		"icon": "UI/InventoryIcons/emote-yawn",
+		"loops": false,
+		"allowSkeletonFlip": true,
+		"hasVoice": true
+	},
+	{
+		"inventoryID": "EmoteStretch",
+		"emoteSpineKey": "emotes/emote_stretching",
+		"icon": "UI/InventoryIcons/emote-stretching",
+		"loops": true,
+		"allowSkeletonFlip": true,
+		"playMusic": "Sounds/SAR_EmoteStretch",
+		"hasMusic": true
+	},
+	{
+		"inventoryID": "EmoteSarturdayNight",
+		"emoteSpineKey": "emotes/emote_SARturdaynight",
+		"icon": "UI/InventoryIcons/emote-sarturday",
+		"loops": true,
+		"allowSkeletonFlip": true,
+		"playMusic": "Sounds/SAR_EmoteSARturdayNight",
+		"hasMusic": true,
+		"isDance": true,
+		"petAnim": "dance2"
+	},
+	{
+		"inventoryID": "EmoteSurrender",
+		"emoteSpineKey": "emotes/emote_whiteflag",
+		"icon": "UI/InventoryIcons/emote-whiteflag",
+		"loops": true,
+		"allowSkeletonFlip": true,
+		"hasVoice": true,
+		"hasMusic": true
+	},
+	{
+		"inventoryID": "EmoteHungry",
+		"emoteSpineKey": "emotes/emote_hungry",
+		"icon": "UI/InventoryIcons/emote-hungry",
+		"loops": true,
+		"allowSkeletonFlip": true,
+		"playMusic": "Sounds/SAR_EmoteHungry",
+		"allowMovement": true
+	},
+	{
+		"inventoryID": "EmotePoint",
+		"emoteSpineKey": "emotes/emote_point",
+		"icon": "UI/InventoryIcons/emote-point",
+		"loops": true,
+		"allowSkeletonFlip": true,
+		"allowMovement": true
+	},
+	{
+		"inventoryID": "EmoteSelfie",
+		"emoteSpineKey": "emotes/emote_selfie",
+		"icon": "UI/InventoryIcons/emote-selfie",
+		"loops": false,
+		"allowSkeletonFlip": true,
+		"hasVoice": true
+	},
+	{
+		"inventoryID": "EmotePartyHorn",
+		"emoteSpineKey": "emotes/emote_partyhorn",
+		"icon": "UI/InventoryIcons/emote-partyhorn",
+		"loops": false,
+		"allowSkeletonFlip": true,
+		"playMusic": "Sounds/SAR_EmotePartyHorn3"
+	},
+	{
+		"inventoryID": "EmoteClipboard",
+		"emoteSpineKey": "emotes/emote_clipboard",
+		"icon": "UI/InventoryIcons/emote-clipboard",
+		"loops": true,
+		"allowSkeletonFlip": true,
+		"hasVoice": true
+	},
+	{
+		"inventoryID": "EmoteCRISPRmasCarol",
+		"emoteSpineKey": "emotes/emote_CRISPRmas_carol",
+		"icon": "UI/InventoryIcons/emote-CRISPRmas_carol",
+		"loops": true,
+		"allowSkeletonFlip": true,
+		"hasVoice": true,
+		"hasMusic": true,
+		"petAnim": "dance1"
+	},
+	{
+		"inventoryID": "EmoteRap",
+		"emoteSpineKey": "emotes/emote_rap",
+		"icon": "UI/InventoryIcons/emote-rap",
+		"loops": true,
+		"allowSkeletonFlip": true,
+		"hasVoice": true,
+		"hasMusic": true,
+		"isDance": true,
+		"petAnim": "dance1"
+	},
+	{
+		"inventoryID": "EmoteCountry",
+		"emoteSpineKey": "emotes/emote_country",
+		"icon": "UI/InventoryIcons/emote-country",
+		"loops": true,
+		"allowSkeletonFlip": true,
+		"playMusic": "Sounds/SAR_EmoteCountry",
+		"hasMusic": true,
+		"isDance": true,
+		"petAnim": "dance1"
+	},
+	{
+		"inventoryID": "EmoteSalute",
+		"emoteSpineKey": "emotes/emote_military",
+		"icon": "UI/InventoryIcons/emote-military",
+		"loops": false,
+		"allowSkeletonFlip": true,
+		"playMusic": "Sounds/SAR_EmoteSalute",
+		"hasMusic": true
+	},
+	{
+		"inventoryID": "EmoteSitInPeace",
+		"emoteSpineKey": "emotes/emote_sit",
+		"icon": "UI/InventoryIcons/emote-sit",
+		"loops": true,
+		"allowSkeletonFlip": true,
+		"moveTolerance": 0.42
+	},
+	{
+		"inventoryID": "EmotePlush",
+		"emoteSpineKey": "emotes/emote_plushie_fox_walk",
+		"icon": "UI/InventoryIcons/emote-plushie_walk",
+		"loops": true,
+		"allowSkeletonFlip": true,
+		"allowMovement": true
+	},
+	{
+		"inventoryID": "EmoteTPose",
+		"emoteSpineKey": "emotes/emote_T-pose",
+		"icon": "UI/InventoryIcons/emote-T-pose",
+		"loops": true,
+		"allowSkeletonFlip": true,
+		"allowMovement": true
+	},
+	{
+		"inventoryID": "EmoteSplits",
+		"emoteSpineKey": "emotes/emote_splits",
+		"icon": "UI/InventoryIcons/emote-splits",
+		"loops": false,
+		"allowSkeletonFlip": true,
+		"moveTolerance": 0.42,
+		"playMusic": "Sounds/SAR_EmoteSplits1",
+		"playMusicRare": "Sounds/SAR_EmoteSplitsRare"
+	},
+	{
+		"inventoryID": "EmoteSlowJam",
+		"emoteSpineKey": "emotes/emote_guitar_short",
+		"icon": "UI/InventoryIcons/emote-guitar",
+		"loops": true,
+		"allowSkeletonFlip": true,
+		"allowMovement": true,
+		"playMusic": "Sounds/SAR_EmoteGuitarPete",
+		"hasMusic": true,
+		"isDance": false,
+		"petAnim": "dance1"
+	},
+	{
+		"inventoryID": "EmoteAerobics",
+		"emoteSpineKey": "emotes/emote_aerobics",
+		"icon": "UI/InventoryIcons/emote-aerobics",
+		"loops": true,
+		"allowSkeletonFlip": true,
+		"playMusic": "Sounds/SAR_EmoteAerobics",
+		"hasMusic": true
+	},
+	{
+		"inventoryID": "EmoteBallet",
+		"emoteSpineKey": "emotes/emote_ballet",
+		"icon": "UI/InventoryIcons/emote-ballet",
+		"loops": true,
+		"allowSkeletonFlip": true,
+		"playMusic": "Sounds/SAR_EmoteBallet",
+		"hasMusic": true,
+		"isDance": true,
+		"petAnim": "dance1"
+	},
+	{
+		"inventoryID": "EmoteBoxing",
+		"emoteSpineKey": "emotes/emote_boxing",
+		"icon": "UI/InventoryIcons/emote-boxing",
+		"loops": true,
+		"allowSkeletonFlip": true,
+		"playMusic": "Sounds/SAR_EmoteBoxing",
+		"hasMusic": true
+	},
+	{
+		"inventoryID": "EmoteHoundDog",
+		"emoteSpineKey": "emotes/emote_hounddog",
+		"icon": "UI/InventoryIcons/emote-hounddog",
+		"loops": true,
+		"allowSkeletonFlip": true,
+		"playMusic": "Sounds/SAR_EmoteRockNRoll",
+		"hasMusic": true,
+		"isDance": false,
+		"petAnim": "dance2"
+	},
+	{
+		"inventoryID": "EmoteHula",
+		"emoteSpineKey": "emotes/emote_hula",
+		"icon": "UI/InventoryIcons/emote-hula",
+		"loops": true,
+		"allowSkeletonFlip": true,
+		"playMusic": "Sounds/SAR_EmoteHula",
+		"hasMusic": true,
+		"isDance": true,
+		"petAnim": "dance1"
+	},
+	{
+		"inventoryID": "EmoteMonkeyDance",
+		"emoteSpineKey": "emotes/emote_monkeydance",
+		"icon": "UI/InventoryIcons/emote-monkeydance",
+		"loops": true,
+		"allowSkeletonFlip": true,
+		"playMusic": "Sounds/SAR_EmoteMonkeyDance",
+		"hasMusic": true,
+		"isDance": true,
+		"petAnim": "dance1"
+	},
+	{
+		"inventoryID": "EmoteSamba",
+		"emoteSpineKey": "emotes/emote_samba",
+		"icon": "UI/InventoryIcons/emote-samba",
+		"loops": true,
+		"allowSkeletonFlip": false,
+		"playMusic": "Sounds/SAR_EmoteSamba",
+		"hasMusic": true,
+		"isDance": true,
+		"petAnim": "dance2"
+	},
+	{
+		"inventoryID": "EmoteSip",
+		"emoteSpineKey": "emotes/emote_juice",
+		"icon": "UI/InventoryIcons/emote-juice",
+		"loops": true,
+		"allowSkeletonFlip": true,
+		"allowMovement": true,
+		"playMusic": "Sounds/SAR_EmoteSip",
+		"isDance": false
+	},
+	{
+		"inventoryID": "EmotePlushSkullcat",
+		"emoteSpineKey": "emotes/emote_plushie_skullcat_walk",
+		"icon": "UI/InventoryIcons/emote-plushie_skullcat_walk",
+		"loops": true,
+		"allowSkeletonFlip": true,
+		"allowMovement": true
+	},
+	{
+		"inventoryID": "EmoteCoconutGallop",
+		"emoteSpineKey": "emotes/emote_coconut_top",
+		"emoteSpineKeyWalk": "emotes/emote_coconut_bot",
+		"icon": "UI/InventoryIcons/emote-coconut",
+		"loops": true,
+		"allowSkeletonFlip": true,
+		"allowMovement": true,
+		"playMusic": "Sounds/SAR_EmoteCoconutGallop",
+		"isDance": false
+	},
+	{
+		"inventoryID": "EmoteShy",
+		"emoteSpineKey": "emotes/emote_shy",
+		"icon": "UI/InventoryIcons/emote-shy",
+		"loops": false,
+		"allowSkeletonFlip": true,
+		"playMusic": "Sounds/SAR_EmoteShy",
+		"isDance": false
+	},
+	{
+		"inventoryID": "EmoteRaceStart",
+		"emoteSpineKey": "emotes/emote_race_start",
+		"icon": "UI/InventoryIcons/emote-race_start",
+		"loops": false,
+		"allowSkeletonFlip": true,
+		"playMusic": "Sounds/SAR_EmoteRaceStart",
+		"isDance": false
+	},
+	{
+		"inventoryID": "EmoteHotCoffee",
+		"emoteSpineKey": "emotes/emote_coffee",
+		"icon": "UI/InventoryIcons/emote-coffee",
+		"loops": true,
+		"allowSkeletonFlip": true,
+		"allowMovement": true,
+		"playMusic": "Sounds/SAR_EmoteHotCoffee",
+		"isDance": false
+	},
+	{
+		"inventoryID": "EmotePlushZombie",
+		"emoteSpineKey": "emotes/emote_plushie_zombie_walk",
+		"icon": "UI/InventoryIcons/emote-plushie_zombie_walk",
+		"loops": true,
+		"allowSkeletonFlip": true,
+		"allowMovement": true
+	},
+	{
+		"inventoryID": "EmotePlushZombieSuper",
+		"emoteSpineKey": "emotes/emote_plushie_superzombie_walk",
+		"icon": "UI/InventoryIcons/emote-plushie_superzombie_walk",
+		"loops": true,
+		"allowSkeletonFlip": true,
+		"allowMovement": true
+	},
+	{
+		"inventoryID": "EmoteHowl",
+		"emoteSpineKey": "emotes/emote_howl",
+		"icon": "UI/InventoryIcons/emote-howl",
+		"loops": false,
+		"allowSkeletonFlip": true,
+		"playMusic": "Sounds/SAR_EmoteHowl",
+		"isDance": false
+	},
+	{
+		"inventoryID": "EmoteWateringCan",
+		"emoteSpineKey": "emotes/emote_watering_can",
+		"icon": "UI/InventoryIcons/emote-wateringcan",
+		"loops": true,
+		"allowSkeletonFlip": true,
+		"playMusic": "Sounds/SAR_EmoteWateringCan",
+		"isDance": false
+	},
+	{
+		"inventoryID": "EmoteTripleSnap",
+		"emoteSpineKey": "emotes/emote_triplesnap",
+		"icon": "UI/InventoryIcons/emote-triplesnap",
+		"loops": false,
+		"allowSkeletonFlip": true,
+		"playMusic": "Sounds/SAR_EmoteTripleSnap",
+		"isDance": false
+	},
+	{
+		"inventoryID": "EmoteCrying",
+		"emoteSpineKey": "emotes/emote_sad",
+		"icon": "UI/InventoryIcons/emote-sad",
+		"loops": true,
+		"allowSkeletonFlip": true,
+		"playMusic": "Sounds/SAR_EmoteCry",
+		"hasMusic": true,
+		"isDance": false
+	},
+	{
+		"inventoryID": "EmoteMakeItRainCoins",
+		"emoteSpineKey": "emotes/emote_raining_coins",
+		"icon": "UI/InventoryIcons/emote-raining-coins",
+		"loops": true,
+		"playMusic": "Sounds/SAR_EmoteMakeItRain",
+		"isDance": true,
+		"petAnim": "dance2",
+		"hasMusic": true
+	},
+	{
+		"inventoryID": "EmoteMakeItRainTickets",
+		"emoteSpineKey": "emotes/emote_raining_tickets",
+		"icon": "UI/InventoryIcons/emote-raining-tickets",
+		"loops": true,
+		"playMusic": "Sounds/SAR_EmoteMakeItRain",
+		"isDance": true,
+		"petAnim": "dance2",
+		"hasMusic": true
+	},
+	{
+		"inventoryID": "EmoteTakeOnMe",
+		"emoteSpineKey": "emotes/emote_takeonme",
+		"icon": "UI/InventoryIcons/emote-takeonme",
+		"loops": true,
+		"allowSkeletonFlip": true,
+		"hasMusic": true,
+		"playMusic": "Sounds/SAR_EmoteTakeOnMe",
+		"isDance": true,
+		"petAnim": "dance2",
+		"allowMovement": true,
+		"allowMovementNeedWalkAnim": false
+	},
+	{
+		"inventoryID": "EmoteRainbow",
+		"emoteSpineKey": "emotes/emote_rainbow",
+		"icon": "UI/InventoryIcons/emote_rainbow",
+		"loops": false,
+		"allowSkeletonFlip": true,
+		"playMusic": "Sounds/SAR_EmoteRainbow"
+	},
+	{
+		"inventoryID": "EmoteMerchBoxes",
+		"emoteSpineKey": "emotes/emote_merch_boxes_idle",
+		"icon": "UI/InventoryIcons/emote_merch",
+		"loops": true,
+		"allowSkeletonFlip": true,
+		"allowMovement": true
+	},
+	{
+		"inventoryID": "EmoteMoonWalk",
+		"emoteSpineKey": "emotes/emote_moonwalk",
+		"icon": "UI/InventoryIcons/emote_moonwalk",
+		"loops": true,
+		"allowSkeletonFlip": true,
+		"hasMusic": true,
+		"playMusic": "Sounds/SAR_EmoteMoonwalk",
+		"isDance": true,
+		"petAnim": "dance2",
+		"allowMovement": true,
+		"allowMovementNeedWalkAnim": false,
+		"faceMovement": true
+	},
+	{
+		"inventoryID": "EmotePlushThomas",
+		"emoteSpineKey": "emotes/emote_plushie_Thomas_walk",
+		"icon": "UI/InventoryIcons/emote_plushie_Thomas_walk",
+		"loops": true,
+		"allowSkeletonFlip": true,
+		"allowMovement": true
+	},
+	{
+		"inventoryID": "EmoteRobotDance",
+		"emoteSpineKey": "emotes/emote_robot_dance",
+		"icon": "UI/InventoryIcons/emote_robot_dance",
+		"loops": true,
+		"allowSkeletonFlip": true,
+		"playMusic": "Sounds/SAR_EmoteRobot",
+		"hasMusic": true,
+		"isDance": true,
+		"petAnim": "dance2"
+	},
+	{
+		"inventoryID": "EmoteShrug",
+		"emoteSpineKey": "emotes/emote_shrug",
+		"icon": "UI/InventoryIcons/emote-shrug",
+		"loops": false,
+		"allowSkeletonFlip": true,
+		"playMusic": "Sounds/SAR_EmoteShrug",
+		"isDance": false
+	},
+	{
+		"inventoryID": "EmoteNoddingOff",
+		"emoteSpineKey": "emotes/emote_nodding_off",
+		"emoteSpineKeyInitial": "emotes/emote_nodding_off_start",
+		"icon": "UI/InventoryIcons/emote-nodding_off",
+		"loops": true,
+		"allowSkeletonFlip": false,
+		"playMusicIntro": "Sounds/SAR_EmoteNoddingOffIntro",
+		"playMusic": "Sounds/SAR_EmoteNoddingOffLoop",
+		"isDance": false
+	},
+	{
+		"inventoryID": "Emote67",
+		"emoteSpineKey": "emotes/emote_67",
+		"icon": "UI/InventoryIcons/emote_67",
+		"loops": false,
+		"allowSkeletonFlip": true,
+		"playMusic": "Sounds/SAR_Emote67",
+		"isDance": false
+	},
+	{
+		"inventoryID": "EmoteBow",
+		"emoteSpineKey": "emotes/emote_bow",
+		"icon": "UI/InventoryIcons/emote-bow",
+		"loops": true,
+		"allowSkeletonFlip": true,
+		"playMusic": "Sounds/SAR_EmoteBow",
+		"hasMusic": true,
+		"isDance": false
+	},
+	{
+		"inventoryID": "EmoteThriller",
+		"emoteSpineKey": "emotes/emote_thriller",
+		"icon": "UI/InventoryIcons/emote_thriller",
+		"loops": true,
+		"playMusic": "Sounds/SAR_EmoteZombieDance",
+		"hasMusic": true,
+		"isDance": true,
+		"petAnim": "dance2"
+	},
+	{
+		"inventoryID": "EmoteMuscleflex",
+		"emoteSpineKey": "emotes/emote_muscleflex",
+		"loops": true,
+		"isDance": true
+	},
+	{
+		"inventoryID": "EmotePlushHug",
+		"emoteSpineKey": "emotes/emote_plushie_hug",
+		"loops": true,
+		"isDance": true
+	},
+	{
+		"inventoryID": "EmoteBadger",
+		"emoteSpineKey": "emotes/emote_badger",
+		"loops": true,
+		"isDance": true
+	},
+	{
+		"inventoryID": "EmoteCoy",
+		"emoteSpineKey": "emotes/emote_coy",
+		"loops": true
+	},
+	{
+		"inventoryID": "EmoteClappingRabbita",
+		"emoteSpineKey": "emotes/emote_clapping_Rabbita",
+		"loops": true,
+		"isDance": true
+	},
+	{
+		"inventoryID": "EmoteSleep",
+		"emoteSpineKey": "emotes/emote_sleep",
+		"emoteSpineKeyInitial": "emotes/emote_sleep_start",
+		"loops": true
+	}
+]

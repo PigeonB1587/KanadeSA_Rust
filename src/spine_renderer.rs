@@ -256,6 +256,7 @@ fn blend_states(blend_mode: BlendMode, premultiplied_alpha: bool) -> (BlendState
 
 /// GPU resources used to draw one Spine skeleton.
 pub struct SpineRenderer {
+    shader: mq::ShaderId,
     /// One pipeline per [`BlendMode`] (indexed by its `as usize` value).
     pipelines: [Pipeline; 4],
     vertex_buffer: BufferId,
@@ -328,6 +329,7 @@ impl SpineRenderer {
         );
 
         Self {
+            shader,
             pipelines,
             vertex_buffer,
             index_buffer,
@@ -337,7 +339,17 @@ impl SpineRenderer {
     }
 
     /// Draw all renderables with the given view/world matrices (Spine's y-axis points up).
-    pub fn draw(&mut self, view: Mat4, world: Mat4, renderables: &[SkeletonCombinedRenderable]) {
+    /// Render explicitly into the scene or preview target. Never begin a default
+    /// pass implicitly: the same drawing path also powers GUI-free capture.
+    pub fn draw_to(
+        &mut self,
+        view: Mat4,
+        world: Mat4,
+        renderables: &[SkeletonCombinedRenderable],
+        target: Option<mq::RenderPass>,
+        size: [i32; 2],
+        clip: Option<[i32; 4]>,
+    ) {
         // Resolve/load textures before borrowing the rendering backend; texture creation uses
         // macroquad's own context.
         let mut texture_ids: Vec<Option<TextureId>> = Vec::with_capacity(renderables.len());
@@ -355,12 +367,12 @@ impl SpineRenderer {
         // Make sure any geometry macroquad batched before this point is already on screen.
         gl.flush();
 
-        let (screen_width, screen_height) = mq::window::screen_size();
         let ctx: &mut dyn RenderingBackend = gl.quad_context;
 
-        ctx.begin_default_pass(PassAction::Nothing);
-        ctx.apply_viewport(0, 0, screen_width as i32, screen_height as i32);
-        ctx.apply_scissor_rect(0, 0, screen_width as i32, screen_height as i32);
+        ctx.begin_pass(target, PassAction::Nothing);
+        ctx.apply_viewport(0, 0, size[0], size[1]);
+        let [x, y, w, h] = clip.unwrap_or([0, 0, size[0], size[1]]);
+        ctx.apply_scissor_rect(x, size[1] - y - h, w, h);
 
         let uniforms = Uniforms { world, view };
 
@@ -422,5 +434,18 @@ impl SpineRenderer {
                 BufferSource::empty::<u16>(self.index_capacity),
             );
         }
+    }
+}
+
+impl Drop for SpineRenderer {
+    fn drop(&mut self) {
+        let mut gl = unsafe { get_internal_gl() };
+        gl.flush();
+        for pipeline in self.pipelines {
+            gl.quad_context.delete_pipeline(pipeline);
+        }
+        gl.quad_context.delete_shader(self.shader);
+        gl.quad_context.delete_buffer(self.vertex_buffer);
+        gl.quad_context.delete_buffer(self.index_buffer);
     }
 }

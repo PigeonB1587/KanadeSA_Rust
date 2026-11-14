@@ -1,4 +1,8 @@
 //! Config-driven appearance, matching SARCharacterController's custom-skin rules.
+use crate::{
+    equipment,
+    model::{Action, EquipmentData},
+};
 use rusty_spine::{Atlas, Physics, SkeletonData, Skin, c::*, controller::SkeletonController};
 use serde::Deserialize;
 use std::{collections::HashMap, ffi::CString, sync::Arc};
@@ -36,17 +40,17 @@ pub struct Item {
 #[derive(Clone, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct Part {
-    skin: String,
-    slot: String,
-    template: String,
-    region: String,
-    region_cut: Option<String>,
-    include_front: Option<bool>,
+    pub skin: String,
+    pub slot: String,
+    pub template: String,
+    pub region: String,
+    pub region_cut: Option<String>,
+    pub include_front: Option<bool>,
 }
 
 pub struct Wardrobe {
-    pub characters: Vec<CharacterItem>,
-    pub items: [Vec<Item>; 5],
+    pub characters: Arc<Vec<CharacterItem>>,
+    pub items: Arc<[Vec<Item>; 5]>,
     pub selected: [usize; 5],
     pub category: usize,
     pub current_character: usize,
@@ -54,11 +58,15 @@ pub struct Wardrobe {
     custom_skin: Option<Skin>,
     data: Arc<SkeletonData>,
     atlas: Arc<Atlas>,
-    visible: Vec<(String, String)>,
+    visible: Vec<(String, String, u8)>,
     hidden: Vec<String>,
-    names: HashMap<String, HashMap<String, String>>,
+    names: Arc<HashMap<String, HashMap<String, String>>>,
     pub language: String,
-    pub available_languages: Vec<String>,
+    pub available_languages: Arc<Vec<String>>,
+    pub equipment_catalog: Arc<equipment::Catalog>,
+    pub equipment: EquipmentData,
+    pub action: Action,
+    umbrella_atlas: Arc<Atlas>,
 }
 
 fn read<T: serde::de::DeserializeOwned>(name: &str) -> Result<T, String> {
@@ -155,9 +163,16 @@ impl Wardrobe {
             characters.len(),
             items.iter().map(Vec::len).sum::<usize>()
         );
+        let equipment_catalog = Arc::new(equipment::Catalog::load()?);
+        let mut equipment = EquipmentData::default();
+        equipment_catalog.initialize_loadout(&mut equipment);
+        equipment.weapon = equipment_catalog
+            .configured_melee(&equipment)
+            .map(str::to_owned);
+        equipment.emote = Some(equipment_catalog.configured_emote(&equipment).to_owned());
         Ok(Self {
-            characters,
-            items,
+            characters: Arc::new(characters),
+            items: Arc::new(items),
             selected: [0; 5],
             category: 0,
             current_character,
@@ -166,10 +181,41 @@ impl Wardrobe {
             atlas,
             visible: vec![],
             hidden: vec![],
-            names,
+            names: Arc::new(names),
             language,
-            available_languages,
+            available_languages: Arc::new(available_languages),
+            equipment_catalog,
+            equipment,
+            action: Action::Idle,
+            umbrella_atlas: Arc::new(
+                Atlas::new_from_file("spineAssets/umbrellas/skeleton.atlas")
+                    .map_err(|e| format!("Umbrella atlas: {e:?}"))?,
+            ),
         })
+    }
+
+    /// Only immutable catalogs and original attachments are shared. Each entity
+    /// owns its selected items, custom skin, visibility and animation mode.
+    pub fn fork(&self) -> Self {
+        Self {
+            characters: self.characters.clone(),
+            items: self.items.clone(),
+            selected: self.selected,
+            category: self.category,
+            current_character: self.current_character,
+            custom_skin: None,
+            data: self.data.clone(),
+            atlas: self.atlas.clone(),
+            visible: vec![],
+            hidden: vec![],
+            names: self.names.clone(),
+            language: self.language.clone(),
+            available_languages: self.available_languages.clone(),
+            equipment_catalog: self.equipment_catalog.clone(),
+            equipment: self.equipment.clone(),
+            action: self.action,
+            umbrella_atlas: self.umbrella_atlas.clone(),
+        }
     }
 
     pub fn item_name(&self, category: usize) -> &str {
@@ -200,6 +246,7 @@ impl Wardrobe {
         }
         let mut visible = vec![];
         let mut hidden = vec![];
+        let mut parts = vec![];
         for (category, selected) in self.selected.iter().enumerate() {
             let item = &self.items[category][*selected];
             if item.hide_hair1 {
@@ -208,82 +255,112 @@ impl Wardrobe {
             if item.hide_hair2 {
                 hidden.push("hair2".to_owned());
             }
-            for part in &item.spine_parts {
-                let source = if part.skin == "#BASE_ANIMAL" {
-                    &character.spine_base_skin
-                } else {
-                    &part.skin
-                };
-                let region = if character.needs_cut_hats && part.region_cut.is_some() {
-                    part.region_cut.as_deref().unwrap()
-                } else if character.custom_shia_headband
-                    && part.region == "costumes/hat/headband_shia"
-                {
-                    "costumes/hat/earband"
-                } else {
-                    &part.region
-                };
-                let slot = self
-                    .data
-                    .find_slot(&part.slot)
-                    .ok_or_else(|| format!("Missing slot {}", part.slot))?;
-                let slot_index = slot.index() as i32;
-                let source = self
-                    .data
-                    .find_skin(source)
-                    .or_else(|| self.data.find_skin("default"))
-                    .ok_or("Missing template skin")?;
-                let template_name =
-                    CString::new(part.template.as_str()).map_err(|e| e.to_string())?;
-                let region_name = CString::new(region).map_err(|e| e.to_string())?;
-                let atlas_region = self
-                    .atlas
-                    .find_region(region)
-                    .ok_or_else(|| format!("Missing atlas region {region}"))?;
-                // All pointers originate from data/atlas held by this wardrobe. Skin owns
-                // copies through Spine's refcount; no original attachment is mutated.
-                unsafe {
-                    let mut template =
-                        spSkin_getAttachment(source.c_ptr(), slot_index, template_name.as_ptr());
-                    if template.is_null() {
-                        if let Some(default) = self.data.find_skin("default") {
-                            template = spSkin_getAttachment(
-                                default.c_ptr(),
-                                slot_index,
-                                template_name.as_ptr(),
-                            );
-                        }
+            parts.extend(item.spine_parts.iter().cloned().map(|p| (p, 0)));
+        }
+        parts.extend(
+            self.equipment_catalog
+                .weapon_parts(&self.equipment)
+                .into_iter()
+                .map(|p| (p, 1)),
+        );
+        if let Some(item) = self
+            .equipment_catalog
+            .umbrellas
+            .iter()
+            .find(|u| Some(u.inventory_id.as_str()) == self.equipment.umbrella.as_deref())
+        {
+            parts.extend(item.spine_parts.iter().cloned().map(|p| (p, 2)));
+        }
+        for (part, visibility) in &parts {
+            let source = if part.skin == "#BASE_ANIMAL" {
+                &character.spine_base_skin
+            } else {
+                &part.skin
+            };
+            let region = if character.needs_cut_hats && part.region_cut.is_some() {
+                part.region_cut.as_deref().unwrap()
+            } else if character.custom_shia_headband && part.region == "costumes/hat/headband_shia"
+            {
+                "costumes/hat/earband"
+            } else {
+                &part.region
+            };
+            let slot = self
+                .data
+                .find_slot(&part.slot)
+                .ok_or_else(|| format!("Missing slot {}", part.slot))?;
+            let slot_index = slot.index() as i32;
+            let source = self
+                .data
+                .find_skin(source)
+                .or_else(|| self.data.find_skin("default"))
+                .ok_or("Missing template skin")?;
+            let template_name = CString::new(part.template.as_str()).map_err(|e| e.to_string())?;
+            let region_name = CString::new(region).map_err(|e| e.to_string())?;
+            let alternate = region
+                .strip_prefix("weapons/")
+                .map(|key| format!("extras/{key}"));
+            let main_region = self.atlas.find_region(region).or_else(|| {
+                alternate
+                    .as_deref()
+                    .and_then(|name| self.atlas.find_region(name))
+            });
+            let external = main_region.is_none() && *visibility == 2;
+            let atlas_region = main_region
+                .or_else(|| {
+                    if external {
+                        self.umbrella_atlas
+                            .find_region(region.rsplit('/').next().unwrap_or(region))
+                    } else {
+                        None
                     }
-                    if template.is_null() {
-                        return Err(format!(
-                            "Missing template {} in {}",
-                            part.template, part.slot
-                        ));
+                })
+                .ok_or_else(|| format!("Missing atlas region {region}"))?;
+            // All pointers originate from data/atlas held by this wardrobe. Skin owns
+            // copies through Spine's refcount; no original attachment is mutated.
+            unsafe {
+                let mut template =
+                    spSkin_getAttachment(source.c_ptr(), slot_index, template_name.as_ptr());
+                if template.is_null() {
+                    if let Some(default) = self.data.find_skin("default") {
+                        template = spSkin_getAttachment(
+                            default.c_ptr(),
+                            slot_index,
+                            template_name.as_ptr(),
+                        );
                     }
-                    remap(
-                        &mut skin,
-                        slot_index,
-                        &region_name,
-                        template,
-                        atlas_region.c_ptr(),
-                    )?;
-                    visible.push((part.slot.clone(), region.to_owned()));
-                    let front = format!("{}_front", part.slot);
-                    if let Some(front_slot) = self.data.find_slot(&front) {
-                        match part.include_front {
-                            Some(true) => {
-                                remap(
-                                    &mut skin,
-                                    front_slot.index() as i32,
-                                    &region_name,
-                                    template,
-                                    atlas_region.c_ptr(),
-                                )?;
-                                visible.push((front, region.to_owned()));
-                            }
-                            Some(false) => hidden.push(front),
-                            None => {}
+                }
+                if template.is_null() {
+                    return Err(format!(
+                        "Missing template {} in {}",
+                        part.template, part.slot
+                    ));
+                }
+                remap(
+                    &mut skin,
+                    slot_index,
+                    &region_name,
+                    template,
+                    atlas_region.c_ptr(),
+                    external,
+                )?;
+                visible.push((part.slot.clone(), region.to_owned(), *visibility));
+                let front = format!("{}_front", part.slot);
+                if let Some(front_slot) = self.data.find_slot(&front) {
+                    match part.include_front {
+                        Some(true) => {
+                            remap(
+                                &mut skin,
+                                front_slot.index() as i32,
+                                &region_name,
+                                template,
+                                atlas_region.c_ptr(),
+                                external,
+                            )?;
+                            visible.push((front, region.to_owned(), *visibility));
                         }
+                        Some(false) => hidden.push(front),
+                        None => {}
                     }
                 }
             }
@@ -303,7 +380,16 @@ impl Wardrobe {
     }
 
     pub fn apply_visibility(&self, controller: &mut SkeletonController) {
-        for (slot, attachment) in &self.visible {
+        for (slot, attachment, group) in &self.visible {
+            let show = match group {
+                1 => self.action.weapons_visible(),
+                2 => self.action.umbrella_visible(),
+                _ => true,
+            };
+            if !show {
+                controller.skeleton.set_attachment(slot, None);
+                continue;
+            }
             // Avoid resetting deform buffers when the attachment is already active.
             let active = controller
                 .skeleton
@@ -329,6 +415,7 @@ unsafe fn remap(
     name: &CString,
     template: *mut spAttachment,
     region: *mut spAtlasRegion,
+    linked: bool,
 ) -> Result<(), String> {
     unsafe {
         let kind = (*template).type_0;
@@ -338,7 +425,11 @@ unsafe fn remap(
         {
             return Err(format!("Unsupported cosmetic template type {kind}"));
         }
-        let copy = spAttachment_copy(template);
+        let copy = if linked && kind != SP_ATTACHMENT_REGION {
+            spMeshAttachment_newLinkedMesh(template.cast()).cast()
+        } else {
+            spAttachment_copy(template)
+        };
         if copy.is_null() {
             return Err("Failed to copy cosmetic attachment".into());
         }
@@ -364,6 +455,87 @@ mod tests {
     use rusty_spine::{AnimationStateData, SkeletonBinary};
 
     #[test]
+    fn all_weapon_skins_and_umbrellas_build_and_entities_are_independent() {
+        let atlas = Arc::new(
+            Atlas::new_from_file("spineAssets/characters/character_01/skeleton.atlas").unwrap(),
+        );
+        let data = Arc::new(
+            SkeletonBinary::new(atlas.clone())
+                .read_skeleton_data_file("spineAssets/characters/character_01/skeleton.skel.bytes")
+                .unwrap(),
+        );
+        let state = Arc::new(AnimationStateData::new(data.clone()));
+        let mut first = SkeletonController::new(data.clone(), state.clone());
+        let mut wardrobe = Wardrobe::load(data.clone(), atlas, "Fox/-Fox").unwrap();
+        wardrobe.apply(&mut first).unwrap();
+        let mut second = SkeletonController::new(data.clone(), state);
+        let mut other = wardrobe.fork();
+        other.apply(&mut second).unwrap();
+        let original: Vec<_> = second
+            .skeleton
+            .slots()
+            .map(|s| s.attachment().map(|a| a.c_ptr()))
+            .collect();
+        let mut failures = vec![];
+        let categories = wardrobe.equipment_catalog.categories.clone();
+        for (category, c) in categories.iter().enumerate() {
+            if !matches!(
+                c.kind,
+                equipment::CategoryKind::Weapon | equipment::CategoryKind::Umbrella
+            ) {
+                continue;
+            }
+            wardrobe.equipment = EquipmentData::default();
+            for (index, entry) in c.entries.iter().enumerate() {
+                wardrobe
+                    .equipment_catalog
+                    .choose(&mut wardrobe.equipment, category, index);
+                // Configuration and held weapon are intentionally independent.
+                wardrobe.equipment.weapon = entry
+                    .weapon
+                    .map(|weapon| wardrobe.equipment_catalog.weapons[weapon].id.clone());
+                wardrobe.action = if matches!(c.kind, equipment::CategoryKind::Umbrella) {
+                    Action::Umbrella
+                } else {
+                    Action::Idle
+                };
+                match wardrobe.apply(&mut first) {
+                    Err(error) => failures.push(format!("{}/{}, {error}", c.label, entry.id)),
+                    Ok(()) => {
+                        first.update(0.05, Physics::Update);
+                        wardrobe.apply_visibility(&mut first);
+                        let mesh = first.combined_renderables();
+                        assert!(
+                            mesh.iter()
+                                .all(|r| r.vertices.iter().flatten().all(|v| v.is_finite())),
+                            "{}",
+                            entry.id
+                        );
+                    }
+                }
+            }
+        }
+        assert_eq!(
+            second
+                .skeleton
+                .slots()
+                .map(|s| s.attachment().map(|a| a.c_ptr()))
+                .collect::<Vec<_>>(),
+            original
+        );
+        assert_eq!(other.equipment.weapon.as_deref(), Some("MeleeKatana"));
+        assert!(Arc::ptr_eq(&wardrobe.items, &other.items));
+        assert!(
+            failures.is_empty(),
+            "{} equipment failures:\n{}",
+            failures.len(),
+            failures.join("\n")
+        );
+        drop(first);
+        drop(second);
+    }
+
+    #[test]
     fn configured_outfits_and_characters_rebuild_without_residue() {
         let atlas = Arc::new(
             Atlas::new_from_file("spineAssets/characters/character_01/skeleton.atlas").unwrap(),
@@ -378,6 +550,8 @@ mod tests {
             SkeletonController::new(data.clone(), Arc::new(AnimationStateData::new(data)));
         wardrobe.apply(&mut controller).unwrap();
         let initial_character = wardrobe.current_character;
+        let initial_visible = wardrobe.visible.clone();
+        let initial_hidden = wardrobe.hidden.clone();
         let initial_attachments: Vec<_> = controller
             .skeleton
             .slots()
@@ -414,8 +588,8 @@ mod tests {
         wardrobe.selected = [0; 5];
         wardrobe.current_character = initial_character;
         wardrobe.apply(&mut controller).unwrap();
-        assert!(wardrobe.visible.is_empty());
-        assert!(wardrobe.hidden.is_empty());
+        assert_eq!(wardrobe.visible, initial_visible);
+        assert_eq!(wardrobe.hidden, initial_hidden);
         let cleared_attachments: Vec<_> = controller
             .skeleton
             .slots()

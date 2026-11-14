@@ -15,13 +15,21 @@ impl NativeInput {
     }
 
     pub fn open(&mut self, text: &str) {
+        self.open_with(
+            "Search",
+            "Search by name in the selected language, or inventory ID",
+            text,
+        );
+    }
+
+    pub fn open_with(&mut self, title: &str, prompt: &str, text: &str) {
         if self.active() {
             return;
         }
         let (tx, rx) = mpsc::channel();
         let result = inputbox::InputBox::new()
-            .title("Search")
-            .prompt("Search by name in the selected language, or inventory ID")
+            .title(title)
+            .prompt(prompt)
             .default_text(text)
             .show_async(move |result| {
                 let _ = tx.send(result);

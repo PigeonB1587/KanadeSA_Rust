@@ -1,0 +1,335 @@
+{
+  "format_version": 1,
+  "sprites": {
+    "penguinbg.png": {
+      "size": [
+        1920,
+        1080
+      ],
+      "pixels_per_unit": 8.0,
+      "pivot": [
+        0.5,
+        0.5
+      ],
+      "filter_mode": 1,
+      "mipmaps": false,
+      "srgb": true,
+      "alpha_is_transparency": true,
+      "wrap_mode": [
+        1,
+        1
+      ],
+      "sprite_alignment": 9,
+      "mesh_type": 0,
+      "max_texture_size": 2048
+    },
+    "penguinbear.png": {
+      "size": [
+        444,
+        1000
+      ],
+      "pixels_per_unit": 8.0,
+      "pivot": [
+        1.0,
+        0.0
+      ],
+      "filter_mode": 1,
+      "mipmaps": false,
+      "srgb": true,
+      "alpha_is_transparency": true,
+      "wrap_mode": [
+        1,
+        1
+      ],
+      "sprite_alignment": 9,
+      "mesh_type": 0,
+      "max_texture_size": 2048
+    },
+    "penguinbenchl.png": {
+      "size": [
+        276,
+        248
+      ],
+      "pixels_per_unit": 8.0,
+      "pivot": [
+        0.0,
+        0.0
+      ],
+      "filter_mode": 1,
+      "mipmaps": false,
+      "srgb": true,
+      "alpha_is_transparency": true,
+      "wrap_mode": [
+        1,
+        1
+      ],
+      "sprite_alignment": 9,
+      "mesh_type": 0,
+      "max_texture_size": 2048
+    },
+    "penguinbenchr.png": {
+      "size": [
+        276,
+        248
+      ],
+      "pixels_per_unit": 8.0,
+      "pivot": [
+        1.0,
+        0.0
+      ],
+      "filter_mode": 1,
+      "mipmaps": false,
+      "srgb": true,
+      "alpha_is_transparency": true,
+      "wrap_mode": [
+        1,
+        1
+      ],
+      "sprite_alignment": 9,
+      "mesh_type": 0,
+      "max_texture_size": 2048
+    },
+    "penguinmainback1.png": {
+      "size": [
+        1412,
+        436
+      ],
+      "pixels_per_unit": 8.0,
+      "pivot": [
+        0.5,
+        0.0
+      ],
+      "filter_mode": 1,
+      "mipmaps": false,
+      "srgb": true,
+      "alpha_is_transparency": true,
+      "wrap_mode": [
+        1,
+        1
+      ],
+      "sprite_alignment": 9,
+      "mesh_type": 0,
+      "max_texture_size": 2048
+    },
+    "penguinmainback2.png": {
+      "size": [
+        1492,
+        376
+      ],
+      "pixels_per_unit": 8.0,
+      "pivot": [
+        0.5,
+        0.0
+      ],
+      "filter_mode": 1,
+      "mipmaps": false,
+      "srgb": true,
+      "alpha_is_transparency": true,
+      "wrap_mode": [
+        1,
+        1
+      ],
+      "sprite_alignment": 9,
+      "mesh_type": 0,
+      "max_texture_size": 2048
+    },
+    "penguinmaindome.png": {
+      "size": [
+        1512,
+        780
+      ],
+      "pixels_per_unit": 8.0,
+      "pivot": [
+        0.5,
+        0.0
+      ],
+      "filter_mode": 1,
+      "mipmaps": false,
+      "srgb": true,
+      "alpha_is_transparency": true,
+      "wrap_mode": [
+        1,
+        1
+      ],
+      "sprite_alignment": 9,
+      "mesh_type": 0,
+      "max_texture_size": 2048
+    },
+    "penguinmaindoor.png": {
+      "size": [
+        376,
+        240
+      ],
+      "pixels_per_unit": 8.0,
+      "pivot": [
+        0.5,
+        0.0
+      ],
+      "filter_mode": 1,
+      "mipmaps": false,
+      "srgb": true,
+      "alpha_is_transparency": true,
+      "wrap_mode": [
+        1,
+        1
+      ],
+      "sprite_alignment": 9,
+      "mesh_type": 0,
+      "max_texture_size": 2048
+    },
+    "penguinmainfront.png": {
+      "size": [
+        1200,
+        256
+      ],
+      "pixels_per_unit": 8.0,
+      "pivot": [
+        0.5,
+        0.0
+      ],
+      "filter_mode": 1,
+      "mipmaps": false,
+      "srgb": true,
+      "alpha_is_transparency": true,
+      "wrap_mode": [
+        1,
+        1
+      ],
+      "sprite_alignment": 9,
+      "mesh_type": 0,
+      "max_texture_size": 2048
+    },
+    "penguinmainmid1.png": {
+      "size": [
+        1068,
+        432
+      ],
+      "pixels_per_unit": 8.0,
+      "pivot": [
+        0.5,
+        0.0
+      ],
+      "filter_mode": 1,
+      "mipmaps": false,
+      "srgb": true,
+      "alpha_is_transparency": true,
+      "wrap_mode": [
+        1,
+        1
+      ],
+      "sprite_alignment": 9,
+      "mesh_type": 0,
+      "max_texture_size": 2048
+    },
+    "penguinmainmid2.png": {
+      "size": [
+        1336,
+        512
+      ],
+      "pixels_per_unit": 8.0,
+      "pivot": [
+        0.5,
+        0.0
+      ],
+      "filter_mode": 1,
+      "mipmaps": false,
+      "srgb": true,
+      "alpha_is_transparency": true,
+      "wrap_mode": [
+        1,
+        1
+      ],
+      "sprite_alignment": 9,
+      "mesh_type": 0,
+      "max_texture_size": 2048
+    },
+    "penguinmainoverhang.png": {
+      "size": [
+        612,
+        604
+      ],
+      "pixels_per_unit": 8.0,
+      "pivot": [
+        0.5,
+        0.0
+      ],
+      "filter_mode": 1,
+      "mipmaps": false,
+      "srgb": true,
+      "alpha_is_transparency": true,
+      "wrap_mode": [
+        1,
+        1
+      ],
+      "sprite_alignment": 9,
+      "mesh_type": 0,
+      "max_texture_size": 2048
+    },
+    "penguinmoose.png": {
+      "size": [
+        440,
+        1000
+      ],
+      "pixels_per_unit": 8.0,
+      "pivot": [
+        0.0,
+        0.0
+      ],
+      "filter_mode": 1,
+      "mipmaps": false,
+      "srgb": true,
+      "alpha_is_transparency": true,
+      "wrap_mode": [
+        1,
+        1
+      ],
+      "sprite_alignment": 9,
+      "mesh_type": 0,
+      "max_texture_size": 2048
+    },
+    "penguinstatues.png": {
+      "size": [
+        936,
+        508
+      ],
+      "pixels_per_unit": 8.0,
+      "pivot": [
+        0.5,
+        0.0
+      ],
+      "filter_mode": 1,
+      "mipmaps": false,
+      "srgb": true,
+      "alpha_is_transparency": true,
+      "wrap_mode": [
+        1,
+        1
+      ],
+      "sprite_alignment": 9,
+      "mesh_type": 0,
+      "max_texture_size": 2048
+    },
+    "penguinthumbnail.png": {
+      "size": [
+        476,
+        268
+      ],
+      "pixels_per_unit": 100.0,
+      "pivot": [
+        0.5,
+        0.5
+      ],
+      "filter_mode": 1,
+      "mipmaps": false,
+      "srgb": true,
+      "alpha_is_transparency": true,
+      "wrap_mode": [
+        1,
+        1
+      ],
+      "sprite_alignment": 9,
+      "mesh_type": 0,
+      "max_texture_size": 2048
+    }
+  }
+}

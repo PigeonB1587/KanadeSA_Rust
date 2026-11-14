@@ -1,11 +1,15 @@
 //! Preview header, wardrobe summary, footer and information panel.
+use super::widgets::{
+    self,
+    paint::{draw_line, draw_rectangle, draw_text_ex},
+};
 use crate::character::Character;
 use macroquad::prelude::*;
 
 const TEXT: Color = Color::new(0.90, 0.91, 0.94, 1.0);
 const MUTED: Color = Color::new(0.49, 0.52, 0.59, 1.0);
 const LINE: Color = Color::new(0.19, 0.20, 0.25, 1.0);
-const INFO_SURFACE: Color = Color::new(0.055, 0.059, 0.080, 0.78);
+const INFO_SURFACE: Color = widgets::PREVIEW_SURFACE;
 const INFO_MUTED: Color = Color::new(0.65, 0.68, 0.74, 1.0);
 
 fn info_surface(panel: Rect) {
@@ -15,7 +19,10 @@ fn info_surface(panel: Rect) {
 #[derive(Default)]
 pub struct Info {
     open: bool,
+    transition: super::widgets::Transition,
     scroll: f32,
+    drag: super::drag_scroll::DragScroll,
+    modal_this_frame: bool,
 }
 
 impl Info {
@@ -25,21 +32,18 @@ impl Info {
         }
         let size = crate::gui_scale::size();
         let mouse = crate::gui_scale::mouse();
-        Rect::new(size.x - 76.0, 10.0, 60.0, 32.0).contains(mouse)
-            || (self.open
-                && Rect::new(
-                    16.0,
-                    80.0,
-                    (size.x - 32.0).min(260.0),
-                    (size.y - 120.0).clamp(1.0, 320.0),
-                )
-                .contains(mouse))
+        (is_mouse_button_pressed(MouseButton::Left)
+            && Rect::new(size.x - 76.0, 10.0, 60.0, 32.0).contains(mouse))
+            || self.open
+            || self.transition.visible()
+            || self.modal_this_frame
     }
     pub fn draw(&mut self, character: &Character, font: &Font, bold: &Font, input_blocked: bool) {
         if !crate::gui_scale::compact() {
             return;
         }
         let size = crate::gui_scale::size();
+        self.modal_this_frame = self.open || self.transition.visible();
         let mouse = crate::gui_scale::mouse();
         let button = Rect::new(size.x - 76.0, 10.0, 60.0, 32.0);
         if !input_blocked && is_mouse_button_pressed(MouseButton::Left) && button.contains(mouse) {
@@ -57,10 +61,11 @@ impl Info {
                 Color::from_rgba(30, 31, 40, 255)
             },
         );
+        let text = measure_text("INFO", Some(bold), 13, 1.0);
         label(
-            "info",
-            button.x + 16.0,
-            button.y + 21.0,
+            "INFO",
+            button.x + (button.w - text.width) * 0.5,
+            button.y + (button.h - text.height) * 0.5 + text.offset_y,
             13,
             bold,
             if self.open || button.contains(mouse) {
@@ -70,28 +75,50 @@ impl Info {
             },
             40.0,
         );
-        if !self.open {
+        self.transition.update(self.open);
+        if !self.open && !self.transition.visible() {
             return;
         }
         let width = (size.x - 32.0).min(260.0);
         let x = 16.0;
-        let y = 80.0;
-        let height = (size.y - y - 40.0).clamp(1.0, 320.0);
-        if !input_blocked && Rect::new(x, y, width, height).contains(mouse) {
-            self.scroll =
-                (self.scroll - mouse_wheel().1 * 24.0).clamp(0.0, (320.0 - height).max(0.0));
+        let height = (size.y - 120.0).clamp(1.0, 360.0);
+        let panel = self
+            .transition
+            .panel(self.open, Rect::new(x, 80.0, width, height));
+        let y = panel.y;
+        self.transition.backdrop();
+        let mouse = self.transition.mouse(
+            self.open,
+            if input_blocked {
+                widgets::BLOCKED
+            } else {
+                mouse
+            },
+        );
+        let close = widgets::popup_close_rect(panel);
+        if self.open && widgets::dismiss_except(panel, close, button, mouse) {
+            self.open = false;
+            self.drag.cancel();
         }
-        info_surface(Rect::new(x, y, width, height));
-        let scale = screen_width() * screen_dpi_scale() / size.x;
-        unsafe {
-            get_internal_gl().quad_gl.scissor(Some((
-                (x * scale) as i32,
-                (y * scale) as i32,
-                (width * scale).ceil() as i32,
-                (height * scale).ceil() as i32,
-            )));
-        }
-        let top = y - self.scroll;
+        let mouse = if self.open { mouse } else { widgets::BLOCKED };
+        let area = Rect::new(
+            x,
+            y + widgets::HEADER_HEIGHT,
+            width,
+            (height - widgets::HEADER_HEIGHT).max(1.0),
+        );
+        widgets::scroll(
+            area,
+            mouse,
+            &mut self.scroll,
+            (320.0 - area.h).max(0.0),
+            &mut self.drag,
+        );
+        let _opacity = self.transition.scope();
+        info_surface(panel);
+        widgets::popup_header(panel, "Info", font, bold);
+        super::layout::clip(area);
+        let top = area.y - self.scroll;
         label(
             "SKIN",
             x + 12.0,
@@ -139,9 +166,7 @@ impl Info {
             bold,
             Rect::new(x, top + 112.0, width, 208.0),
         );
-        unsafe {
-            get_internal_gl().quad_gl.scissor(None);
-        }
+        super::layout::end_clip();
     }
 }
 
@@ -232,7 +257,7 @@ pub fn draw(character: &Character, regular: &Font, bold: &Font) {
     let narrow = crate::gui_scale::compact();
     let header_h = if narrow { 104.0 } else { 88.0 };
     let footer_h = if narrow { 54.0 } else { 58.0 };
-    let panel = Color::from_rgba(20, 21, 28, 242);
+    let panel = widgets::PREVIEW_SURFACE;
     if crate::gui_scale::compact() {
         draw_rectangle(0.0, 0.0, w, 74.0, panel);
         label(
@@ -265,13 +290,13 @@ pub fn draw(character: &Character, regular: &Font, bold: &Font) {
         draw_line(16.0, 74.0, w - 16.0, 74.0, 1.0, LINE);
         draw_rectangle(0.0, h - 32.0, w, 32.0, panel);
         label(
-            "Click to equip    Q / E: cycle    Esc: quit",
+            "Tap to equip · Q / E: cycle",
             16.0,
             h - 12.0,
             11,
             regular,
             MUTED,
-            w - 32.0,
+            (w - 174.0).max(1.0),
         );
         return;
     }
@@ -368,7 +393,7 @@ pub fn draw(character: &Character, regular: &Font, bold: &Font) {
             inner,
         );
         label(
-            "Esc   Quit",
+            "Esc   Back to booth",
             margin,
             top + 31.0,
             10,
@@ -390,17 +415,6 @@ pub fn draw(character: &Character, regular: &Font, bold: &Font) {
         label(
             "Left / Right   Animation",
             margin,
-            top + 29.0,
-            12,
-            regular,
-            MUTED,
-            third,
-        );
-        let quit = "Esc   Quit";
-        let quit_w = measure_text(quit, Some(regular), 12, 1.0).width;
-        label(
-            quit,
-            w - margin - quit_w,
             top + 29.0,
             12,
             regular,

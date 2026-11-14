@@ -1,6 +1,28 @@
 //! Stepped UI scale and shared layout geometry.
 use macroquad::prelude::*;
 
+/// Clip GUI content in physical framebuffer pixels, including partially visible rows.
+pub fn clip(area: Rect) {
+    let offset = super::widgets::paint::offset();
+    let physical = macroquad::miniquad::window::screen_size();
+    let logical = size();
+    let (sx, sy) = (physical.0 / logical.x, physical.1 / logical.y);
+    unsafe {
+        get_internal_gl().quad_gl.scissor(Some((
+            ((area.x + offset.x) * sx).floor() as i32,
+            ((area.y + offset.y) * sy).floor() as i32,
+            (area.w * sx).ceil() as i32,
+            (area.h * sy).ceil() as i32,
+        )));
+    }
+}
+
+pub fn end_clip() {
+    unsafe {
+        get_internal_gl().quad_gl.scissor(None);
+    }
+}
+
 pub fn dimensions(width: f32, height: f32) -> (f32, f32, f32) {
     let available = (width / 1280.0).min(height / 720.0);
     let scale = [1.0_f32, 1.25, 1.5, 1.75, 2.0, 2.5, 3.0]
@@ -22,7 +44,7 @@ pub fn regions(size: Vec2) -> (Rect, Rect) {
     let top = if compact { 82.0 } else { 100.0 };
     let bottom = size.y - if compact { 40.0 } else { 70.0 };
     let height = (bottom - top).max(1.0);
-    if size.x < 620.0 {
+    if size.x < 620.0 && !(size.x >= 460.0 && size.y < 560.0) {
         let preview_height = (height * 0.38).min(200.0);
         (
             Rect::new(12.0, top, (size.x - 24.0).max(1.0), preview_height),
@@ -34,7 +56,9 @@ pub fn regions(size: Vec2) -> (Rect, Rect) {
             ),
         )
     } else {
-        let width = if compact {
+        let width = if size.x < 620.0 {
+            (size.x * 0.50).clamp(220.0, 280.0)
+        } else if compact {
             (size.x * 0.44).clamp(280.0, 420.0)
         } else {
             (size.x * 0.34).clamp(250.0, 420.0)
@@ -46,7 +70,7 @@ pub fn regions(size: Vec2) -> (Rect, Rect) {
         };
         let panel_x = size.x - width - 16.0;
         (
-            Rect::new(left, top, (panel_x - left - 12.0).max(1.0), height),
+            Rect::new(left, top, (panel_x - left - 68.0).max(1.0), height),
             Rect::new(panel_x, top, width, height),
         )
     }
@@ -59,7 +83,7 @@ pub fn size() -> Vec2 {
 
 pub fn mouse() -> Vec2 {
     let (_, _, scale) = dimensions(screen_width(), screen_height());
-    Vec2::from(mouse_position()) / scale
+    Vec2::from(mouse_position()) / scale - super::widgets::paint::offset()
 }
 
 pub fn begin() {
@@ -84,6 +108,8 @@ mod tests {
     fn preview_and_catalog_never_overlap() {
         for (w, h) in [
             (480.0, 480.0),
+            (480.0, 320.0),
+            (640.0, 360.0),
             (600.0, 720.0),
             (800.0, 540.0),
             (960.0, 720.0),

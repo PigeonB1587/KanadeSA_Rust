@@ -21,3 +21,9 @@ Assets/Spine/Runtime/spine-csharp/Bone.cs, lines 265–290:
 
 This fixes bone transforms before constraints and mesh generation; it does
 not apply character-specific scale compensation in the renderer.
+
+In src/color.rs, `Color::clamp()` now clamps each channel from its own value.
+The upstream implementation accidentally assigned clamped red to green, blue
+and alpha, turning independent tints into grayscale and making a red tint below
+one unexpectedly translucent. `tests/spine_color.rs` in the application checks
+independent RGBA values and out-of-range clamping.

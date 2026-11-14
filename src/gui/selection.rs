@@ -1,7 +1,10 @@
 //! Virtualized mouse-driven catalog. Only visible cells request textures.
+use super::widgets::{
+    self,
+    paint::{draw_rectangle, draw_text_ex, draw_texture_ex},
+};
 use crate::character::Character;
 use macroquad::prelude::*;
-use std::collections::HashMap;
 use unicode_normalization::UnicodeNormalization;
 
 fn normalize(text: &str, japanese: bool) -> String {
@@ -18,15 +21,17 @@ fn normalize(text: &str, japanese: bool) -> String {
 }
 
 const ACCENT: Color = Color::new(0.925, 0.604, 0.361, 1.0);
-const CACHE_LIMIT: usize = 128;
 
 #[derive(Default)]
 pub struct Selection {
     pub pointer_blocked: bool,
     tab: usize,
-    scroll: [f32; 6],
-    cache: HashMap<String, (Option<Texture2D>, u64)>,
-    tick: u64,
+    scroll: Vec<f32>,
+    category_scroll: f32,
+    category_drag: crate::drag_scroll::DragScroll,
+    cache: super::icons::IconCache,
+    category_cache: super::icons::IconCache,
+    preview_tab: Option<usize>,
     dragging: bool,
     content_drag: crate::drag_scroll::DragScroll,
     query: String,
@@ -98,6 +103,124 @@ fn text(s: &str, x: f32, y: f32, font: &Font, color: Color, size: u16) {
 }
 
 impl Selection {
+    fn draw_categories(&mut self, character: &Character, rail: Rect, mouse: Vec2, font: &Font) {
+        use crate::equipment::CategoryKind;
+        let wardrobe = character.wardrobe();
+        let mut icons: Vec<(String, bool, String)> = [
+            ("Animal", "Characters"),
+            ("Neck", "Neck"),
+            ("Body", "Clothes"),
+            ("Eyes", "Glasses"),
+            ("Head", "Hats"),
+            ("Face", "Beards"),
+        ]
+        .into_iter()
+        .map(|(icon, title)| {
+            (
+                format!("ui/customizeicons/icon_{}", icon.to_lowercase()),
+                false,
+                title.into(),
+            )
+        })
+        .collect();
+        for category in &wardrobe.equipment_catalog.categories {
+            let (icon, white) = match category.kind {
+                CategoryKind::Weapon => (
+                    category
+                        .entries
+                        .iter()
+                        .find(|entry| !entry.icon.is_empty())
+                        .map(|entry| entry.icon.clone())
+                        .unwrap_or_default(),
+                    true,
+                ),
+                CategoryKind::Umbrella => ("ui/customizeicons/icon_umbrella".into(), false),
+                CategoryKind::Pet => ("ui/customizeicons/icon_pets".into(), false),
+                CategoryKind::Emote => ("ui/customizeicons/icon_emote".into(), false),
+            };
+            icons.push((icon, white, category.label.clone()));
+        }
+        self.category_cache.begin_frame();
+        let mut order: Vec<usize> = (0..icons.len()).collect();
+        order.sort_by_key(|&index| icons[index].1);
+        let step = 52.0;
+        let max = (icons.len() as f32 * step - 6.0 - rail.h).max(0.0);
+        let tapped = widgets::scroll(
+            rail,
+            mouse,
+            &mut self.category_scroll,
+            max,
+            &mut self.category_drag,
+        );
+        let mut hovered = None;
+        super::layout::clip(rail);
+        for (position, &i) in order.iter().enumerate() {
+            let (icon, white, title) = &icons[i];
+            let r = Rect::new(
+                rail.x,
+                rail.y + position as f32 * step - self.category_scroll,
+                rail.w,
+                46.0,
+            );
+            if r.bottom() <= rail.y || r.y >= rail.bottom() {
+                continue;
+            }
+            let hit = rail.contains(mouse) && r.contains(mouse);
+            draw_rectangle(
+                r.x,
+                r.y,
+                r.w,
+                r.h,
+                if self.tab == i {
+                    Color::from_rgba(53, 44, 41, 255)
+                } else {
+                    widgets::PREVIEW_SURFACE
+                },
+            );
+            if self.tab == i {
+                draw_rectangle(r.x, r.y, 2.0, r.h, ACCENT);
+            }
+            if let Some(texture) = self.category_cache.get(icon, *white) {
+                let scale = if *white {
+                    (r.w - 12.0).min(r.h - 10.0) / texture.width().max(texture.height()).max(1.0)
+                } else {
+                    0.65
+                };
+                let dest = vec2(texture.width(), texture.height()) * scale;
+                draw_texture_ex(
+                    texture,
+                    r.x + (r.w - dest.x) * 0.5,
+                    r.y + (r.h - dest.y) * 0.5,
+                    if self.tab == i { ACCENT } else { WHITE },
+                    DrawTextureParams {
+                        dest_size: Some(dest),
+                        ..Default::default()
+                    },
+                );
+            }
+            if hit {
+                hovered = Some(title.as_str());
+                if tapped && self.tab != i {
+                    self.tab = i;
+                    self.content_drag.cancel();
+                    super::audio::click();
+                }
+            }
+        }
+        super::layout::end_clip();
+        if let Some(title) = hovered {
+            let width = measure_text(title, Some(font), 11, 1.0).width + 16.0;
+            let x = (rail.x - width - 6.0).max(0.0);
+            let y = mouse.y.min(rail.bottom() - 24.0);
+            draw_rectangle(x, y, width, 24.0, widgets::PREVIEW_SURFACE);
+            text(title, x + 8.0, y + 16.0, font, WHITE, 11);
+        }
+    }
+    pub fn begin_preview(&mut self) {
+        // Opening always starts Idle, even when an equipment category was retained.
+        self.preview_tab = Some(self.tab);
+        self.category_drag.cancel();
+    }
     pub fn captures_keyboard(&self) -> bool {
         self.capture_keyboard || self.native_input.active()
     }
@@ -106,23 +229,37 @@ impl Selection {
         self.capture_keyboard = false;
     }
     pub async fn draw(&mut self, character: &mut Character, font: &Font, bold: &Font) {
-        self.tick += 1;
+        let modal_was_open = self.native_input.active();
+        let categories = 6 + character.wardrobe().equipment_catalog.categories.len();
+        self.scroll.resize(categories, 0.0);
+        self.tab = self.tab.min(categories - 1);
+        self.cache.begin_frame();
         if let Some(query) = self.native_input.poll() {
             self.query = query.chars().filter(|c| !c.is_control()).take(80).collect();
-            self.scroll = [0.0; 6];
+            self.scroll.fill(0.0);
             self.content_drag.cancel();
         }
         let size = crate::gui_scale::size();
         let w = size.x;
         let compact = crate::gui_scale::compact();
-        let mouse = if self.pointer_blocked || self.native_input.active() {
+        let actual_mouse = if self.pointer_blocked || self.native_input.active() {
             vec2(-10000.0, -10000.0)
         } else {
             crate::gui_scale::mouse()
         };
+        let mouse = actual_mouse;
         let click = is_mouse_button_pressed(MouseButton::Left);
         let (_, panel) = crate::gui_scale::regions(size);
-        let (x, top, width, bottom) = (panel.x, panel.y, panel.w, panel.y + panel.h);
+        let stacked = panel.x < 32.0;
+        let rail = Rect::new(
+            if stacked { panel.x } else { panel.x - 56.0 },
+            panel.y + panel.h * 0.04,
+            48.0,
+            panel.h * 0.92,
+        );
+        let inset = if stacked { 60.0 } else { 0.0 };
+        let (x, top, width, bottom) =
+            (panel.x + inset, panel.y, panel.w - inset, panel.y + panel.h);
         // Header animation controls remain available without reaching for the keyboard.
         for (offset, title, direction) in [(58.0, "<", -1), (28.0, ">", 1)] {
             let r = Rect::new(
@@ -144,57 +281,13 @@ impl Selection {
                 character.cycle_animation(direction);
             }
         }
-        if bottom - top < 130.0 {
-            return;
-        }
+        let search_offset = 12.0;
+        let summary_offset = 46.0;
+        let grid_offset = 72.0;
         let panel = Rect::new(x, top, width, bottom - top);
-        draw_rectangle(
-            panel.x,
-            panel.y,
-            panel.w,
-            panel.h,
-            Color::from_rgba(20, 21, 28, 250),
-        );
-        let tabs = ["Characters", "Neck", "Clothes", "Glasses", "Hats", "Beards"];
-        let tab_w = (width - 24.0) / 3.0;
-        for (i, title) in tabs.iter().enumerate() {
-            let r = Rect::new(
-                x + 12.0 + (i % 3) as f32 * tab_w,
-                top + 12.0 + (i / 3) as f32 * 30.0,
-                tab_w - 4.0,
-                26.0,
-            );
-            let hover = r.contains(mouse);
-            if hover && click {
-                super::audio::click();
-                self.content_drag.cancel();
-                self.tab = i;
-                self.scroll[i] = 0.0;
-            }
-            draw_rectangle(
-                r.x,
-                r.y,
-                r.w,
-                r.h,
-                if self.tab == i {
-                    Color::from_rgba(53, 44, 41, 255)
-                } else {
-                    Color::from_rgba(30, 31, 40, 255)
-                },
-            );
-            if self.tab == i {
-                draw_rectangle(r.x, r.y + r.h - 2.0, r.w, 2.0, ACCENT);
-            }
-            text(
-                title,
-                r.x + 7.0,
-                r.y + 17.0,
-                bold,
-                if self.tab == i || hover { WHITE } else { GRAY },
-                if tab_w < 90.0 { 10 } else { 12 },
-            );
-        }
-        let search = Rect::new(x + 12.0, top + 76.0, width - 24.0, 28.0);
+        draw_rectangle(panel.x, panel.y, panel.w, panel.h, widgets::PREVIEW_SURFACE);
+        self.draw_categories(character, rail, mouse, font);
+        let search = Rect::new(x + 12.0, top + search_offset, width - 24.0, 28.0);
         let reset = Rect::new(search.x + search.w - 28.0, search.y, 28.0, 28.0);
         if click && !self.pointer_blocked {
             if search.contains(mouse) && !reset.contains(mouse) {
@@ -204,7 +297,7 @@ impl Selection {
             self.search_focused = false;
         }
         self.search_focused = self.native_input.active();
-        self.capture_keyboard = self.search_focused;
+        self.capture_keyboard = self.search_focused || modal_was_open;
         let previous = self.query.clone();
         if click && reset.contains(mouse) {
             self.query.clear();
@@ -213,7 +306,7 @@ impl Selection {
         while get_char_pressed().is_some() {}
         if previous != self.query {
             self.content_drag.cancel();
-            self.scroll = [0.0; 6];
+            self.scroll.fill(0.0);
         }
         draw_rectangle(
             search.x,
@@ -243,7 +336,7 @@ impl Selection {
             12,
         );
         text("x", reset.x + 9.0, reset.y + 19.0, font, GRAY, 14);
-        let clear = Rect::new(x + width - 72.0, top + 110.0, 60.0, 22.0);
+        let clear = Rect::new(x + width - 72.0, top + summary_offset, 60.0, 22.0);
         text(
             "Clear all",
             clear.x,
@@ -258,24 +351,24 @@ impl Selection {
         }
         let wardrobe = character.wardrobe();
         if self.last_language != wardrobe.language {
-            self.scroll = [0.0; 6];
+            self.scroll.fill(0.0);
             self.last_language.clone_from(&wardrobe.language);
         }
         let total = if self.tab == 0 {
             wardrobe.characters.len()
-        } else {
+        } else if self.tab < 6 {
             wardrobe.items[self.tab - 1].len()
+        } else {
+            wardrobe.equipment_catalog.categories[self.tab - 6]
+                .entries
+                .len()
         };
         let japanese = wardrobe.language == "japanese";
         let query = normalize(&self.query, japanese);
         let filtered: Vec<usize> = (0..total)
             .filter(|&index| {
-                let id = if self.tab == 0 {
-                    &wardrobe.characters[index].inventory_id
-                } else {
-                    &wardrobe.items[self.tab - 1][index].inventory_id
-                };
-                let name = if self.tab != 0 && index == 0 {
+                let (_, id) = entry(wardrobe, self.tab, index);
+                let name = if self.tab > 0 && self.tab < 6 && index == 0 {
                     wardrobe.search_name("None")
                 } else {
                     wardrobe.search_name(id)
@@ -286,43 +379,40 @@ impl Selection {
         let count = filtered.len();
         let selected = if self.tab == 0 {
             wardrobe.current_character
-        } else {
+        } else if self.tab < 6 {
             wardrobe.selected[self.tab - 1]
+        } else {
+            wardrobe
+                .equipment_catalog
+                .selected(&wardrobe.equipment, self.tab - 6)
         };
         text(
             &format!("{} / {} items", count, total),
             x + 12.0,
-            top + 125.0,
+            top + summary_offset + 15.0,
             font,
             GRAY,
             11,
         );
         let grid = Rect::new(
             x + 12.0,
-            top + 140.0,
+            top + grid_offset,
             width - 34.0,
-            (bottom - top - 172.0).max(1.0),
+            (bottom - top - grid_offset - 32.0).max(1.0),
         );
         let columns = ((grid.w + 8.0) / 82.0).floor().max(2.0) as usize;
         let cell = (grid.w + 8.0) / columns as f32;
         let rows = count.div_ceil(columns);
         let max_scroll = (rows as f32 * cell - grid.h).max(0.0);
-        let tapped = if self.pointer_blocked {
-            self.content_drag.cancel();
-            false
-        } else {
-            self.content_drag.update(
-                grid,
-                mouse,
-                click,
-                is_mouse_button_down(MouseButton::Left),
-                is_mouse_button_released(MouseButton::Left),
-                &mut self.scroll[self.tab],
-                max_scroll,
-            )
-        };
-        if grid.contains(mouse) {
-            self.scroll[self.tab] -= mouse_wheel().1 * 38.0;
+        let tapped = widgets::scroll(
+            grid,
+            mouse,
+            &mut self.scroll[self.tab],
+            max_scroll,
+            &mut self.content_drag,
+        );
+        if mouse.x <= -9999.0 {
+            self.dragging = false;
         }
         let track = Rect::new(x + width - 14.0, grid.y, 4.0, grid.h);
         if click && Rect::new(track.x - 6.0, track.y, 16.0, track.h).contains(mouse) {
@@ -363,10 +453,10 @@ impl Selection {
         let last_row = ((self.scroll[self.tab] + grid.h) / cell).ceil() as usize;
         let mut chosen = None;
         let mut hovered_name = None;
-        let mut loads = 0;
         if count == 0 {
             text("No matches", grid.x, grid.y + 24.0, font, GRAY, 13);
         }
+        super::layout::clip(grid);
         for position in first_row * columns..((last_row * columns).min(count)) {
             let index = filtered[position];
             let row = position / columns;
@@ -382,39 +472,18 @@ impl Selection {
                 continue;
             }
             let hit = Rect::new(r.x, clip_top, r.w, clip_bottom - clip_top).contains(mouse);
-            let (icon, id) = if self.tab == 0 {
-                let c = &wardrobe.characters[index];
-                (&c.icon, &c.inventory_id)
-            } else {
-                let c = &wardrobe.items[self.tab - 1][index];
-                (&c.icon, &c.inventory_id)
-            };
+            let (icon, id) = entry(wardrobe, self.tab, index);
             if hit {
                 hovered_name = Some(wardrobe.display_name(id).to_owned());
                 if tapped {
                     chosen = Some(index);
                 }
             }
-            let key = format!("icons/{}.png", icon.to_lowercase());
-            if !self.cache.contains_key(&key) && loads < 2 {
-                let texture = match load_texture(&key).await {
-                    Ok(texture) => {
-                        texture.set_filter(FilterMode::Linear);
-                        Some(texture)
-                    }
-                    Err(error) => {
-                        tracing::warn!("Cannot load icon {key}: {error}");
-                        None
-                    }
-                };
-                self.cache.insert(key.clone(), (texture, self.tick));
-                loads += 1;
-            }
             draw_rectangle(
                 r.x,
-                clip_top,
+                r.y,
                 r.w,
-                clip_bottom - clip_top,
+                r.h,
                 if index == selected {
                     ACCENT
                 } else if hit {
@@ -423,53 +492,36 @@ impl Selection {
                     Color::from_rgba(44, 46, 58, 255)
                 },
             );
-            if let Some((texture, tick)) = self.cache.get_mut(&key) {
-                *tick = self.tick;
-                if let Some(texture) = texture {
-                    let inset = 3.0;
-                    let image = Rect::new(
-                        r.x + inset,
-                        r.y + inset,
-                        r.w - inset * 2.0,
-                        r.h - inset * 2.0,
-                    );
-                    let y1 = image.y.max(grid.y);
-                    let y2 = (image.y + image.h).min(grid.y + grid.h);
-                    if y2 > y1 {
-                        draw_texture_ex(
-                            texture,
-                            image.x,
-                            y1,
-                            WHITE,
-                            DrawTextureParams {
-                                dest_size: Some(vec2(image.w, y2 - y1)),
-                                source: Some(Rect::new(
-                                    0.0,
-                                    (y1 - image.y) / image.h * texture.height(),
-                                    texture.width(),
-                                    (y2 - y1) / image.h * texture.height(),
-                                )),
-                                ..Default::default()
-                            },
-                        );
-                    }
-                }
+            if let Some(texture) = self.cache.get(icon, false) {
+                let inset = 3.0;
+                let image = Rect::new(
+                    r.x + inset,
+                    r.y + inset,
+                    r.w - inset * 2.0,
+                    r.h - inset * 2.0,
+                );
+                draw_texture_ex(
+                    texture,
+                    image.x,
+                    image.y,
+                    WHITE,
+                    DrawTextureParams {
+                        dest_size: Some(vec2(image.w, image.h)),
+                        ..Default::default()
+                    },
+                );
             }
         }
-        while self.cache.len() > CACHE_LIMIT {
-            let oldest = self
-                .cache
-                .iter()
-                .min_by_key(|(_, (_, tick))| *tick)
-                .map(|(key, _)| key.clone())
-                .unwrap();
-            self.cache.remove(&oldest);
-        }
+        super::layout::end_clip();
         let name = hovered_name.unwrap_or_else(|| {
             if self.tab == 0 {
                 character.name().to_owned()
-            } else {
+            } else if self.tab < 6 {
                 wardrobe.item_name(self.tab - 1).to_owned()
+            } else {
+                wardrobe
+                    .display_name(entry(wardrobe, self.tab, selected).1)
+                    .to_owned()
             }
         });
         let mut name = name;
@@ -479,14 +531,40 @@ impl Selection {
         text(&name, x + 12.0, bottom - 10.0, font, WHITE, 12);
         if let Some(index) = chosen {
             super::audio::click();
-            character.choose(
-                if self.tab == 0 {
-                    None
-                } else {
-                    Some(self.tab - 1)
-                },
-                index,
-            );
+            if self.tab >= 6 {
+                if let Err(error) = character.choose_equipment(self.tab - 6, index) {
+                    tracing::warn!("Cannot equip: {error}");
+                }
+                character.preview_category(self.tab - 6);
+            } else {
+                character.choose(
+                    if self.tab == 0 {
+                        None
+                    } else {
+                        Some(self.tab - 1)
+                    },
+                    index,
+                );
+            }
         }
+        if self.preview_tab != Some(self.tab) {
+            if self.tab >= 6 {
+                character.preview_category(self.tab - 6);
+            }
+            self.preview_tab = Some(self.tab);
+        }
+    }
+}
+
+fn entry(wardrobe: &crate::wardrobe::Wardrobe, tab: usize, index: usize) -> (&str, &str) {
+    if tab == 0 {
+        let c = &wardrobe.characters[index];
+        (&c.icon, &c.inventory_id)
+    } else if tab < 6 {
+        let c = &wardrobe.items[tab - 1][index];
+        (&c.icon, &c.inventory_id)
+    } else {
+        let c = &wardrobe.equipment_catalog.categories[tab - 6].entries[index];
+        (&c.icon, &c.id)
     }
 }

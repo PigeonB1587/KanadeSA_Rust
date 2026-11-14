@@ -1,0 +1,335 @@
+{
+  "format_version": 1,
+  "sprites": {
+    "aquabg.png": {
+      "size": [
+        1920,
+        1080
+      ],
+      "pixels_per_unit": 8.0,
+      "pivot": [
+        0.5,
+        0.5
+      ],
+      "filter_mode": 1,
+      "mipmaps": false,
+      "srgb": true,
+      "alpha_is_transparency": true,
+      "wrap_mode": [
+        1,
+        1
+      ],
+      "sprite_alignment": 9,
+      "mesh_type": 0,
+      "max_texture_size": 2048
+    },
+    "aquabeams.png": {
+      "size": [
+        1920,
+        728
+      ],
+      "pixels_per_unit": 8.0,
+      "pivot": [
+        0.5,
+        0.0
+      ],
+      "filter_mode": 1,
+      "mipmaps": false,
+      "srgb": true,
+      "alpha_is_transparency": true,
+      "wrap_mode": [
+        1,
+        1
+      ],
+      "sprite_alignment": 9,
+      "mesh_type": 0,
+      "max_texture_size": 2048
+    },
+    "aquacoralspotg.png": {
+      "size": [
+        412,
+        168
+      ],
+      "pixels_per_unit": 8.0,
+      "pivot": [
+        0.5,
+        0.0
+      ],
+      "filter_mode": 1,
+      "mipmaps": false,
+      "srgb": true,
+      "alpha_is_transparency": true,
+      "wrap_mode": [
+        1,
+        1
+      ],
+      "sprite_alignment": 9,
+      "mesh_type": 0,
+      "max_texture_size": 2048
+    },
+    "aquacoralsticksb.png": {
+      "size": [
+        396,
+        240
+      ],
+      "pixels_per_unit": 8.0,
+      "pivot": [
+        0.5,
+        0.0
+      ],
+      "filter_mode": 1,
+      "mipmaps": false,
+      "srgb": true,
+      "alpha_is_transparency": true,
+      "wrap_mode": [
+        1,
+        1
+      ],
+      "sprite_alignment": 9,
+      "mesh_type": 0,
+      "max_texture_size": 2048
+    },
+    "aquacoralsticksc.png": {
+      "size": [
+        300,
+        184
+      ],
+      "pixels_per_unit": 8.0,
+      "pivot": [
+        0.5,
+        0.0
+      ],
+      "filter_mode": 1,
+      "mipmaps": false,
+      "srgb": true,
+      "alpha_is_transparency": true,
+      "wrap_mode": [
+        1,
+        1
+      ],
+      "sprite_alignment": 9,
+      "mesh_type": 0,
+      "max_texture_size": 2048
+    },
+    "aquacoralstumpspg.png": {
+      "size": [
+        700,
+        260
+      ],
+      "pixels_per_unit": 8.0,
+      "pivot": [
+        0.5,
+        0.0
+      ],
+      "filter_mode": 1,
+      "mipmaps": false,
+      "srgb": true,
+      "alpha_is_transparency": true,
+      "wrap_mode": [
+        1,
+        1
+      ],
+      "sprite_alignment": 9,
+      "mesh_type": 0,
+      "max_texture_size": 2048
+    },
+    "aquacoraltubesg.png": {
+      "size": [
+        292,
+        176
+      ],
+      "pixels_per_unit": 8.0,
+      "pivot": [
+        0.5,
+        0.0
+      ],
+      "filter_mode": 1,
+      "mipmaps": false,
+      "srgb": true,
+      "alpha_is_transparency": true,
+      "wrap_mode": [
+        1,
+        1
+      ],
+      "sprite_alignment": 9,
+      "mesh_type": 0,
+      "max_texture_size": 2048
+    },
+    "aquadiver.png": {
+      "size": [
+        420,
+        460
+      ],
+      "pixels_per_unit": 8.0,
+      "pivot": [
+        0.5,
+        0.0
+      ],
+      "filter_mode": 1,
+      "mipmaps": false,
+      "srgb": true,
+      "alpha_is_transparency": true,
+      "wrap_mode": [
+        1,
+        1
+      ],
+      "sprite_alignment": 9,
+      "mesh_type": 0,
+      "max_texture_size": 2048
+    },
+    "aquafgcoralballp.png": {
+      "size": [
+        296,
+        244
+      ],
+      "pixels_per_unit": 8.0,
+      "pivot": [
+        0.5,
+        0.0
+      ],
+      "filter_mode": 1,
+      "mipmaps": false,
+      "srgb": true,
+      "alpha_is_transparency": true,
+      "wrap_mode": [
+        1,
+        1
+      ],
+      "sprite_alignment": 9,
+      "mesh_type": 0,
+      "max_texture_size": 2048
+    },
+    "aquaglass.png": {
+      "size": [
+        1920,
+        828
+      ],
+      "pixels_per_unit": 8.0,
+      "pivot": [
+        0.5,
+        0.0
+      ],
+      "filter_mode": 1,
+      "mipmaps": false,
+      "srgb": true,
+      "alpha_is_transparency": true,
+      "wrap_mode": [
+        1,
+        1
+      ],
+      "sprite_alignment": 9,
+      "mesh_type": 0,
+      "max_texture_size": 2048
+    },
+    "aquakelpl.png": {
+      "size": [
+        204,
+        932
+      ],
+      "pixels_per_unit": 8.0,
+      "pivot": [
+        0.5,
+        0.0
+      ],
+      "filter_mode": 1,
+      "mipmaps": false,
+      "srgb": true,
+      "alpha_is_transparency": true,
+      "wrap_mode": [
+        1,
+        1
+      ],
+      "sprite_alignment": 9,
+      "mesh_type": 0,
+      "max_texture_size": 2048
+    },
+    "aquakelpm.png": {
+      "size": [
+        724,
+        640
+      ],
+      "pixels_per_unit": 8.0,
+      "pivot": [
+        0.5,
+        0.0
+      ],
+      "filter_mode": 1,
+      "mipmaps": false,
+      "srgb": true,
+      "alpha_is_transparency": true,
+      "wrap_mode": [
+        1,
+        1
+      ],
+      "sprite_alignment": 9,
+      "mesh_type": 0,
+      "max_texture_size": 2048
+    },
+    "aquakelpr.png": {
+      "size": [
+        204,
+        932
+      ],
+      "pixels_per_unit": 8.0,
+      "pivot": [
+        0.5,
+        0.0
+      ],
+      "filter_mode": 1,
+      "mipmaps": false,
+      "srgb": true,
+      "alpha_is_transparency": true,
+      "wrap_mode": [
+        1,
+        1
+      ],
+      "sprite_alignment": 9,
+      "mesh_type": 0,
+      "max_texture_size": 2048
+    },
+    "aquaskullcat.png": {
+      "size": [
+        332,
+        264
+      ],
+      "pixels_per_unit": 8.0,
+      "pivot": [
+        0.5,
+        0.0
+      ],
+      "filter_mode": 1,
+      "mipmaps": false,
+      "srgb": true,
+      "alpha_is_transparency": true,
+      "wrap_mode": [
+        1,
+        1
+      ],
+      "sprite_alignment": 9,
+      "mesh_type": 0,
+      "max_texture_size": 2048
+    },
+    "aquathumbnail.png": {
+      "size": [
+        476,
+        268
+      ],
+      "pixels_per_unit": 100.0,
+      "pivot": [
+        0.5,
+        0.5
+      ],
+      "filter_mode": 1,
+      "mipmaps": false,
+      "srgb": true,
+      "alpha_is_transparency": true,
+      "wrap_mode": [
+        1,
+        1
+      ],
+      "sprite_alignment": 9,
+      "mesh_type": 0,
+      "max_texture_size": 2048
+    }
+  }
+}

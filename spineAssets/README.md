@@ -4,6 +4,8 @@ Spine 角色资源目录。每个角色一个子目录，便于后续继续添�
 
 ```
 spineAssets/
+├── pets/                      # 独立宠物骨骼、atlas 和分页图片
+├── umbrellas/                 # 原始未裁切伞 PNG 与生成的 atlas
 └── characters/
     └── character_01/          # 第 1 个角色
         ├── skeleton.atlas     # atlas 描述文件（贴图名需与同目录文件一致）
@@ -22,3 +24,5 @@ spineAssets/
   并同步修改 `skeleton.atlas` 中的分页文件名。
 - 本资源来自同级 Unity 参考工程 `../KanadeSA`（只读工程，未做任何修改）。
 - Spine 运行时版本必须与资源版本匹配：当前资源为 Spine **4.2**，对应 `rusty_spine` 0.8。
+- 伞 atlas 保留模板尺寸和 linked mesh deform 身份；可用 `tools/import_unity_booth.py` 只读重新导入。
+- 等级 GEM、影子和水印位于 `booth/`，同目录 `sprites.json` 保存图片导入元数据。
