@@ -188,6 +188,9 @@ pub mod paint {
     pub fn light_amount() -> f32 {
         LIGHT.with(Cell::get)
     }
+    pub fn opacity() -> f32 {
+        ALPHA.with(Cell::get)
+    }
     pub fn update_theme(light: bool) {
         LIGHT.with(|value| {
             let target = f32::from(light);

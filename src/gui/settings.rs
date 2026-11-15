@@ -151,7 +151,7 @@ impl Settings {
         let y = panel.y;
         let mouse = self.transition.mouse(self.open, mouse);
         let _opacity = self.transition.scope();
-        draw_rectangle(x, y, width, height, widgets::SURFACE);
+        super::shadow::surface(panel, widgets::SURFACE, super::shadow::Elevation::Popup);
         let close = widgets::popup_header(panel, "Settings", font, bold);
         let child_active = self.dropdown || self.dropdown_transition.visible();
         let close_parent =
@@ -324,12 +324,10 @@ impl Settings {
             let tapped =
                 widgets::scroll(list, mouse, &mut self.scroll, max, &mut self.content_drag);
             let _opacity = self.dropdown_transition.scope();
-            draw_rectangle(
-                dropdown_panel.x,
-                dropdown_panel.y,
-                dropdown_panel.w,
-                dropdown_panel.h,
+            super::shadow::surface(
+                dropdown_panel,
                 Color::from_rgba(36, 37, 47, 255),
+                super::shadow::Elevation::Popup,
             );
             let mut chosen = None;
             super::layout::clip(list);

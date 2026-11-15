@@ -13,7 +13,7 @@ const INFO_SURFACE: Color = widgets::PREVIEW_SURFACE;
 const INFO_MUTED: Color = Color::new(0.65, 0.68, 0.74, 1.0);
 
 fn info_surface(panel: Rect) {
-    draw_rectangle(panel.x, panel.y, panel.w, panel.h, INFO_SURFACE);
+    super::shadow::surface(panel, INFO_SURFACE, super::shadow::Elevation::Panel);
 }
 
 #[derive(Default)]

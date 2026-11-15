@@ -178,7 +178,7 @@ impl Projects {
             mouse,
         );
         let _opacity = self.transition.scope();
-        draw_rectangle(panel.x, panel.y, panel.w, panel.h, widgets::SURFACE);
+        super::shadow::surface(panel, widgets::SURFACE, super::shadow::Elevation::Popup);
         let close = if booth.project.is_some() {
             widgets::popup_header(panel, "Projects", font, bold)
         } else {

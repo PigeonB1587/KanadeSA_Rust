@@ -108,7 +108,7 @@ impl ColorPicker {
         }
         self.just_opened = false;
         let _opacity = self.transition.scope();
-        draw_rectangle(panel.x, panel.y, panel.w, panel.h, widgets::SURFACE);
+        super::shadow::surface(panel, widgets::SURFACE, super::shadow::Elevation::Popup);
         widgets::popup_header(panel, "Color Tint", font, bold);
         let palette = Rect::new(
             panel.x + 14.0,

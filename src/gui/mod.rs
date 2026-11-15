@@ -15,4 +15,5 @@ pub mod projects;
 pub mod scenes;
 pub mod selection;
 pub mod settings;
+pub mod shadow;
 pub mod widgets;

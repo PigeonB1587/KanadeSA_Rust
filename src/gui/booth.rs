@@ -456,7 +456,7 @@ impl BoothUi {
             &mut self.ratio_drag,
         );
         let _opacity = self.ratio_transition.scope();
-        draw_rectangle(panel.x, panel.y, panel.w, panel.h, SURFACE);
+        super::shadow::surface(panel, SURFACE, super::shadow::Elevation::Popup);
         super::layout::clip(panel);
         for (i, (title, _, _)) in RATIOS.iter().enumerate() {
             let r = Rect::new(
@@ -576,7 +576,11 @@ impl BoothUi {
             raw_mouse
         };
         let layout = BoothLayout::new(size, self.inspector);
-        draw_rectangle(0.0, 0.0, size.x, TOPBAR_HEIGHT, SURFACE);
+        super::shadow::surface(
+            Rect::new(0.0, 0.0, size.x, TOPBAR_HEIGHT),
+            SURFACE,
+            super::shadow::Elevation::Panel,
+        );
         super::settings::Settings::draw_button(layout.settings, bold);
         let title_left = layout.ratio.right() + MARGIN;
         let title_right = if layout.wrapped {
@@ -927,7 +931,7 @@ impl BoothUi {
     fn draw_inspector(&mut self, booth: &mut Booth, font: &Font, bold: &Font, mouse: Vec2) {
         let background = booth.backgrounds[booth.background].clone();
         let (_, panel) = self.rects();
-        draw_rectangle(panel.x, panel.y, panel.w, panel.h, SURFACE);
+        super::shadow::surface(panel, SURFACE, super::shadow::Elevation::Panel);
         let inner_width = panel.w - PANEL_PADDING * 2.0;
         let tab_width = (inner_width - GAP * 2.0) / 3.0;
         let titles = ["Transform", "Animation", "Recorder"];
@@ -1564,7 +1568,11 @@ impl BoothUi {
         self.scene_transition.backdrop();
         let mut mouse = self.scene_transition.mouse(self.scene_picker, mouse);
         let _opacity = self.scene_transition.scope();
-        draw_rectangle(panel.x, panel.y, panel.w, panel.h, super::widgets::SURFACE);
+        super::shadow::surface(
+            panel,
+            super::widgets::SURFACE,
+            super::shadow::Elevation::Popup,
+        );
         let close = super::widgets::popup_header(panel, "Booth scenes", font, bold);
         if super::widgets::dismiss(panel, close, mouse) {
             self.scene_picker = false;
@@ -1595,7 +1603,11 @@ impl BoothUi {
         self.preset_transition.backdrop();
         let mut mouse = self.preset_transition.mouse(self.clip_picker, mouse);
         let _opacity = self.preset_transition.scope();
-        draw_rectangle(x, y, w, h, super::widgets::SURFACE);
+        super::shadow::surface(
+            panel,
+            super::widgets::SURFACE,
+            super::shadow::Elevation::Popup,
+        );
         let close = super::widgets::popup_header(panel, "Animation presets", font, bold);
         if super::widgets::dismiss(panel, close, mouse) {
             self.clip_picker = false;

@@ -291,7 +291,11 @@ impl Selection {
         let summary_offset = 46.0;
         let grid_offset = 72.0;
         let panel = Rect::new(x, top, width, bottom - top);
-        draw_rectangle(panel.x, panel.y, panel.w, panel.h, widgets::PREVIEW_SURFACE);
+        super::shadow::surface(
+            panel,
+            widgets::PREVIEW_SURFACE,
+            super::shadow::Elevation::Panel,
+        );
         self.draw_categories(character, rail, mouse, font);
         let search = Rect::new(x + 12.0, top + search_offset, width - 24.0, 28.0);
         let reset = Rect::new(search.x + search.w - 28.0, search.y, 28.0, 28.0);

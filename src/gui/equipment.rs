@@ -143,7 +143,11 @@ impl EquipmentPicker {
         );
         self.transition.backdrop();
         let _opacity = self.transition.scope();
-        draw_rectangle(panel.x, panel.y, panel.w, panel.h, super::widgets::SURFACE);
+        super::shadow::surface(
+            panel,
+            super::widgets::SURFACE,
+            super::shadow::Elevation::Popup,
+        );
         let close = super::widgets::popup_header(
             panel,
             match kind {
