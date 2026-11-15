@@ -25,6 +25,7 @@ fn window_conf() -> Conf {
         window_title: "KanadeSA_Rust".to_owned(),
         window_width: 1280,
         window_height: 720,
+        icon: assets::window_icon(),
         high_dpi: true,
         platform: miniquad::conf::Platform {
             swap_interval: Some(if preferences::Preferences::load().vsync {

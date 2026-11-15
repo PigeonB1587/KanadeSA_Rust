@@ -3,6 +3,7 @@ use serde::de::DeserializeOwned;
 use std::path::{Path, PathBuf};
 
 pub const ROOT: &str = "assets";
+pub const APP_ICON: &[u8] = include_bytes!("../assets/icons/app.png");
 pub const BOOTH_CONFIG: &str = include_str!("../assets/configs/_boothbg.json");
 #[cfg(test)]
 pub const LANGUAGES: &str = include_str!("../assets/configs/_languages.json");
@@ -20,6 +21,26 @@ pub const FONT_MULTILINGUAL: &str = "assets/fonts/SourceHanSans/Regular.otf";
 pub const FONT_MULTILINGUAL_BOLD: &str = "assets/fonts/SourceHanSans/Bold.otf";
 pub const BUTTON_SOUND: &str = "assets/audio/ui/button.ogg";
 pub const FALLBACK_ICON: &str = "assets/icons/ui/inventoryicons/item_rejection_letter.png";
+
+/// Window icons are embedded so they are available before async asset loading.
+pub fn window_icon() -> Option<macroquad::miniquad::conf::Icon> {
+    let source = match image::load_from_memory_with_format(APP_ICON, image::ImageFormat::Png) {
+        Ok(image) => image.to_rgba8(),
+        Err(error) => {
+            eprintln!("Cannot decode application icon: {error}");
+            return None;
+        }
+    };
+    let resized = |size| {
+        image::imageops::resize(&source, size, size, image::imageops::FilterType::Lanczos3)
+            .into_raw()
+    };
+    Some(macroquad::miniquad::conf::Icon {
+        small: resized(16).try_into().ok()?,
+        medium: resized(32).try_into().ok()?,
+        big: resized(64).try_into().ok()?,
+    })
+}
 
 /// Catalog IDs (Booth/..., UI/...) stay unchanged; resolve only at file I/O.
 pub fn path(relative: impl AsRef<Path>) -> PathBuf {
