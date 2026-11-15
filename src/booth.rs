@@ -52,7 +52,36 @@ struct SpriteFile {
 }
 
 pub fn resource_path(path: &str) -> String {
-    format!("{}.png", path.to_lowercase())
+    format!("{}.png", crate::assets::logical_key(path).to_lowercase())
+}
+
+// Keep logical keys separate from native paths, including when caching siblings.
+fn sprite_metadata(
+    metadata: &mut HashMap<String, SpriteMeta>,
+    path: &str,
+) -> Result<SpriteMeta, String> {
+    let path = crate::assets::logical_key(path);
+    if !metadata.contains_key(&path) {
+        let (parent, _) = path.rsplit_once('/').ok_or("Missing sprite parent")?;
+        let file: SpriteFile = serde_json::from_slice(
+            &std::fs::read(crate::assets::path(Path::new(parent).join("sprites.json")))
+                .map_err(|e| format!("{path}: {e}"))?,
+        )
+        .map_err(|e| e.to_string())?;
+        if file.format_version != 1 {
+            return Err("Unsupported sprite metadata".into());
+        }
+        for (name, meta) in file.sprites {
+            metadata.insert(
+                crate::assets::logical_key(&format!("{parent}/{name}")),
+                meta,
+            );
+        }
+    }
+    metadata
+        .get(&path)
+        .cloned()
+        .ok_or_else(|| format!("Missing metadata for {path}"))
 }
 pub fn perspective(background: &Background, y: f32) -> f32 {
     let start = (background.horizon_bot_start * 135.0 - 67.5) * UNITY_SCALE;
@@ -287,32 +316,13 @@ impl Booth {
         });
     }
     fn load_sprite(&mut self, path: &str) -> Result<(), String> {
-        if self.sprites.contains_key(path) {
+        let path = crate::assets::logical_key(path);
+        if self.sprites.contains_key(&path) {
             return Ok(());
         }
-        if !self.metadata.contains_key(path) {
-            let p = Path::new(path);
-            let parent = p.parent().ok_or("Missing sprite parent")?;
-            let file: SpriteFile = serde_json::from_slice(
-                &std::fs::read(crate::assets::path(parent.join("sprites.json")))
-                    .map_err(|e| format!("{path}: {e}"))?,
-            )
-            .map_err(|e| e.to_string())?;
-            if file.format_version != 1 {
-                return Err("Unsupported sprite metadata".into());
-            }
-            for (name, meta) in file.sprites {
-                self.metadata
-                    .insert(parent.join(name).to_string_lossy().into_owned(), meta);
-            }
-        }
-        let meta = self
-            .metadata
-            .get(path)
-            .ok_or_else(|| format!("Missing metadata for {path}"))?
-            .clone();
+        let meta = sprite_metadata(&mut self.metadata, &path)?;
         let image = Image::from_file_with_format(
-            &std::fs::read(crate::assets::path(path)).map_err(|e| format!("{path}: {e}"))?,
+            &std::fs::read(crate::assets::path(&path)).map_err(|e| format!("{path}: {e}"))?,
             Some(ImageFormat::Png),
         )
         .map_err(|e| e.to_string())?;
@@ -325,7 +335,7 @@ impl Booth {
         } else {
             FilterMode::Linear
         });
-        self.sprites.insert(path.into(), (texture, meta));
+        self.sprites.insert(path, (texture, meta));
         Ok(())
     }
     fn sprite(&self, path: &str, position: [f32; 2], scale: [f32; 2], color: Color, size: Vec2) {
@@ -789,26 +799,79 @@ pub fn unpremultiply(bytes: &mut [u8]) {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn resource_keys_normalize_explicit_windows_and_mixed_separators() {
+        for input in [
+            "Booth/SaW/Background",
+            r"Booth\SaW\Background",
+            r"Booth/SaW\Background",
+        ] {
+            assert_eq!(resource_path(input), "booth/saw/background.png");
+        }
+        assert_eq!(
+            crate::assets::logical_key(r"booth\gems/gem_0.png"),
+            "booth/gems/gem_0.png"
+        );
+    }
+
+    #[test]
+    fn sprite_metadata_cache_uses_portable_keys_for_common_sprites_and_all_gems() {
+        let mut cache = HashMap::new();
+        let paths = ["booth/shadow.png", "booth/watermark.png"]
+            .into_iter()
+            .map(str::to_owned)
+            .chain((0..100).map(|level| format!("booth/gems/gem_{level}.png")));
+        for path in paths {
+            // Deliberately synthesize Windows input on Linux, without Path::join.
+            let windows = path.replace('/', "\\");
+            let meta = sprite_metadata(&mut cache, &windows).unwrap();
+            assert!(
+                cache.contains_key(&path),
+                "Non-portable metadata key: {path}"
+            );
+            assert!(!cache.contains_key(&windows));
+            let cached_count = cache.len();
+            let again = sprite_metadata(&mut cache, &path).unwrap();
+            assert_eq!(cache.len(), cached_count);
+            assert_eq!(again.size, meta.size);
+            assert_eq!(
+                image::image_dimensions(crate::assets::path(&path)).unwrap(),
+                (meta.size[0], meta.size[1])
+            );
+        }
+        // Loading shadow also caches the three common background sprites.
+        assert_eq!(cache.len(), 105);
+        assert!(cache.keys().all(|key| !key.contains('\\')));
+        // Missing entries must still fail instead of silently hiding bad data.
+        assert!(
+            sprite_metadata(&mut cache, r"booth\missing.png")
+                .unwrap_err()
+                .contains("Missing metadata for booth/missing.png")
+        );
+    }
+
     #[test]
     fn unity_sprites_have_valid_metadata_and_all_references_resolve() {
         let backgrounds: Vec<Background> =
             serde_json::from_str(crate::assets::BOOTH_CONFIG).unwrap();
         assert_eq!(backgrounds.len(), 15);
+        let mut cache = HashMap::new();
         for bg in backgrounds {
             for reference in std::iter::once(&bg.img)
                 .chain(std::iter::once(&bg.thumb))
                 .chain(bg.layers.iter().map(|l| &l.img))
             {
                 let path = resource_path(reference);
-                let p = crate::assets::path(&path);
-                let file: SpriteFile = serde_json::from_slice(
-                    &std::fs::read(p.parent().unwrap().join("sprites.json")).unwrap(),
-                )
-                .unwrap();
-                let meta = &file.sprites[p.file_name().unwrap().to_str().unwrap()];
+                let windows = path.replace('/', "\\");
+                let meta = sprite_metadata(&mut cache, &windows).unwrap();
+                assert!(cache.contains_key(&path));
                 assert!(meta.pixels_per_unit > 0.0);
                 assert!(meta.size.iter().all(|v| *v > 0));
-                assert!(p.exists());
+                assert_eq!(
+                    image::image_dimensions(crate::assets::path(&path)).unwrap(),
+                    (meta.size[0], meta.size[1])
+                );
             }
             assert!((perspective(&bg, -5.0) - 1.0).abs() < 0.1);
             assert!(perspective(&bg, 5.0) >= 0.15);

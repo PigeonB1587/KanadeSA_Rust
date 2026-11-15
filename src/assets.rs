@@ -47,6 +47,11 @@ pub fn path(relative: impl AsRef<Path>) -> PathBuf {
     Path::new(ROOT).join(relative)
 }
 
+/// Resource cache keys use `/` on every host; disk paths still use Path/PathBuf.
+pub fn logical_key(path: &str) -> String {
+    path.replace('\\', "/")
+}
+
 pub fn read_config<T: DeserializeOwned>(name: &str) -> Result<T, String> {
     let path = path(format!("configs/_{name}.json"));
     let bytes = std::fs::read(&path).map_err(|e| format!("Cannot read {}: {e}", path.display()))?;
