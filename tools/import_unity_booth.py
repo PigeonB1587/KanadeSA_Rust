@@ -10,14 +10,24 @@ import shutil
 import struct
 import sys
 from pathlib import Path
+from compact_json import compact_json
 
 ROOT = Path(__file__).resolve().parents[1]
+ASSETS = ROOT / "assets"
 SOURCE = Path(sys.argv[1]).resolve() / "Assets"
 
 
 def copy(source, target):
     target.parent.mkdir(parents=True, exist_ok=True)
     shutil.copyfile(source, target)
+
+
+def write_json(target, value):
+    target.parent.mkdir(parents=True, exist_ok=True)
+    target.write_text(
+        json.dumps(value, ensure_ascii=False, separators=(",", ":")) + "\n",
+        encoding="utf-8",
+    )
 
 
 def png_size(path):
@@ -50,53 +60,56 @@ def metadata(path):
 
 configs = SOURCE / "Core/Configs"
 for name in ("pets", "umbrellas", "emotes", "boothbg"):
-    copy(configs / f"_{name}.json", ROOT / "configs" / f"_{name}.json")
+    target = ASSETS / "configs" / f"_{name}.json"
+    target.parent.mkdir(parents=True, exist_ok=True)
+    target.write_text(
+        compact_json((configs / f"_{name}.json").read_text(encoding="utf-8")),
+        encoding="utf-8",
+    )
 
 booth = SOURCE / "Resources/booth"
 groups = {}
 for source in sorted(booth.rglob("*.png")):
     relative = source.relative_to(booth).as_posix().lower()
-    copy(source, ROOT / "booth" / relative)
+    copy(source, ASSETS / "booth" / relative)
     parent = str(Path(relative).parent)
     groups.setdefault(parent, {})[Path(relative).name] = metadata(source)
 for parent, sprites in groups.items():
-    (ROOT / "booth" / parent / "sprites.json").write_text(
-        json.dumps({"format_version": 1, "sprites": sprites}, indent=2) + "\n"
-    )
+    write_json(ASSETS / "booth" / parent / "sprites.json",
+               {"format_version": 1, "sprites": sprites})
 
 for source_name, destination in (
     ("mini animals.atlas.txt", "skeleton.atlas"),
     ("mini animals.skel.bytes", "skeleton.skel.bytes"),
     ("mini animals.png", "mini animals.png"),
 ):
-    copy(SOURCE / "Core/Spine/Pets" / source_name, ROOT / "spineAssets/pets" / destination)
+    copy(SOURCE / "Core/Spine/Pets" / source_name, ASSETS / "spine/pets" / destination)
 
 # A separate atlas uses the original untrimmed PNG rectangle. Attachment cloning
 # keeps the template's geometry, dimensions and linked mesh deform identity.
 atlas = []
 for source in sorted((SOURCE / "Core/Spine/Character/Umbrellas/full").glob("*.png")):
-    copy(source, ROOT / "spineAssets/umbrellas" / source.name)
+    copy(source, ASSETS / "spine/umbrellas" / source.name)
     w, h = png_size(source)
     atlas.append(f"{source.name}\nsize:{w},{h}\nfilter:Linear,Linear\n"
                  f"{source.stem}\nbounds:0,0,{w},{h}\n")
-(ROOT / "spineAssets/umbrellas/skeleton.atlas").write_text("\n".join(atlas))
+(ASSETS / "spine/umbrellas/skeleton.atlas").write_text("\n".join(atlas))
 
 for source in (SOURCE / "Core/Spine/Gems").glob("*.png"):
-    copy(source, ROOT / "booth/gems" / source.name)
+    copy(source, ASSETS / "booth/gems" / source.name)
 for source_name, destination in (
     ("Core/Texture2D/Shadows/booth-char-shadow.png", "shadow.png"),
     ("Core/Texture2D/UGUI/Booth/BoothLogo.png", "watermark.png"),
 ):
     source = SOURCE / source_name
-    copy(source, ROOT / "booth" / destination)
+    copy(source, ASSETS / "booth" / destination)
     groups["."][destination] = metadata(source)
-(ROOT / "booth/sprites.json").write_text(
-    json.dumps({"format_version": 1, "sprites": groups["."]}, indent=2) + "\n"
-)
-(ROOT / "booth/gems/sprites.json").write_text(json.dumps({
+write_json(ASSETS / "booth/sprites.json",
+           {"format_version": 1, "sprites": groups["."]})
+write_json(ASSETS / "booth/gems/sprites.json", {
     "format_version": 1,
     "sprites": {p.name: metadata(p) for p in sorted((SOURCE / "Core/Spine/Gems").glob("*.png"))},
-}, indent=2) + "\n")
+})
 
 icon_paths = {"UI/InventoryIcons/item_rejection_letter"}
 for name in ("weapons", "pets", "umbrellas", "emotes"):
@@ -114,7 +127,7 @@ for icon in sorted(icon_paths):
     if source is None:
         missing.append(key)
     else:
-        copy(source, ROOT / "icons" / key)
+        copy(source, ASSETS / "icons" / key)
 print(f"Imported {sum(map(len, groups.values()))} booth sprites, 139 umbrella pages, "
       f"pets, gems and {len(icon_paths) - len(missing)} equipment icons.")
 if missing:

@@ -93,7 +93,7 @@ impl Preferences {
         }
     }
     pub fn save(&self) -> Result<(), String> {
-        let bytes = serde_json::to_vec_pretty(self).map_err(|e| e.to_string())?;
+        let bytes = serde_json::to_vec(self).map_err(|e| e.to_string())?;
         let mut file =
             std::fs::File::create(format!("{FILE}.pending")).map_err(|e| e.to_string())?;
         file.write_all(&bytes)

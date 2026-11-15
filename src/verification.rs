@@ -195,7 +195,7 @@ pub async fn recorder(
     }
     std::fs::write(
         directory.join("recordings.json"),
-        serde_json::to_vec_pretty(&results).unwrap(),
+        serde_json::to_vec(&results).unwrap(),
     )
     .map_err(|e| e.to_string())?;
     tracing::info!(

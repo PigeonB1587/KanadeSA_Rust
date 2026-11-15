@@ -72,9 +72,7 @@ pub struct Wardrobe {
 }
 
 fn read<T: serde::de::DeserializeOwned>(name: &str) -> Result<T, String> {
-    let path = format!("configs/_{name}.json");
-    let bytes = std::fs::read(&path).map_err(|e| format!("Cannot read {path}: {e}"))?;
-    serde_json::from_slice(&bytes).map_err(|e| format!("Invalid {path}: {e}"))
+    crate::assets::read_config(name)
 }
 
 impl Wardrobe {
@@ -190,7 +188,7 @@ impl Wardrobe {
             equipment,
             action: Action::Idle,
             umbrella_atlas: Arc::new(
-                Atlas::new_from_file("spineAssets/umbrellas/skeleton.atlas")
+                Atlas::new_from_file(crate::assets::UMBRELLA_ATLAS)
                     .map_err(|e| format!("Umbrella atlas: {e:?}"))?,
             ),
         })
@@ -458,12 +456,10 @@ mod tests {
 
     #[test]
     fn all_weapon_skins_and_umbrellas_build_and_entities_are_independent() {
-        let atlas = Arc::new(
-            Atlas::new_from_file("spineAssets/characters/character_01/skeleton.atlas").unwrap(),
-        );
+        let atlas = Arc::new(Atlas::new_from_file(crate::assets::CHARACTER_ATLAS).unwrap());
         let data = Arc::new(
             SkeletonBinary::new(atlas.clone())
-                .read_skeleton_data_file("spineAssets/characters/character_01/skeleton.skel.bytes")
+                .read_skeleton_data_file(crate::assets::CHARACTER_SKELETON)
                 .unwrap(),
         );
         let state = Arc::new(AnimationStateData::new(data.clone()));
@@ -539,12 +535,10 @@ mod tests {
 
     #[test]
     fn configured_outfits_and_characters_rebuild_without_residue() {
-        let atlas = Arc::new(
-            Atlas::new_from_file("spineAssets/characters/character_01/skeleton.atlas").unwrap(),
-        );
+        let atlas = Arc::new(Atlas::new_from_file(crate::assets::CHARACTER_ATLAS).unwrap());
         let data = Arc::new(
             SkeletonBinary::new(atlas.clone())
-                .read_skeleton_data_file("spineAssets/characters/character_01/skeleton.skel.bytes")
+                .read_skeleton_data_file(crate::assets::CHARACTER_SKELETON)
                 .unwrap(),
         );
         let mut wardrobe = Wardrobe::load(data.clone(), atlas, "Fox/-Fox").unwrap();

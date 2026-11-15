@@ -1,15 +1,15 @@
 # Third-party notices
 
-`audio/ui/button.ogg` is copied without modification from phira's
+`assets/audio/ui/button.ogg` is copied without modification from phira's
 `assets/button.ogg`, used by its regular UI button feedback (`button_hit`).
 It is distributed with phira under the project's GPL-3.0 license;
 see `licenses/phira-GPL-3.0.txt`.
 
-`fonts/SourceHanSans/Regular.otf` and `Bold.otf` are Source Han Sans fonts
+`assets/fonts/SourceHanSans/Regular.otf` and `Bold.otf` are Source Han Sans fonts
 copied from the read-only Unity reference project's `Assets/Core/Fonts/Source Han Sans/`.
 Source Han Sans is an Adobe open-source font family under the SIL Open Font License 1.1.
 
-`icons/ui/shopsparkle.png` is copied without modification from the read-only
+`assets/icons/ui/shopsparkle.png` is copied without modification from the read-only
 Unity reference project's `Assets/Core/Texture2D/UGUI/ShopSparkle.png`.
 It is used for the same inventory marker as Unity's `InventoryItem.SparkleImage`;
 visibility follows `SkinGenerator.GetEnableSparkle` (`useCosmeticsAnimTrack`).

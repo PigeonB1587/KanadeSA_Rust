@@ -39,8 +39,8 @@ fn write_synced(path: &Path, bytes: &[u8]) -> Result<(), String> {
 
 pub fn save(directory: &Path, characters: &CharacterFile, scene: &SceneFile) -> Result<(), String> {
     validate_pair(characters, scene)?;
-    let character_bytes = serde_json::to_vec_pretty(characters).map_err(|e| e.to_string())?;
-    let scene_bytes = serde_json::to_vec_pretty(scene).map_err(|e| e.to_string())?;
+    let character_bytes = serde_json::to_vec(characters).map_err(|e| e.to_string())?;
+    let scene_bytes = serde_json::to_vec(scene).map_err(|e| e.to_string())?;
     fs::create_dir_all(directory).map_err(|e| e.to_string())?;
     // Stage and sync both files before replacing either member. Keep a complete
     // previous pair; a crash between renames can never load a mixed generation.
@@ -49,11 +49,11 @@ pub fn save(directory: &Path, characters: &CharacterFile, scene: &SceneFile) -> 
     if let Ok((previous_characters, previous_scene)) = load(directory) {
         write_synced(
             &directory.join("characters.json.previous.pending"),
-            &serde_json::to_vec_pretty(&previous_characters).map_err(|e| e.to_string())?,
+            &serde_json::to_vec(&previous_characters).map_err(|e| e.to_string())?,
         )?;
         write_synced(
             &directory.join("scene.json.previous.pending"),
-            &serde_json::to_vec_pretty(&previous_scene).map_err(|e| e.to_string())?,
+            &serde_json::to_vec(&previous_scene).map_err(|e| e.to_string())?,
         )?;
         for name in ["characters", "scene"] {
             fs::rename(

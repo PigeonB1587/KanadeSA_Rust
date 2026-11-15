@@ -208,11 +208,26 @@ pub fn draw(font: &Font) {
                 white,
                 font,
             );
+            let metrics: Vec<_> = lines
+                .iter()
+                .map(|line| measure_text(line, Some(font), FONT_SIZE, 1.0))
+                .collect();
+            let text_top = metrics
+                .iter()
+                .enumerate()
+                .map(|(i, text)| i as f32 * LINE_HEIGHT - text.offset_y)
+                .fold(f32::INFINITY, f32::min);
+            let text_bottom = metrics
+                .iter()
+                .enumerate()
+                .map(|(i, text)| i as f32 * LINE_HEIGHT - text.offset_y + text.height)
+                .fold(f32::NEG_INFINITY, f32::max);
+            let baseline = y + (height - (text_bottom - text_top)) * 0.5 - text_top;
             for (i, line) in lines.iter().enumerate() {
                 draw_text_ex(
                     line,
                     x + ICON_WIDTH + PADDING,
-                    y + PADDING + 13.0 + i as f32 * LINE_HEIGHT,
+                    baseline + i as f32 * LINE_HEIGHT,
                     TextParams {
                         font: Some(font),
                         font_size: FONT_SIZE,

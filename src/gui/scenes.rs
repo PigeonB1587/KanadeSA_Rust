@@ -145,7 +145,7 @@ impl SceneGallery {
             if !self.thumbnails.contains_key(&path) && loads < 2 {
                 // Decode only visible cards, at most two per frame. Failed loads are
                 // retained too, so a missing resource never retries every frame.
-                let loaded = std::fs::read(&path)
+                let loaded = std::fs::read(crate::assets::path(&path))
                     .map_err(|error| error.to_string())
                     .and_then(|bytes| {
                         Image::from_file_with_format(&bytes, Some(ImageFormat::Png))

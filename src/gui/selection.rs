@@ -81,7 +81,7 @@ mod tests {
     #[test]
     fn localized_search_uses_translation_and_keeps_id_lookup() {
         let languages: HashMap<String, HashMap<String, String>> =
-            serde_json::from_str(include_str!("../../configs/_languages.json")).unwrap();
+            serde_json::from_str(crate::assets::LANGUAGES).unwrap();
         let chinese = &languages["Item.CharFox"]["schinese"];
         assert!(matches_query(chinese, "charfox", "狐狸"));
         assert!(!matches_query(chinese, "charfox", "super"));

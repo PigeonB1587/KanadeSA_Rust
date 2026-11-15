@@ -3,6 +3,7 @@ use macroquad::prelude::*;
 
 pub const MARGIN: f32 = 12.0;
 pub const GAP: f32 = 4.0;
+pub const INSPECTOR_PADDING: f32 = 8.0;
 pub const CONTROL_HEIGHT: f32 = 34.0;
 pub const TOPBAR_HEIGHT: f32 = 52.0;
 pub const TOOLS_Y: f32 = TOPBAR_HEIGHT + 8.0;
@@ -24,7 +25,7 @@ impl BoothLayout {
     pub fn new(size: Vec2, inspector: bool) -> Self {
         let wrapped = size.x < 840.0;
         let settings_w = if wrapped { 82.0 } else { 98.0 };
-        let settings = Rect::new(
+        let mut settings = Rect::new(
             size.x - MARGIN - settings_w,
             9.0,
             settings_w,
@@ -95,9 +96,12 @@ impl BoothLayout {
             let width = ((right - left - GAP) * 0.5).clamp(1.0, 90.0);
             (right - width * 2.0 - GAP, right, width, TOOLS_Y)
         } else {
-            // Match the left toolbar's gaps while spanning the inspector edges.
-            // 90 + 4 + 90 + 4 + 98 = 286 logical pixels.
-            (panel.x, settings.x - GAP, 90.0, 9.0)
+            // Align all three toolbar controls with the inspector's three tabs.
+            let left = panel.x + INSPECTOR_PADDING;
+            let width = (panel.w - INSPECTOR_PADDING * 2.0 - GAP * 2.0) / 3.0;
+            settings.x = left + (width + GAP) * 2.0;
+            settings.w = width;
+            (left, left + width * 2.0 + GAP, width, 9.0)
         };
         let output = std::array::from_fn(|i| {
             Rect::new(

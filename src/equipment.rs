@@ -88,10 +88,7 @@ pub struct Catalog {
     pub categories: Vec<Category>,
 }
 fn read<T: serde::de::DeserializeOwned>(name: &str) -> Result<T, String> {
-    serde_json::from_slice(
-        &std::fs::read(format!("configs/_{name}.json")).map_err(|e| e.to_string())?,
-    )
-    .map_err(|e| e.to_string())
+    crate::assets::read_config(name)
 }
 impl Catalog {
     pub fn load() -> Result<Self, String> {

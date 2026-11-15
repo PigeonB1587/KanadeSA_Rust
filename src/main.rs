@@ -1,4 +1,5 @@
 mod animation;
+mod assets;
 mod booth;
 mod character;
 mod equipment;
@@ -48,20 +49,20 @@ async fn main() {
         preferences::Preferences::load().vsync
     );
     gui::audio::init().await;
-    let font_regular = load_ttf_font("fonts/Rubik/Rubik-Regular.ttf")
+    let font_regular = load_ttf_font(assets::FONT_REGULAR)
         .await
         .expect("failed to load Rubik Regular font");
-    let font_bold = load_ttf_font("fonts/Rubik/Rubik-Bold.ttf")
+    let font_bold = load_ttf_font(assets::FONT_BOLD)
         .await
         .expect("failed to load Rubik Bold font");
 
     let character = Character::load(&CHARACTERS[0]).unwrap_or_else(|err| {
         panic!("failed to load character: {err}");
     });
-    let multilingual = load_ttf_font("fonts/SourceHanSans/Regular.otf")
+    let multilingual = load_ttf_font(assets::FONT_MULTILINGUAL)
         .await
         .expect("Failed to load multilingual font");
-    let multilingual_bold = load_ttf_font("fonts/SourceHanSans/Bold.otf")
+    let multilingual_bold = load_ttf_font(assets::FONT_MULTILINGUAL_BOLD)
         .await
         .expect("Failed to load multilingual bold font");
     tracing::info!(

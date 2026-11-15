@@ -7,7 +7,7 @@ thread_local! {
 }
 
 pub async fn init() {
-    match load_sound("audio/ui/button.ogg").await {
+    match load_sound(crate::assets::BUTTON_SOUND).await {
         Ok(sound) => CLICK.with(|slot| *slot.borrow_mut() = Some(sound)),
         Err(error) => tracing::warn!("Failed to load UI click sound: {error}"),
     }

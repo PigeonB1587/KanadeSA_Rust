@@ -89,7 +89,7 @@ Linux 需要 `zenity` 或 `yad`（Fedora：`sudo dnf install zenity`）。
 移动端后端尚未实机验证：Android 打包还需接入 `inputbox-android` AAR 并初始化 JNI 后端，
 不能仅启用 Rust 依赖就视为完成 Android 输入支持。
 
-UI 点击音效使用 phira 的 `button.ogg`，位于 `audio/ui/button.ogg`，启动时加载一次。
+UI 点击音效使用 phira 的 `button.ogg`，位于 `assets/audio/ui/button.ogg`，启动时加载一次。
 按钮、分类、搜索框、物品选择和语言选择播放点击反馈；悬停、滚轮及拖动滚动不播放。
 Linux 构建需安装 ALSA 开发库（Fedora：`sudo dnf install alsa-lib-devel`；
 Debian/Ubuntu：`sudo apt install libasound2-dev`）。缺失时链接器会报告找不到 `-lasound`。
@@ -128,10 +128,10 @@ Debian/Ubuntu：`sudo apt install libasound2-dev`）。缺失时链接器会报�
 每种枪单独分类，分类内选择皮肤，不再合成枪械 None。`Umbrella`、`Pet` 和 `Emote` 独立选择。
 所有配置列表保留原始顺序和原有空项，不人为插入 None；默认选择第一项（伞为红伞，宠物第一项为配置原有的空宠物）。新角色的实际近战和表情也默认第一项，旧存档保留已保存的实际选择。
 Preview 使用共享资源但独立控制器的试穿实体；武器/表情选择只编辑搭配并在 Preview 试用，不改变照相亭当前武器、表情或动作进度。所有枪皮分别保留选择，切换到另一把枪不会丢失配置；Emotes 严格保留原 JSON 的 74 项顺序，第一项为默认舞蹈，不插入 None。返回后通过照相亭图标选择实际使用内容。
-图标路径为 `icons/{配置 icon 转小写}.png`；枪械按 `weapon.icon + skinNames[index]` 拼接。缺省、假路径或加载失败统一采用 Unity 的 `UI/InventoryIcons/item_rejection_letter`，不会以 None 圆叉代替无图标物品。
+图标路径为 `assets/icons/{配置 icon 转小写}.png`；枪械按 `weapon.icon + skinNames[index]` 拼接。缺省、假路径或加载失败统一采用 Unity 的 `UI/InventoryIcons/item_rejection_letter`，不会以 None 圆叉代替无图标物品。
 特殊伞通过独立 atlas 重映射模板，GEM 随等级变化；宠物继承角色颜色，不提供点击触摸动作彩蛋。
 
-图标位于 `icons/ui/inventoryicons/`，仅包含从 Unity Resources 按配置路径复制的 PNG，
+图标位于 `assets/icons/ui/inventoryicons/`，仅包含从 Unity Resources 按配置路径复制的 PNG，
 文件路径统一小写。列表仅绘制可见单元格，每帧最多加载两张图标，
 使用最多 128 张纹理的最近使用缓存；移出缓存的纹理由 macroquad 释放。
 
@@ -147,7 +147,7 @@ GUI 使用 `1280×720` 设计单位和阶梯缩放：`1 / 1.25 / 1.5 / 1.75 / 2 
 背景使用移植自 phira 的缓慢斜向扫描条纹着色器，仅影响背景，不叠加到角色或界面上。
 来源与许可证见 `THIRD_PARTY_NOTICES.md`。
 
-从项目根目录的 `configs/` 读取 JSON 配置。角色列表以 `_characters.json` 为准，
+从项目根目录的 `assets/configs/` 读取 JSON 配置。角色列表以 `_characters.json` 为准，
 保留配置顺序，并使用 `spineSkin`、`spineBaseSkin`、`needsCutHats` 和
 `customShiaHeadband` 规则。界面名称读取 `_languages.json` 中的当前语言，缺失显示名可回退英文，搜索不回退。
 
@@ -171,6 +171,7 @@ GUI 使用 `1280×720` 设计单位和阶梯缩放：`1 / 1.25 / 1.5 / 1.75 / 2 
 ├── Cargo.toml
 ├── src
 │   ├── main.rs            # 照相亭与上层 Preview 主循环
+│   ├── assets.rs          # 应用资源路径、内嵌配置与 JSON 加载入口
 │   ├── character.rs       # 共享资源、独立角色/宠物控制器与 Preview 构图
 │   ├── animation.rs       # 多轨动作解析、initial/alternate、seek 与恢复
 │   ├── equipment.rs       # 平级装备类别、稳定皮肤名与附件配置
@@ -198,23 +199,34 @@ GUI 使用 `1280×720` 设计单位和阶梯缩放：`1 / 1.25 / 1.5 / 1.75 / 2 
 │   ├── version.rs         # 设置面板专用版本信息
 │   ├── logging.rs         # 控制台日志和按天轮转的日志文件
 │   └── spine_renderer.rs  # rusty_spine -> miniquad 渲染器（着色器/混合模式/纹理）
-├── configs                # 角色、服饰、装备、宠物、场景与多语言配置
-├── booth                  # 场景/GEM/影子/水印及各目录 sprites.json
-├── tools/import_unity_booth.py # 只读参考工程的资源导入脚本
-└── spineAssets
-    ├── README.md
-    ├── pets               # 宠物骨骼和 atlas
-    ├── umbrellas          # 独立伞 PNG 和生成的 atlas
-    └── characters
-        └── character_01
-            ├── skeleton.atlas
-            ├── skeleton.skel.bytes
-            └── skeleton*.png
+├── assets/                # 随应用分发的资源，与用户创作数据分离
+│   ├── audio/             # UI 音效
+│   ├── booth/             # 场景/GEM/影子/水印及各目录 sprites.json
+│   ├── configs/           # 角色、服饰、装备、宠物、场景与多语言 JSON
+│   ├── fonts/             # 字体与字体许可证
+│   ├── icons/             # UI/Inventory 图标
+│   └── spine/
+│       ├── pets/          # 宠物骨骼和 atlas
+│       ├── spring_platform/ # Preview 平台
+│       ├── umbrellas/     # 独立伞 PNG 和生成的 atlas
+│       └── characters/character_01/
+│           ├── skeleton.atlas
+│           ├── skeleton.skel.bytes
+│           └── skeleton*.png
+├── tools/
+│   ├── import_unity_booth.py # 只读参考工程的资源导入脚本
+│   ├── compact_json.py    # 保留字符串和数值文本的 JSON 紧凑化
+│   └── verify_recorder_outputs.py
+├── tests/                 # Spine 回归测试
+├── vendor/                # 本地依赖及修补说明
+├── projects/              # 用户工程与项目内照片/GIF（不入 Git）
+├── exports/               # 默认工程文件导出目录（不入 Git）
+└── editor_settings.json   # 编辑器全局偏好（不入 Git）
 ```
 
 ## 资源整理约定
 
-`spineAssets/characters/<角色目录>/` 下每个角色保持一套统一命名：
+`assets/spine/characters/<角色目录>/` 下每个角色保持一套统一命名：
 
 - `skeleton.atlas`：Spine 导出的 atlas 文件
 - `skeleton.skel.bytes`：Spine 二进制骨骼
@@ -222,9 +234,18 @@ GUI 使用 `1280×720` 设计单位和阶梯缩放：`1 / 1.25 / 1.5 / 1.75 / 2 
 
 atlas 文件中的贴图名必须与实际文件名一致（本项目的 `skeleton.atlas` 已从原始 `Character_full*.png` 重命名并同步更新）。
 
+从项目根目录运行应用；安装资源统一由 `src/assets.rs` 管理。场景配置和工程仍保留
+`Booth/...`、`UI/...` 等原始逻辑标识，只在文件读取时加上 `assets/` 路径，
+因此既有项目不需要修改。Spine atlas 和分页图片保持相邻，`sprites.json` 保持与图片同目录。
+
+资源 JSON 统一去除缩进和字符串外空白，保留键顺序、原始字符串、数值文本及全部字段；
+工程、角色/场景存档、备份和编辑器偏好的后续保存也使用紧凑 JSON，不改变数据格式。
+已有用户工程、导出和编辑器设置不会被本次整理改写。重新导入资源时脚本直接生成紧凑 JSON；
+手工更新后可运行 `python3 tools/compact_json.py`，默认仅处理 `assets/`，不扫描用户数据或 vendor。
+
 ## 添加新角色
 
-1. 在 `spineAssets/characters/` 下新建目录，例如 `character_02`，放入整理好的 `skeleton.atlas`、`skeleton.skel.bytes` 和贴图。
+1. 在 `assets/spine/characters/` 下新建目录，例如 `character_02`，放入整理好的 `skeleton.atlas`、`skeleton.skel.bytes` 和贴图。
 2. 在 `src/character.rs` 的 `CHARACTERS` 数组中追加一项 `CharacterConfig`：
    - `atlas_path` / `skeleton_path`：资源路径
    - `skin`：要使用的 Skin。注意本资源的 `default` Skin 只有一个占位附件，必须指定完整 Skin（如 `Fox/-Fox`）
@@ -232,7 +253,7 @@ atlas 文件中的贴图名必须与实际文件名一致（本项目的 `skelet
    - `backface_culling`：是否启用背面剔除；现有资源默认关闭
 3. `cargo run` 即可。
 
-若新骨骼使用不同的角色/服饰目录，需要同步提供 `configs/` 中相应配置。
+若新骨骼使用不同的角色/服饰目录，需要同步提供 `assets/configs/` 中相应配置。
 运行时只展示 `spineSkin` 和 `spineBaseSkin` 都存在于该骨骼中的角色。
 
 ## 实现说明
@@ -279,7 +300,7 @@ cargo run --quiet -- --verify-recorder /tmp/opencode/recorder-verify
 python3 tools/verify_recorder_outputs.py /tmp/opencode/recorder-verify # 需 Pillow、ffprobe
 ```
 
-导入脚本仅向本工程复制图片/配置并生成元数据，不写入参考工程。`booth/xxx/sprites.json` 保存原图尺寸、PPU、
+导入脚本仅向本工程 `assets/` 复制图片/配置并生成紧凑 JSON 元数据，不写入参考工程。`assets/booth/xxx/sprites.json` 保存原图尺寸、PPU、
 pivot、过滤、mipmap、色彩空间及其他导入设置；渲染按 PPU/pivot 转换坐标。
 Unity 世界 Y 向上、相机半高 5；Booth 配置单位换算为 `5 / 67.5`，物体深度为 `(offsetY + zOffset) × 5 / 67.5`。
 

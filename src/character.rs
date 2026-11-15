@@ -1,7 +1,7 @@
 //! Spine character loading, animation and placement.
 //!
 //! Add new characters by dropping their exported files into
-//! `spineAssets/characters/<name>/` and appending an entry to [`CHARACTERS`].
+//! `assets/spine/characters/<name>/` and appending an entry to [`CHARACTERS`].
 
 use std::sync::Arc;
 
@@ -49,8 +49,8 @@ pub struct CharacterConfig {
 /// Registry of all characters available in the project.
 pub const CHARACTERS: &[CharacterConfig] = &[CharacterConfig {
     name: "Character 01",
-    atlas_path: "spineAssets/characters/character_01/skeleton.atlas",
-    skeleton_path: "spineAssets/characters/character_01/skeleton.skel.bytes",
+    atlas_path: crate::assets::CHARACTER_ATLAS,
+    skeleton_path: crate::assets::CHARACTER_SKELETON,
     skin: Some("Fox/-Fox"),
     animation: Some("idle/idle"),
     backface_culling: false,
@@ -228,13 +228,13 @@ impl Character {
         });
 
         let pet_atlas = Arc::new(
-            Atlas::new_from_file("spineAssets/pets/skeleton.atlas")
+            Atlas::new_from_file(crate::assets::PET_ATLAS)
                 .map_err(|e| format!("Pet atlas: {e:?}"))?,
         );
         let pet_pma = pet_atlas.pages().any(|p| p.pma());
         let pet_data = Arc::new(
             SkeletonBinary::new(pet_atlas)
-                .read_skeleton_data_file("spineAssets/pets/skeleton.skel.bytes")
+                .read_skeleton_data_file(crate::assets::PET_SKELETON)
                 .map_err(|e| format!("Pet skeleton: {e:?}"))?,
         );
         let pet_state = Arc::new(AnimationStateData::new(pet_data.clone()));
@@ -328,13 +328,13 @@ impl Character {
         };
         preview.set_action(crate::model::Action::Idle);
         let atlas = Arc::new(
-            Atlas::new_from_file("spineAssets/spring_platform/skeleton.atlas")
+            Atlas::new_from_file(crate::assets::PLATFORM_ATLAS)
                 .map_err(|e| format!("Preview platform atlas: {e:?}"))?,
         );
         let pma = atlas.pages().any(|p| p.pma());
         let data = Arc::new(
             SkeletonBinary::new(atlas)
-                .read_skeleton_data_file("spineAssets/spring_platform/skeleton.skel.bytes")
+                .read_skeleton_data_file(crate::assets::PLATFORM_SKELETON)
                 .map_err(|e| format!("Preview platform skeleton: {e:?}"))?,
         );
         let state = Arc::new(AnimationStateData::new(data.clone()));

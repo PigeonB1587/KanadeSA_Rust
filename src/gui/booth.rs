@@ -12,7 +12,7 @@ use macroquad::prelude::*;
 const ACCENT: Color = Color::new(0.925, 0.604, 0.361, 1.0);
 const SURFACE: Color = Color::new(0.078, 0.082, 0.11, 0.97);
 const CONTROL: Color = Color::new(0.12, 0.125, 0.16, 1.0);
-const PANEL_PADDING: f32 = 8.0;
+const PANEL_PADDING: f32 = super::layout::INSPECTOR_PADDING;
 const INSPECTOR_CONTROL_HEIGHT: f32 = 36.0;
 const ROW_STEP: f32 = INSPECTOR_CONTROL_HEIGHT + PANEL_PADDING;
 const RATIOS: [(&str, u32, u32); 8] = [
@@ -102,11 +102,33 @@ impl Default for BoothUi {
 }
 
 pub fn label(text: &str, x: f32, y: f32, size: u16, font: &Font, color: Color, width: f32) {
+    fitted_label(text, x, y, size, font, color, width, false);
+}
+
+pub fn selected_label(text: &str, x: f32, y: f32, size: u16, font: &Font, width: f32) {
+    fitted_label(text, x, y, size, font, WHITE, width, true);
+}
+
+fn fitted_label(
+    text: &str,
+    x: f32,
+    y: f32,
+    size: u16,
+    font: &Font,
+    color: Color,
+    width: f32,
+    fixed_color: bool,
+) {
     let mut fitted = text.to_owned();
     while !fitted.is_empty() && measure_text(&fitted, Some(font), size, 1.0).width > width {
         fitted.pop();
     }
-    draw_text_ex(
+    let draw = if fixed_color {
+        super::widgets::paint::draw_text_fixed_color
+    } else {
+        super::widgets::paint::draw_text_ex
+    };
+    draw(
         &fitted,
         x,
         y,

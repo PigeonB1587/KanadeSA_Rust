@@ -21,12 +21,10 @@ mod tests {
     use std::sync::Arc;
 
     fn controller() -> SkeletonController {
-        let atlas = Arc::new(
-            Atlas::new_from_file("spineAssets/characters/character_01/skeleton.atlas").unwrap(),
-        );
+        let atlas = Arc::new(Atlas::new_from_file(crate::assets::CHARACTER_ATLAS).unwrap());
         let data = Arc::new(
             SkeletonBinary::new(atlas)
-                .read_skeleton_data_file("spineAssets/characters/character_01/skeleton.skel.bytes")
+                .read_skeleton_data_file(crate::assets::CHARACTER_SKELETON)
                 .unwrap(),
         );
         SkeletonController::new(data.clone(), Arc::new(AnimationStateData::new(data)))
@@ -226,12 +224,10 @@ mod tests {
 
     #[test]
     fn all_presets_weapon_tokens_and_emote_initials_resolve_on_actual_skeleton() {
-        let atlas = Arc::new(
-            Atlas::new_from_file("spineAssets/characters/character_01/skeleton.atlas").unwrap(),
-        );
+        let atlas = Arc::new(Atlas::new_from_file(crate::assets::CHARACTER_ATLAS).unwrap());
         let data = Arc::new(
             SkeletonBinary::new(atlas)
-                .read_skeleton_data_file("spineAssets/characters/character_01/skeleton.skel.bytes")
+                .read_skeleton_data_file(crate::assets::CHARACTER_SKELETON)
                 .unwrap(),
         );
         let mut controller =
@@ -282,12 +278,10 @@ mod tests {
     }
     #[test]
     fn appearance_reapply_preserves_tracks_and_seek_restores_pose() {
-        let atlas = Arc::new(
-            Atlas::new_from_file("spineAssets/characters/character_01/skeleton.atlas").unwrap(),
-        );
+        let atlas = Arc::new(Atlas::new_from_file(crate::assets::CHARACTER_ATLAS).unwrap());
         let data = Arc::new(
             SkeletonBinary::new(atlas)
-                .read_skeleton_data_file("spineAssets/characters/character_01/skeleton.skel.bytes")
+                .read_skeleton_data_file(crate::assets::CHARACTER_SKELETON)
                 .unwrap(),
         );
         let mut controller =

@@ -147,8 +147,7 @@ impl Booth {
     }
     pub fn new(character: Character) -> Result<Self, String> {
         let backgrounds: Vec<Background> =
-            serde_json::from_str(include_str!("../configs/_boothbg.json"))
-                .map_err(|e| e.to_string())?;
+            serde_json::from_str(crate::assets::BOOTH_CONFIG).map_err(|e| e.to_string())?;
         let target = render_target(1280, 720);
         target.texture.set_filter(FilterMode::Linear);
         Ok(Self {
@@ -295,7 +294,8 @@ impl Booth {
             let p = Path::new(path);
             let parent = p.parent().ok_or("Missing sprite parent")?;
             let file: SpriteFile = serde_json::from_slice(
-                &std::fs::read(parent.join("sprites.json")).map_err(|e| format!("{path}: {e}"))?,
+                &std::fs::read(crate::assets::path(parent.join("sprites.json")))
+                    .map_err(|e| format!("{path}: {e}"))?,
             )
             .map_err(|e| e.to_string())?;
             if file.format_version != 1 {
@@ -312,7 +312,7 @@ impl Booth {
             .ok_or_else(|| format!("Missing metadata for {path}"))?
             .clone();
         let image = Image::from_file_with_format(
-            &std::fs::read(path).map_err(|e| format!("{path}: {e}"))?,
+            &std::fs::read(crate::assets::path(path)).map_err(|e| format!("{path}: {e}"))?,
             Some(ImageFormat::Png),
         )
         .map_err(|e| e.to_string())?;
@@ -792,7 +792,7 @@ mod tests {
     #[test]
     fn unity_sprites_have_valid_metadata_and_all_references_resolve() {
         let backgrounds: Vec<Background> =
-            serde_json::from_str(include_str!("../configs/_boothbg.json")).unwrap();
+            serde_json::from_str(crate::assets::BOOTH_CONFIG).unwrap();
         assert_eq!(backgrounds.len(), 15);
         for bg in backgrounds {
             for reference in std::iter::once(&bg.img)
@@ -800,7 +800,7 @@ mod tests {
                 .chain(bg.layers.iter().map(|l| &l.img))
             {
                 let path = resource_path(reference);
-                let p = Path::new(&path);
+                let p = crate::assets::path(&path);
                 let file: SpriteFile = serde_json::from_slice(
                     &std::fs::read(p.parent().unwrap().join("sprites.json")).unwrap(),
                 )

@@ -60,7 +60,7 @@ impl ProjectFile {
     }
     pub fn write_new(&self, path: &Path) -> Result<(), String> {
         self.validate()?;
-        let bytes = serde_json::to_vec_pretty(self).map_err(|e| e.to_string())?;
+        let bytes = serde_json::to_vec(self).map_err(|e| e.to_string())?;
         if let Some(parent) = path.parent().filter(|p| !p.as_os_str().is_empty()) {
             std::fs::create_dir_all(parent).map_err(|e| e.to_string())?;
         }
@@ -179,7 +179,7 @@ impl Project {
         std::fs::create_dir_all(&directory).map_err(|e| e.to_string())?;
         write_atomic(
             &directory.join("project.json"),
-            &serde_json::to_vec_pretty(self).map_err(|e| e.to_string())?,
+            &serde_json::to_vec(self).map_err(|e| e.to_string())?,
         )
     }
 }

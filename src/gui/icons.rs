@@ -2,10 +2,10 @@
 use macroquad::prelude::*;
 use std::collections::HashMap;
 
-pub const FALLBACK: &str = "icons/ui/inventoryicons/item_rejection_letter.png";
+pub const FALLBACK: &str = crate::assets::FALLBACK_ICON;
 
 pub fn path(icon: &str) -> String {
-    let path = format!("icons/{}.png", icon.to_lowercase());
+    let path = format!("{}/icons/{}.png", crate::assets::ROOT, icon.to_lowercase());
     if icon.is_empty() || !std::path::Path::new(&path).is_file() {
         FALLBACK.into()
     } else {
@@ -86,16 +86,18 @@ mod tests {
         }
         assert_eq!(
             path("UI/InventoryIcons/emote-dance1"),
-            "icons/ui/inventoryicons/emote-dance1.png"
+            "assets/icons/ui/inventoryicons/emote-dance1.png"
         );
         assert!(std::path::Path::new(FALLBACK).is_file());
     }
 
     #[test]
     fn white_icons_preserve_every_alpha_value() {
-        let mut image = image::open("icons/ui/inventoryicons/gun_ak_grey.png")
-            .unwrap()
-            .into_rgba8();
+        let mut image = image::open(crate::assets::path(
+            "icons/ui/inventoryicons/gun_ak_grey.png",
+        ))
+        .unwrap()
+        .into_rgba8();
         let alpha: Vec<_> = image.pixels().map(|pixel| pixel[3]).collect();
         whiten(image.as_mut());
         for (pixel, alpha) in image.pixels().zip(alpha) {

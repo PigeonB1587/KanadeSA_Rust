@@ -305,7 +305,17 @@ pub mod paint {
         );
     }
     pub fn draw_text_ex(text: &str, x: f32, y: f32, mut params: TextParams) -> TextDimensions {
-        params.color = tint(text_color(params.color));
+        params.color = text_color(params.color);
+        draw_text_fixed_color(text, x, y, params)
+    }
+    /// Preserve foreground contrast on fills that do not change with the theme.
+    pub fn draw_text_fixed_color(
+        text: &str,
+        x: f32,
+        y: f32,
+        mut params: TextParams,
+    ) -> TextDimensions {
+        params.color = tint(params.color);
         let offset = offset();
         macroquad::text::draw_text_ex(text, x + offset.x, y + offset.y, params)
     }

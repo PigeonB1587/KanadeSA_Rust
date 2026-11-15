@@ -1,7 +1,7 @@
 //! Actual booth choices. The Preview catalog only configures their appearance.
 use super::widgets::paint::{draw_rectangle, draw_texture_ex};
 use super::{
-    booth::{control_label, label},
+    booth::{control_label, label, selected_label},
     drag_scroll::DragScroll,
     icons::IconCache,
 };
@@ -244,15 +244,26 @@ impl EquipmentPicker {
             } else {
                 entry.id.clone()
             };
-            label(
-                wardrobe.display_name(&name_id),
-                r.x + 3.0,
-                r.bottom() - 4.0,
-                10,
-                font,
-                WHITE,
-                r.w - 6.0,
-            );
+            if selected {
+                selected_label(
+                    wardrobe.display_name(&name_id),
+                    r.x + 3.0,
+                    r.bottom() - 4.0,
+                    10,
+                    font,
+                    r.w - 6.0,
+                );
+            } else {
+                label(
+                    wardrobe.display_name(&name_id),
+                    r.x + 3.0,
+                    r.bottom() - 4.0,
+                    10,
+                    font,
+                    WHITE,
+                    r.w - 6.0,
+                );
+            }
             if tap && area.contains(mouse) && r.contains(mouse) {
                 chosen = Some(entry.id.clone());
             }
