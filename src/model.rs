@@ -120,6 +120,8 @@ pub struct AnimationData {
     pub control_track: usize,
     pub paused: bool,
     pub pet_animation: Option<PetAnimationData>,
+    /// Automatic cosmetic layer; independent of the action's editable tracks.
+    pub cosmetics_time: Option<f32>,
 }
 
 #[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
@@ -148,6 +150,7 @@ impl AnimationData {
             control_track: action.control_track(),
             paused: false,
             pet_animation: None,
+            cosmetics_time: None,
         }
     }
 }
@@ -270,6 +273,12 @@ pub fn validate_pair(characters: &CharacterFile, scene: &SceneFile) -> Result<()
             return Err("Empty or duplicate character ID".into());
         }
         let animation = &character.animation;
+        if animation
+            .cosmetics_time
+            .is_some_and(|time| !time.is_finite() || time < 0.0)
+        {
+            return Err(format!("Invalid cosmetic animation for {}", character.id));
+        }
         if animation
             .pet_animation
             .as_ref()

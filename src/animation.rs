@@ -5,6 +5,10 @@ use crate::{
 };
 use rusty_spine::{Physics, controller::SkeletonController};
 
+const COSMETICS_ANIMATION: &str = "misc/cosmetics";
+// Keep the automatic layer above all user tracks without consuming one of them.
+const COSMETICS_TRACK: usize = MAX_TRACKS;
+
 #[derive(Clone, Debug, PartialEq)]
 pub struct ResolvedTrack {
     pub clip: Option<String>,
@@ -338,6 +342,147 @@ mod tests {
                 .all(|b| b.world_x().is_finite() && b.world_y().is_finite())
         );
     }
+
+    fn cosmetics_character() -> (SkeletonController, crate::wardrobe::Wardrobe) {
+        let atlas = Arc::new(Atlas::new_from_file(crate::assets::CHARACTER_ATLAS).unwrap());
+        let data = Arc::new(
+            SkeletonBinary::new(atlas.clone())
+                .read_skeleton_data_file(crate::assets::CHARACTER_SKELETON)
+                .unwrap(),
+        );
+        let wardrobe = crate::wardrobe::Wardrobe::load(data.clone(), atlas, "Fox/-Fox").unwrap();
+        let controller =
+            SkeletonController::new(data.clone(), Arc::new(AnimationStateData::new(data)));
+        (controller, wardrobe)
+    }
+
+    #[test]
+    fn cosmetic_lenses_rotate_and_preserve_pause_seek_restore_and_other_roles() {
+        let (mut controller, mut wardrobe) = cosmetics_character();
+        wardrobe.selected[2] = wardrobe.items[2]
+            .iter()
+            .position(|item| item.inventory_id == "GlassesPinwheelAnimated")
+            .unwrap();
+        wardrobe.apply(&mut controller).unwrap();
+        let mut data = AnimationData::default();
+        let mut runtime = AnimationRuntime::default();
+        runtime
+            .configure(
+                &mut controller,
+                &data,
+                &wardrobe.equipment_catalog,
+                &wardrobe.equipment,
+                true,
+            )
+            .unwrap();
+        runtime
+            .configure_cosmetics(
+                &mut controller,
+                &mut data,
+                wardrobe.uses_cosmetics_animation(),
+            )
+            .unwrap();
+        wardrobe.apply_visibility(&mut controller);
+        runtime.update(&mut controller, &mut data, 0.5);
+        for name in ["rotate_L", "rotate_R"] {
+            assert!((controller.skeleton.find_bone(name).unwrap().rotation() + 90.0).abs() < 0.001);
+        }
+        assert_eq!(data.cosmetics_time, Some(0.5));
+        data.paused = true;
+        runtime.update(&mut controller, &mut data, 1.0);
+        assert_eq!(data.cosmetics_time, Some(0.5));
+        runtime.seek(&mut controller, &mut data, 1.5);
+        assert!(
+            (controller
+                .skeleton
+                .find_bone("rotate_L")
+                .unwrap()
+                .rotation()
+                + 270.0)
+                .abs()
+                < 0.001
+        );
+
+        let (mut other, mut other_wardrobe) = cosmetics_character();
+        other_wardrobe.selected = wardrobe.selected;
+        other_wardrobe.apply(&mut other).unwrap();
+        let saved = data.clone();
+        let mut restored = AnimationRuntime::default();
+        restored
+            .configure(
+                &mut other,
+                &data,
+                &other_wardrobe.equipment_catalog,
+                &other_wardrobe.equipment,
+                true,
+            )
+            .unwrap();
+        restored
+            .configure_cosmetics(&mut other, &mut data, true)
+            .unwrap();
+        other_wardrobe.apply_visibility(&mut other);
+        restored.update(&mut other, &mut data, 0.0);
+        assert_eq!(data, saved);
+        runtime
+            .configure_cosmetics(&mut controller, &mut data, false)
+            .unwrap();
+        assert!(
+            controller
+                .animation_state
+                .get_current(COSMETICS_TRACK)
+                .is_none()
+        );
+        assert!(
+            controller
+                .skeleton
+                .find_bone("rotate_L")
+                .unwrap()
+                .rotation()
+                .abs()
+                < 0.001
+        );
+        assert!((other.skeleton.find_bone("rotate_L").unwrap().rotation() + 270.0).abs() < 0.001);
+    }
+
+    #[test]
+    fn remapped_cosmetic_mesh_receives_original_deform_timeline() {
+        let (mut controller, mut wardrobe) = cosmetics_character();
+        wardrobe.selected[0] = wardrobe.items[0]
+            .iter()
+            .position(|item| item.inventory_id == "ClothesNecklaceCarlCoin")
+            .unwrap();
+        wardrobe.apply(&mut controller).unwrap();
+        let mut data = AnimationData::default();
+        let mut runtime = AnimationRuntime::default();
+        runtime
+            .configure(
+                &mut controller,
+                &data,
+                &wardrobe.equipment_catalog,
+                &wardrobe.equipment,
+                true,
+            )
+            .unwrap();
+        runtime
+            .configure_cosmetics(&mut controller, &mut data, true)
+            .unwrap();
+        wardrobe.apply_visibility(&mut controller);
+        let deform = |controller: &SkeletonController| {
+            let slot = controller.skeleton.find_slot("costumes_tie").unwrap();
+            unsafe {
+                let slot = &*slot.c_ptr();
+                if slot.deformCount == 0 {
+                    return vec![];
+                }
+                std::slice::from_raw_parts(slot.deform, slot.deformCount as usize).to_vec()
+            }
+        };
+        runtime.update(&mut controller, &mut data, 0.25);
+        let first = deform(&controller);
+        assert!(!first.is_empty(), "Remapped mesh lost its deform timeline");
+        runtime.update(&mut controller, &mut data, 0.5);
+        assert_ne!(first, deform(&controller));
+    }
 }
 
 fn resolve(token: &str, weapon: Option<&Weapon>, emote: Option<&Emote>) -> ResolvedTrack {
@@ -473,6 +618,51 @@ impl AnimationRuntime {
         self.apply(controller);
         Ok(())
     }
+    pub fn configure_cosmetics(
+        &self,
+        controller: &mut SkeletonController,
+        data: &mut AnimationData,
+        enabled: bool,
+    ) -> Result<(), String> {
+        if !enabled {
+            if controller
+                .animation_state
+                .get_current(COSMETICS_TRACK)
+                .is_some()
+            {
+                controller.animation_state.clear_track(COSMETICS_TRACK);
+                self.apply(controller);
+            }
+            data.cosmetics_time = None;
+            return Ok(());
+        }
+        if controller
+            .skeleton
+            .data()
+            .find_animation(COSMETICS_ANIMATION)
+            .is_none()
+        {
+            return Err(format!("Unknown animation {COSMETICS_ANIMATION}"));
+        }
+        if controller
+            .animation_state
+            .get_current(COSMETICS_TRACK)
+            .is_none()
+        {
+            let mut entry = controller
+                .animation_state
+                .set_animation_by_name(COSMETICS_TRACK, COSMETICS_ANIMATION, true)
+                .map_err(|e| format!("{e:?}"))?;
+            entry.set_mix_duration(0.0);
+            entry.set_track_time(data.cosmetics_time.unwrap_or(0.0));
+        }
+        data.cosmetics_time = controller
+            .animation_state
+            .get_current(COSMETICS_TRACK)
+            .map(|entry| entry.track_time());
+        self.apply(controller);
+        Ok(())
+    }
     pub fn update(
         &mut self,
         controller: &mut SkeletonController,
@@ -561,6 +751,10 @@ impl AnimationRuntime {
                 t.current_clip = None;
             }
         }
+        data.cosmetics_time = controller
+            .animation_state
+            .get_current(COSMETICS_TRACK)
+            .map(|entry| entry.track_time());
     }
     pub fn seek(&self, controller: &mut SkeletonController, data: &mut AnimationData, time: f32) {
         let i = data.control_track;
@@ -570,6 +764,14 @@ impl AnimationRuntime {
             if let Some(t) = data.tracks.get_mut(i) {
                 t.time = time.max(0.0);
             }
+        }
+        if let Some(mut entry) = controller
+            .animation_state
+            .track_at_index_mut(COSMETICS_TRACK)
+        {
+            entry.set_track_time(time.max(0.0));
+            entry.set_animation_last(time.max(0.0));
+            data.cosmetics_time = Some(time.max(0.0));
         }
         self.apply(controller);
     }

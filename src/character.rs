@@ -326,6 +326,7 @@ impl Character {
             character_id: preview.id.clone(),
             ..Placement::default()
         };
+        preview.animation.cosmetics_time = None;
         preview.set_action(crate::model::Action::Idle);
         let atlas = Arc::new(
             Atlas::new_from_file(crate::assets::PLATFORM_ATLAS)
@@ -424,8 +425,17 @@ impl Character {
             force,
         )?;
         self.wardrobe.action = self.animation.action;
+        self.configure_cosmetics()?;
         self.configure_pet(force)?;
         Ok(())
+    }
+
+    fn configure_cosmetics(&mut self) -> Result<(), String> {
+        self.animation_runtime.configure_cosmetics(
+            &mut self.controller,
+            &mut self.animation,
+            self.wardrobe.uses_cosmetics_animation(),
+        )
     }
 
     fn configure_pet(&mut self, force: bool) -> Result<(), String> {
@@ -505,6 +515,9 @@ impl Character {
         if let Some(platform) = &mut self.preview_platform {
             platform.update(delta_seconds, Physics::Update);
         }
+        // Configure/seek can restore setup slots. Bind remapped meshes before
+        // evaluating their deform timelines, including a paused first frame.
+        self.wardrobe.apply_visibility(&mut self.controller);
         self.animation_runtime
             .update(&mut self.controller, &mut self.animation, delta_seconds);
         if let Some(mut target) = self.controller.skeleton.find_bone_mut("TARGET") {
@@ -567,6 +580,10 @@ impl Character {
             self.wardrobe.selected = old_selected;
             tracing::warn!("Cannot apply selection: {error}");
         }
+        if let Err(error) = self.configure_cosmetics() {
+            tracing::warn!("Cannot animate outfit: {error}");
+        }
+        self.update(0.0);
     }
 
     /// Use the previous Preview size, shrinking only to keep attachments visible.
@@ -765,6 +782,10 @@ impl Character {
                 .rem_euclid(count as isize) as usize;
             match self.wardrobe.apply(&mut self.controller) {
                 Ok(()) => {
+                    if let Err(error) = self.configure_cosmetics() {
+                        tracing::warn!("Cannot animate outfit: {error}");
+                    }
+                    self.update(0.0);
                     tracing::info!(
                         "Equipped {}: {}",
                         crate::wardrobe::CATEGORIES[category],
@@ -788,6 +809,10 @@ impl Character {
             self.wardrobe.selected = previous;
             tracing::error!("Cannot clear outfit: {error}");
         }
+        if let Err(error) = self.configure_cosmetics() {
+            tracing::warn!("Cannot animate outfit: {error}");
+        }
+        self.update(0.0);
     }
 
     pub fn animation_name(&self) -> &str {
@@ -809,6 +834,7 @@ impl Character {
     pub fn set_action(&mut self, action: Action) {
         let old = self.animation.clone();
         self.animation = AnimationData::preset(action);
+        self.animation.cosmetics_time = old.cosmetics_time;
         if let Err(error) = self.configure_animation(true) {
             self.animation = old;
             if let Err(rollback) = self.configure_animation(true) {
@@ -921,8 +947,10 @@ impl Character {
         self.wardrobe.equipment.weapon = id.map(str::to_owned);
         if !self.animation.action.weapons_visible() {
             let paused = self.animation.paused;
+            let cosmetics_time = self.animation.cosmetics_time;
             self.animation = AnimationData::preset(Action::Idle);
             self.animation.paused = paused;
+            self.animation.cosmetics_time = cosmetics_time;
         }
         let result = self
             .wardrobe
@@ -948,9 +976,11 @@ impl Character {
         }
         let before = self.data();
         let paused = self.animation.paused;
+        let cosmetics_time = self.animation.cosmetics_time;
         self.wardrobe.equipment.emote = Some(id.to_owned());
         self.animation = AnimationData::preset(Action::Emote);
         self.animation.paused = paused;
+        self.animation.cosmetics_time = cosmetics_time;
         if let Err(error) = self.configure_animation(true) {
             self.restore(&before, self.placement.clone())?;
             return Err(error);

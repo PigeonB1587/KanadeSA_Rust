@@ -24,6 +24,7 @@ cargo run
 Preview 完整叠在照相亭 GUI 上方，底层只绘制、不响应输入；底板与面板采用照相亭同款深灰蓝色，全屏底板使用 30% 透明度（70% 不透明度），服装列表与信息卡保留 98% 不透明度以保证文字可读性。
 角色后方的三维坐标参考与角色取景共用脚部原点，水平轴平行于地平线并跨越窗口，浅透视地网只向左右展开，纵轴与纵深保持短小；包含三轴刻度和定位环，打开时横向弹性展开，退出时横向收缩淡出，线色随 Dark/Day 平滑变化，仅用于 Preview，不进入照片或 GIF。
 物品网格沿用 Unity `SkinGenerator.GetEnableSparkle`：五类服饰、伞和武器按 `useCosmeticsAnimTrack` 显示左上角高级物品烟花标记，角色、宠物与 Emote 不显示；标记使用 Unity 原图并适配明暗主题。
+实际穿戴带该标记的饰品或显示动态武器时，会自动叠加原版 `misc/cosmetics` 动画，恢复催眠眼镜旋转、帽子/项链变形等效果。该层遵循角色暂停，独立保存进度，录制 GIF 时同步从零推进；不改变九种动作预设或其控制轨道。原版资产证据与实现边界见 `docs/cosmetics-animation.md`。
 
 ## 照相亭
 
@@ -73,7 +74,7 @@ projects/<id>/
 
 项目中的两份创作 JSON 分别保存：
 
-- `characters.json`：稳定角色 ID、动物/服饰 inventory ID、装备、每种枪的皮肤名、`equipment.loadout` 搭配配置（近战和表情）、实际 `weapon` / `emote`、等级、各轨道当前片段/时间/速度/循环、暂停状态和宠物动画时间。旧存档缺少 loadout 时从原选择补全，保留实际武器、表情和动画状态。
+- `characters.json`：稳定角色 ID、动物/服饰 inventory ID、装备、每种枪的皮肤名、`equipment.loadout` 搭配配置（近战和表情）、实际 `weapon` / `emote`、等级、各轨道当前片段/时间/速度/循环、暂停状态、宠物动画时间与装饰层 `animation.cosmetics_time`。旧存档缺少 loadout 时从原选择补全，保留实际武器、表情和动画状态。
 - `scene.json`：背景、水印、透明开关、选中角色及通过 `character_id` 引用的场景变换，不嵌入完整角色数据。
 
 两份 JSON 具有相同 revision；保存先写入并同步 `.pending`，再替换当前文件，保留完整 `.previous` 配对供中断后恢复。加载先校验并完整构建新实体，再替换现场；无效资源或动作不会清空当前场景。空场景也可以保存恢复。不要将不同次保存的两份 JSON 混用。

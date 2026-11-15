@@ -232,6 +232,24 @@ impl Wardrobe {
         self.display_name(id)
     }
 
+    /// The original game's animated items opt into the shared cosmetics clip.
+    pub fn uses_cosmetics_animation(&self) -> bool {
+        self.selected
+            .iter()
+            .enumerate()
+            .any(|(category, selected)| self.items[category][*selected].use_cosmetics_anim_track)
+            || (self.action.weapons_visible()
+                && self
+                    .equipment_catalog
+                    .weapon(&self.equipment)
+                    .is_some_and(|weapon| weapon.use_cosmetics_anim_track))
+            || (self.action.umbrella_visible()
+                && self.equipment_catalog.umbrellas.iter().any(|item| {
+                    Some(item.inventory_id.as_str()) == self.equipment.umbrella.as_deref()
+                        && item.use_cosmetics_anim_track
+                }))
+    }
+
     /// Build before applying: an invalid combination cannot damage the active appearance.
     pub fn apply(&mut self, controller: &mut SkeletonController) -> Result<(), String> {
         let character = &self.characters[self.current_character];
@@ -440,6 +458,11 @@ unsafe fn remap(
             spRegionAttachment_updateRegion(attachment);
         } else {
             let attachment = copy.cast::<spMeshAttachment>();
+            // A deep copy has a new identity. Keep the source's deform timeline
+            // association while retaining private geometry/UVs for each entity.
+            (*attachment).super_0.timelineAttachment = (*template.cast::<spMeshAttachment>())
+                .super_0
+                .timelineAttachment;
             (*attachment).region = region.cast::<spTextureRegion>();
             (*attachment).rendererObject = region.cast();
             spMeshAttachment_updateRegion(attachment);

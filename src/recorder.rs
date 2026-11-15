@@ -109,6 +109,9 @@ impl Recorder {
             if let Some(pet) = &mut data.animation.pet_animation {
                 pet.time = 0.0;
             }
+            if let Some(time) = &mut data.animation.cosmetics_time {
+                *time = 0.0;
+            }
             c.restore(&data, c.placement.clone())?;
         }
         std::fs::create_dir_all(directory).map_err(|e| e.to_string())?;
