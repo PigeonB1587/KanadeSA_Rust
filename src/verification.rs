@@ -8,6 +8,203 @@ use crate::{
 use macroquad::prelude::*;
 use std::path::Path;
 
+/// Exercises the actual GPU readback, cloned scene and async ffmpeg lifecycle.
+pub async fn recorder(
+    booth: &mut Booth,
+    directory: &Path,
+    font: &Font,
+    bold: &Font,
+) -> Result<(), String> {
+    use crate::recorder::{Options, Recorder};
+    std::fs::create_dir_all(directory).map_err(|e| e.to_string())?;
+    booth.characters[0].set_action(Action::Run);
+    booth.characters[0].animation.paused = true;
+    booth.add()?;
+    booth.characters[1].placement.position = [2.0, -2.8];
+    booth.characters[1].placement.height = -2.8;
+    booth.characters[1].set_action(Action::Roll);
+    booth.characters[1].animation.paused = true;
+    booth.selected = Some(0);
+    let original = booth.characters[0].data();
+    let placement = booth.characters[0].placement.clone();
+    let mut recorder = Recorder::default();
+    let mut results = Vec::new();
+    for (index, (fps, transparent)) in [(10, false), (20, true), (25, true), (50, false)]
+        .into_iter()
+        .enumerate()
+    {
+        if transparent {
+            let green = booth
+                .backgrounds
+                .iter()
+                .position(|bg| bg.transparency_option)
+                .ok_or("Missing green backdrop")?;
+            booth.switch_background(green);
+        }
+        booth.transparent = transparent;
+        let speed = if index == 2 { 0.5 } else { 1.0 };
+        let c = &mut booth.characters[0];
+        c.animation.tracks[c.animation.control_track].speed = speed;
+        let duration = c.duration() / speed;
+        let options = Options {
+            width: if index == 2 { 240 } else { 320 },
+            height: if index == 2 { 240 } else { 180 },
+            fps,
+            colors: [64, 128, 256, 128][index],
+            dither: index > 0,
+        };
+        let before: Vec<_> = booth
+            .characters
+            .iter()
+            .map(|c| (c.data(), c.placement.clone()))
+            .collect();
+        recorder.start(booth, options, directory)?;
+        if recorder.start(booth, options, directory).is_ok() {
+            return Err("Recorder allowed two simultaneous jobs".into());
+        }
+        let started = std::time::Instant::now();
+        let path = loop {
+            if started.elapsed().as_secs() > 90 {
+                return Err("Recorder timed out".into());
+            }
+            if let Some(result) = recorder.tick() {
+                break result?;
+            }
+            clear_background(BLACK);
+            next_frame().await;
+        };
+        if booth
+            .characters
+            .iter()
+            .map(|c| (c.data(), c.placement.clone()))
+            .collect::<Vec<_>>()
+            != before
+        {
+            return Err("Recorder changed live scene playback or placement".into());
+        }
+        results.push(serde_json::json!({"path":path,"fps":fps,"transparent":transparent,"duration":duration,
+            "frames":crate::recorder::frame_count(duration,fps)?,"width":options.width,"height":options.height}));
+        booth.capture_to(
+            &directory.join(format!("photo-{index}.png")),
+            options.width,
+            options.height,
+        )?;
+    }
+    let options = Options {
+        width: 320,
+        height: 180,
+        fps: 20,
+        colors: 128,
+        dither: true,
+    };
+    recorder.start(booth, options, directory)?;
+    recorder.tick();
+    recorder.cancel();
+    let start = std::time::Instant::now();
+    loop {
+        if start.elapsed().as_secs() > 10 {
+            return Err("Cancel timed out".into());
+        }
+        if let Some(result) = recorder.tick() {
+            if result.is_ok() {
+                return Err("Cancelled job produced a GIF".into());
+            }
+            break;
+        }
+        next_frame().await;
+    }
+    // Dropping the owner during capture must join the worker and clean its job.
+    {
+        let mut closing = Recorder::default();
+        closing.start(booth, options, directory)?;
+        closing.tick();
+    }
+    booth.characters[0].animation.tracks[0].speed = 0.0;
+    if recorder.start(booth, options, directory).is_ok() {
+        return Err("Zero-speed track accepted".into());
+    }
+    booth.characters[0].restore(&original, placement)?;
+    // Theme affects GUI only: the exact same scene pixels must survive switching.
+    let dark = booth.capture_pixels(320, 180)?;
+    for _ in 0..100 {
+        gui::widgets::paint::update_theme(true);
+        next_frame().await;
+    }
+    let light = booth.capture_pixels(320, 180)?;
+    if dark != light {
+        return Err("GUI theme recolored the scene capture".into());
+    }
+    let pet_category = booth.characters[0]
+        .wardrobe()
+        .equipment_catalog
+        .categories
+        .iter()
+        .position(|c| matches!(c.kind, crate::equipment::CategoryKind::Pet))
+        .ok_or("Missing pet category")?;
+    booth.characters[0].choose_equipment(pet_category, 1)?;
+    booth.characters[0].level = 999;
+    let catalog = booth.characters[0].wardrobe().equipment_catalog.clone();
+    let emote_category = catalog
+        .categories
+        .iter()
+        .position(|c| matches!(c.kind, crate::equipment::CategoryKind::Emote))
+        .ok_or("Missing emote category")?;
+    let gem = catalog.categories[emote_category]
+        .entries
+        .iter()
+        .position(|e| e.id.to_lowercase().contains("gem"))
+        .ok_or("Missing gem emote")?;
+    booth.characters[0].use_emote(&catalog.categories[emote_category].entries[gem].id)?;
+    booth.characters[0].animation.paused = false;
+    booth.update(0.75);
+    booth.characters[0].animation.paused = true;
+    let baseline = booth.capture_pixels(320, 180)?;
+    for option in 0..3 {
+        booth.render_options = crate::booth::RenderOptions::default();
+        match option {
+            0 => booth.render_options.shadows = false,
+            1 => booth.render_options.pets = false,
+            _ => booth.render_options.gems = false,
+        }
+        if booth.capture_pixels(320, 180)? == baseline {
+            return Err(format!("Render toggle {option} did not change pixels"));
+        }
+    }
+    booth.render_options = crate::booth::RenderOptions::default();
+    for theme in [false, true] {
+        for _ in 0..100 {
+            gui::widgets::paint::update_theme(theme);
+            next_frame().await;
+        }
+        booth.render(1280, 720, false)?;
+        clear_background(gui::widgets::paint::surface(Color::from_rgba(
+            24, 24, 32, 255,
+        )));
+        gui::layout::begin();
+        let mut ui = gui::booth::BoothUi::default();
+        ui.draw_canvas(booth);
+        ui.draw(booth, font, bold, true);
+        set_default_camera();
+        get_screen_data().export_png(
+            directory
+                .join(if theme { "gui-day.png" } else { "gui-dark.png" })
+                .to_str()
+                .unwrap(),
+        );
+        next_frame().await;
+    }
+    std::fs::write(
+        directory.join("recordings.json"),
+        serde_json::to_vec_pretty(&results).unwrap(),
+    )
+    .map_err(|e| e.to_string())?;
+    tracing::info!(
+        "Recorder GPU/ffmpeg verification passed: {}",
+        directory.display()
+    );
+    Ok(())
+}
+
 pub async fn run(
     booth: &mut Booth,
     directory: &Path,

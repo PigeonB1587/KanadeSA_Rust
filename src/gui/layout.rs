@@ -1,6 +1,166 @@
 //! Stepped UI scale and shared layout geometry.
 use macroquad::prelude::*;
 
+pub const MARGIN: f32 = 12.0;
+pub const GAP: f32 = 4.0;
+pub const CONTROL_HEIGHT: f32 = 34.0;
+pub const TOPBAR_HEIGHT: f32 = 52.0;
+pub const TOOLS_Y: f32 = TOPBAR_HEIGHT + 8.0;
+
+/// One geometry source for the booth, its equipment row and the Settings opener.
+pub struct BoothLayout {
+    pub wrapped: bool,
+    pub actions: [Rect; 5],
+    pub settings: Rect,
+    pub output: [Rect; 2],
+    pub equipment: Rect,
+    pub ratio: Rect,
+    pub stage: Rect,
+    pub inspector: Rect,
+    pub footer: Rect,
+}
+
+impl BoothLayout {
+    pub fn new(size: Vec2, inspector: bool) -> Self {
+        let wrapped = size.x < 840.0;
+        let settings_w = if wrapped { 82.0 } else { 98.0 };
+        let settings = Rect::new(
+            size.x - MARGIN - settings_w,
+            9.0,
+            settings_w,
+            CONTROL_HEIGHT,
+        );
+        let action_w = if wrapped {
+            ((settings.x - MARGIN - GAP * 5.0) / 5.0).max(1.0)
+        } else {
+            88.0
+        };
+        let actions = std::array::from_fn(|i| {
+            Rect::new(
+                MARGIN + i as f32 * (action_w + GAP),
+                9.0,
+                action_w,
+                CONTROL_HEIGHT,
+            )
+        });
+        let equipment = Rect::new(MARGIN, TOOLS_Y, 96.0, CONTROL_HEIGHT);
+        let ratio = Rect::new(equipment.right() + MARGIN, TOOLS_Y, 78.0, CONTROL_HEIGHT);
+        let mut footer = Rect::new(
+            MARGIN,
+            size.y - MARGIN - 28.0,
+            (size.x - MARGIN * 2.0).max(1.0),
+            28.0,
+        );
+        let stage_top = TOOLS_Y + CONTROL_HEIGHT + MARGIN;
+        let content_bottom = footer.y - MARGIN;
+        let side = size.x >= 700.0 || (size.x >= 460.0 && size.y < 500.0);
+        // Match the eight-pixel gap below the top bar at the window's bottom.
+        // In stacked layouts the role footer still needs its own full-width row.
+        let panel_bottom = if side { size.y - 8.0 } else { footer.y - GAP };
+        let panel = if side {
+            let width = (size.x * 0.42).clamp(220.0, 286.0);
+            let top = if wrapped { stage_top } else { TOOLS_Y };
+            Rect::new(
+                size.x - MARGIN - width,
+                top,
+                width,
+                (panel_bottom - top).max(1.0),
+            )
+        } else {
+            let top = (size.y * 0.40).max(stage_top + 64.0);
+            Rect::new(MARGIN, top, footer.w, (panel_bottom - top).max(1.0))
+        };
+        if inspector && side {
+            footer.w = (panel.x - MARGIN - footer.x).max(1.0);
+        }
+        let right = if inspector && side {
+            panel.x - MARGIN
+        } else {
+            size.x - MARGIN
+        };
+        let bottom = if inspector && !side {
+            panel.y - MARGIN
+        } else {
+            content_bottom
+        };
+        let stage = Rect::new(
+            MARGIN,
+            stage_top,
+            (right - MARGIN).max(1.0),
+            (bottom - stage_top).max(1.0),
+        );
+        let (output_left, output_right, output_w, output_y) = if wrapped {
+            let right = panel.right();
+            let left = panel.x.max(ratio.right() + MARGIN);
+            let width = ((right - left - GAP) * 0.5).clamp(1.0, 90.0);
+            (right - width * 2.0 - GAP, right, width, TOOLS_Y)
+        } else {
+            // Match the left toolbar's gaps while spanning the inspector edges.
+            // 90 + 4 + 90 + 4 + 98 = 286 logical pixels.
+            (panel.x, settings.x - GAP, 90.0, 9.0)
+        };
+        let output = std::array::from_fn(|i| {
+            Rect::new(
+                if i == 0 {
+                    output_left
+                } else {
+                    output_right - output_w
+                },
+                output_y,
+                output_w,
+                CONTROL_HEIGHT,
+            )
+        });
+        Self {
+            wrapped,
+            actions,
+            settings,
+            output,
+            equipment,
+            ratio,
+            stage,
+            inspector: panel,
+            footer,
+        }
+    }
+
+    pub fn canvas(&self, aspect: f32) -> Rect {
+        let height = self.stage.h.min(self.stage.w / aspect);
+        let width = height * aspect;
+        Rect::new(
+            self.stage.x + (self.stage.w - width) * 0.5,
+            self.stage.y + (self.stage.h - height) * 0.5,
+            width,
+            height,
+        )
+    }
+}
+
+pub fn preview_info_button(size: Vec2) -> Rect {
+    Rect::new(size.x - 76.0, 10.0, 60.0, 32.0)
+}
+
+/// Shared foot anchor for both the Spine framing and its decorative coordinate plane.
+pub fn preview_origin(area: Rect, size: Vec2, compact: bool) -> Vec2 {
+    vec2(
+        area.x + area.w * 0.5,
+        if compact {
+            area.y + area.h * 0.90
+        } else {
+            size.y * 0.80
+        },
+    )
+}
+
+pub fn preview_back_button(size: Vec2, compact: bool) -> Rect {
+    if compact {
+        let info = preview_info_button(size);
+        Rect::new((info.x - 8.0 - 158.0).max(0.0), info.y, 158.0, info.h)
+    } else {
+        Rect::new((size.x - 174.0).max(0.0), size.y - 40.0, 158.0, 32.0)
+    }
+}
+
 /// Clip GUI content in physical framebuffer pixels, including partially visible rows.
 pub fn clip(area: Rect) {
     let offset = super::widgets::paint::offset();

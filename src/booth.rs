@@ -96,7 +96,23 @@ pub fn canvas_to_world(point: Vec2, size: Vec2) -> [f32; 2] {
     ]
 }
 
+#[derive(Clone, Copy)]
+pub struct RenderOptions {
+    pub shadows: bool,
+    pub pets: bool,
+    pub gems: bool,
+}
+impl Default for RenderOptions {
+    fn default() -> Self {
+        Self {
+            shadows: true,
+            pets: true,
+            gems: true,
+        }
+    }
+}
 pub struct Booth {
+    pub render_options: RenderOptions,
     pub characters: Vec<Character>,
     pub selected: Option<usize>,
     pub backgrounds: Vec<Background>,
@@ -117,6 +133,18 @@ enum DrawItem {
     Pet(usize),
 }
 impl Booth {
+    pub fn recording_copy(&self) -> Result<Self, String> {
+        let mut copy = Self::new(self.characters[0].duplicate()?)?;
+        for c in self.characters.iter().skip(1) {
+            copy.characters.push(c.duplicate()?);
+        }
+        copy.selected = self.selected;
+        copy.background = self.background;
+        copy.watermark = self.watermark;
+        copy.transparent = self.transparent;
+        copy.render_options = self.render_options;
+        Ok(copy)
+    }
     pub fn new(character: Character) -> Result<Self, String> {
         let backgrounds: Vec<Background> =
             serde_json::from_str(include_str!("../configs/_boothbg.json"))
@@ -124,6 +152,7 @@ impl Booth {
         let target = render_target(1280, 720);
         target.texture.set_filter(FilterMode::Linear);
         Ok(Self {
+            render_options: RenderOptions::default(),
             language: character.wardrobe().language.clone(),
             characters: vec![character],
             selected: Some(0),
@@ -364,7 +393,11 @@ impl Booth {
         }
         let count = self.active_count();
         // Shadows are the Unity Shadow sorting layer, below every default layer.
-        for c in self.characters.iter().take(count) {
+        for c in self.characters.iter().take(if self.render_options.shadows {
+            count
+        } else {
+            0
+        }) {
             let p = &c.placement;
             let scale = perspective(&bg, p.position[1]) * 0.9 * p.scale;
             let center = world_to_canvas(p.position, size);
@@ -390,7 +423,7 @@ impl Booth {
         }
         for (i, c) in self.characters.iter().take(count).enumerate() {
             sorted.push((c.placement.position[1], DrawItem::Character(i)));
-            if c.has_pet() {
+            if self.render_options.pets && c.has_pet() {
                 sorted.push((
                     c.pet_position(perspective(&bg, c.placement.position[1]))[1],
                     DrawItem::Pet(i),
@@ -425,7 +458,9 @@ impl Booth {
                     let c = &mut self.characters[i];
                     let scale = perspective(&bg, c.placement.position[1]);
                     c.draw_world(view, scale, &self.target);
-                    if let Some((pos, scale, alpha)) = c.gem(scale) {
+                    if let Some((pos, scale, alpha)) =
+                        c.gem(scale).filter(|_| self.render_options.gems)
+                    {
                         let path = format!("booth/gems/gem_{}.png", (c.level / 10).min(99));
                         self.sprite(&path, pos, scale, Color::new(1.0, 1.0, 1.0, alpha), size);
                     }
@@ -531,20 +566,29 @@ impl Booth {
         Ok(())
     }
     pub fn capture(&mut self, width: u32, height: u32) -> Result<PathBuf, String> {
-        let path =
-            PathBuf::from("photos").join(format!("KanadeSA-{}.png", crate::persistence::new_id()));
+        // Unity PreviewCapture.GetFinalSavePath: local yyyyMMddHHmmss.png.
+        let path = PathBuf::from("photos").join(format!(
+            "{}.png",
+            chrono::Local::now().format("%Y%m%d%H%M%S")
+        ));
         self.capture_to(&path, width, height)?;
         Ok(path)
     }
     pub fn capture_to(&mut self, path: &Path, width: u32, height: u32) -> Result<(), String> {
+        let pixels = self.capture_pixels(width, height)?;
+        if let Some(parent) = path.parent() {
+            std::fs::create_dir_all(parent).map_err(|e| e.to_string())?;
+        }
+        image::save_buffer(path, &pixels, width, height, image::ColorType::Rgba8)
+            .map_err(|e| e.to_string())?;
+        Ok(())
+    }
+    pub fn capture_pixels(&mut self, width: u32, height: u32) -> Result<Vec<u8>, String> {
         self.render(width, height, true)?;
         let mut image = self.target.texture.get_texture_data();
         let transparent = self.transparent && self.backgrounds[self.background].transparency_option;
         if transparent {
             unpremultiply(&mut image.bytes);
-        }
-        if let Some(parent) = path.parent() {
-            std::fs::create_dir_all(parent).map_err(|e| e.to_string())?;
         }
         // macroquad Image::export_png flips GL readback, but panics on I/O errors.
         // Use the encoder directly so failures are reported in the UI.
@@ -555,9 +599,7 @@ impl Booth {
                 &image.bytes[(height as usize - 1 - y) * stride..(height as usize - y) * stride],
             );
         }
-        image::save_buffer(path, &pixels, width, height, image::ColorType::Rgba8)
-            .map_err(|e| e.to_string())?;
-        Ok(())
+        Ok(pixels)
     }
 }
 pub fn unpremultiply(bytes: &mut [u8]) {

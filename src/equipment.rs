@@ -11,6 +11,8 @@ pub struct Weapon {
     #[serde(rename = "inventoryID")]
     pub id: String,
     pub icon: String,
+    #[serde(default)]
+    pub use_cosmetics_anim_track: bool,
     pub weapon_class: String,
     #[serde(default)]
     pub spine_attachment_key: String,
@@ -197,6 +199,17 @@ impl Catalog {
             emotes,
             categories,
         })
+    }
+    /// Mirrors Unity SkinGenerator.GetEnableSparkle, including its category exclusions.
+    pub fn has_sparkle(&self, category: usize, index: usize) -> bool {
+        let category = &self.categories[category];
+        match category.kind {
+            CategoryKind::Weapon => category.entries[index]
+                .weapon
+                .is_some_and(|weapon| self.weapons[weapon].use_cosmetics_anim_track),
+            CategoryKind::Umbrella => self.umbrellas[index].use_cosmetics_anim_track,
+            CategoryKind::Pet | CategoryKind::Emote => false,
+        }
     }
     pub fn choose(&self, equipment: &mut EquipmentData, category: usize, index: usize) {
         let Some(c) = self.categories.get(category) else {

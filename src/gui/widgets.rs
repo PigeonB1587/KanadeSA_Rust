@@ -184,6 +184,60 @@ pub mod paint {
     use std::cell::Cell;
     thread_local! { static ALPHA: Cell<f32> = const { Cell::new(1.0) }; }
     thread_local! { static OFFSET: Cell<Vec2> = const { Cell::new(Vec2::ZERO) }; }
+    thread_local! { static LIGHT: Cell<f32> = const { Cell::new(0.0) }; }
+    pub fn light_amount() -> f32 {
+        LIGHT.with(Cell::get)
+    }
+    pub fn update_theme(light: bool) {
+        LIGHT.with(|value| {
+            let target = f32::from(light);
+            let blend = 1.0 - (-10.0 * get_frame_time().min(0.1)).exp();
+            let next = value.get() + (target - value.get()) * blend;
+            value.set(if (target - next).abs() < 0.001 {
+                target
+            } else {
+                next
+            });
+        });
+    }
+    // Only semantic GUI chrome is recolored; artwork/textures and scene captures
+    // retain their original colors, including HSV picker/tint swatches.
+    pub fn surface(color: Color) -> Color {
+        let amount = LIGHT.with(Cell::get);
+        let max = color.r.max(color.g).max(color.b);
+        let min = color.r.min(color.g).min(color.b);
+        if max > 0.0 && max < 0.32 && max - min < 0.10 {
+            // Keep panel surfaces light while separating controls, selected
+            // fills and slider tracks with progressively stronger grays.
+            let l = (1.04 - (color.r + color.g + color.b) / 3.0 * 1.35).clamp(0.60, 0.94);
+            Color::new(
+                color.r + (l - color.r) * amount,
+                color.g + (l - color.g) * amount,
+                color.b + (l - color.b) * amount,
+                color.a,
+            )
+        } else {
+            color
+        }
+    }
+    fn text_color(color: Color) -> Color {
+        let amount = LIGHT.with(Cell::get);
+        let neutral = color.r.max(color.g).max(color.b) - color.r.min(color.g).min(color.b) < 0.10;
+        if neutral && color.r > 0.4 {
+            let l = if color.r > 0.8 { 0.12 } else { 0.28 };
+            Color::new(
+                color.r + (l - color.r) * amount,
+                color.g + (l - color.g) * amount,
+                color.b + (l - color.b) * amount,
+                color.a,
+            )
+        } else {
+            color
+        }
+    }
+    pub fn icon_color(color: Color) -> Color {
+        text_color(color)
+    }
     pub fn offset() -> Vec2 {
         OFFSET.with(Cell::get)
     }
@@ -219,7 +273,15 @@ pub mod paint {
     }
     pub fn draw_rectangle(x: f32, y: f32, w: f32, h: f32, color: Color) {
         let offset = offset();
+        macroquad::shapes::draw_rectangle(x + offset.x, y + offset.y, w, h, tint(surface(color)));
+    }
+    pub fn draw_swatch(x: f32, y: f32, w: f32, h: f32, color: Color) {
+        let offset = offset();
         macroquad::shapes::draw_rectangle(x + offset.x, y + offset.y, w, h, tint(color));
+    }
+    pub fn draw_circle(x: f32, y: f32, r: f32, color: Color) {
+        let offset = offset();
+        macroquad::shapes::draw_circle(x + offset.x, y + offset.y, r, tint(color));
     }
     pub fn draw_line(x: f32, y: f32, x2: f32, y2: f32, thickness: f32, color: Color) {
         let offset = offset();
@@ -229,11 +291,11 @@ pub mod paint {
             x2 + offset.x,
             y2 + offset.y,
             thickness,
-            tint(color),
+            tint(surface(color)),
         );
     }
     pub fn draw_text_ex(text: &str, x: f32, y: f32, mut params: TextParams) -> TextDimensions {
-        params.color = tint(params.color);
+        params.color = tint(text_color(params.color));
         let offset = offset();
         macroquad::text::draw_text_ex(text, x + offset.x, y + offset.y, params)
     }

@@ -30,6 +30,8 @@ pub struct Item {
     #[serde(rename = "inventoryID")]
     pub inventory_id: String,
     #[serde(default)]
+    pub use_cosmetics_anim_track: bool,
+    #[serde(default)]
     pub spine_parts: Vec<Part>,
     #[serde(default)]
     pub hide_hair1: bool,

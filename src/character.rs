@@ -105,12 +105,12 @@ fn preview_framing(
 ) -> (Mat4, f32) {
     let center_x = (reference.min_x + reference.max_x) * 0.5;
     let foot = reference.min_y;
-    let anchor_x = (preview.x + preview.w * 0.5) * gui_scale;
-    let anchor_y = if compact {
-        (preview.y + preview.h * 0.90) * gui_scale
-    } else {
-        screen[1] * 0.80
-    };
+    let anchor = crate::gui::layout::preview_origin(
+        preview,
+        macroquad::prelude::vec2(screen[0] / gui_scale, screen[1] / gui_scale),
+        compact,
+    ) * gui_scale;
+    let (anchor_x, anchor_y) = (anchor.x, anchor.y);
     let mut scale = screen[1] * 0.42 / (reference.max_y - reference.min_y).max(0.01);
     for (space, extent) in [
         (preview.w * gui_scale * 0.40, center_x - content.min_x),

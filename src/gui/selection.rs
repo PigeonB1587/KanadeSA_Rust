@@ -31,6 +31,7 @@ pub struct Selection {
     category_drag: crate::drag_scroll::DragScroll,
     cache: super::icons::IconCache,
     category_cache: super::icons::IconCache,
+    sparkle_cache: super::icons::IconCache,
     preview_tab: Option<usize>,
     dragging: bool,
     content_drag: crate::drag_scroll::DragScroll,
@@ -191,7 +192,11 @@ impl Selection {
                     texture,
                     r.x + (r.w - dest.x) * 0.5,
                     r.y + (r.h - dest.y) * 0.5,
-                    if self.tab == i { ACCENT } else { WHITE },
+                    if self.tab == i {
+                        ACCENT
+                    } else {
+                        widgets::paint::icon_color(WHITE)
+                    },
                     DrawTextureParams {
                         dest_size: Some(dest),
                         ..Default::default()
@@ -234,6 +239,7 @@ impl Selection {
         self.scroll.resize(categories, 0.0);
         self.tab = self.tab.min(categories - 1);
         self.cache.begin_frame();
+        self.sparkle_cache.begin_frame();
         if let Some(query) = self.native_input.poll() {
             self.query = query.chars().filter(|c| !c.is_control()).take(80).collect();
             self.scroll.fill(0.0);
@@ -511,6 +517,26 @@ impl Selection {
                     },
                 );
             }
+            let sparkle = if self.tab == 0 {
+                false
+            } else if self.tab < 6 {
+                wardrobe.items[self.tab - 1][index].use_cosmetics_anim_track
+            } else {
+                wardrobe.equipment_catalog.has_sparkle(self.tab - 6, index)
+            };
+            if sparkle && let Some(texture) = self.sparkle_cache.get("ui/shopsparkle", false) {
+                let side = (r.w * 0.23).clamp(12.0, 20.0);
+                draw_texture_ex(
+                    texture,
+                    r.x + 4.0,
+                    r.y + 4.0,
+                    widgets::paint::icon_color(WHITE),
+                    DrawTextureParams {
+                        dest_size: Some(vec2(side, side)),
+                        ..Default::default()
+                    },
+                );
+            }
         }
         super::layout::end_clip();
         let name = hovered_name.unwrap_or_else(|| {
@@ -533,7 +559,7 @@ impl Selection {
             super::audio::click();
             if self.tab >= 6 {
                 if let Err(error) = character.choose_equipment(self.tab - 6, index) {
-                    tracing::warn!("Cannot equip: {error}");
+                    super::notifications::error(format!("Cannot equip: {error}"));
                 }
                 character.preview_category(self.tab - 6);
             } else {

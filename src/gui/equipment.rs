@@ -1,6 +1,10 @@
 //! Actual booth choices. The Preview catalog only configures their appearance.
 use super::widgets::paint::{draw_rectangle, draw_texture_ex};
-use super::{booth::label, drag_scroll::DragScroll, icons::IconCache};
+use super::{
+    booth::{control_label, label},
+    drag_scroll::DragScroll,
+    icons::IconCache,
+};
 use crate::{booth::Booth, equipment::Entry};
 use macroquad::prelude::*;
 
@@ -33,7 +37,7 @@ impl EquipmentPicker {
     }
     pub fn bar(_canvas: Rect) -> Rect {
         // Dedicated controls row below the main toolbar, outside the stage.
-        Rect::new(12.0, 56.0, 96.0, 38.0)
+        super::layout::BoothLayout::new(super::layout::size(), true).equipment
     }
 
     pub fn toolbar(&mut self, booth: &Booth, canvas: Rect, font: &Font, mouse: Vec2) {
@@ -60,21 +64,27 @@ impl EquipmentPicker {
         .into_iter()
         .enumerate()
         {
-            let r = Rect::new(bar.x + i as f32 * 49.0, bar.y, 46.0, bar.h);
+            let width = (bar.w - super::layout::GAP) * 0.5;
+            let r = Rect::new(
+                bar.x + i as f32 * (width + super::layout::GAP),
+                bar.y,
+                width,
+                bar.h,
+            );
             draw_rectangle(r.x, r.y, r.w, r.h, Color::new(0.078, 0.082, 0.11, 0.97));
             if let Some(texture) = self.icons.get(icon, true) {
                 draw_texture_ex(
                     texture,
-                    r.x + 7.0,
-                    r.y + 3.0,
-                    WHITE,
+                    r.x + (r.w - 28.0) * 0.5,
+                    r.y + (r.h - 28.0) * 0.5,
+                    super::widgets::paint::icon_color(WHITE),
                     DrawTextureParams {
-                        dest_size: Some(vec2(32.0, 32.0)),
+                        dest_size: Some(vec2(28.0, 28.0)),
                         ..Default::default()
                     },
                 );
             } else {
-                label(title, r.x + 14.0, r.y + 25.0, 12, font, WHITE, 20.0);
+                control_label(title, r, 12, font, WHITE, true);
             }
             if r.contains(mouse) && is_mouse_button_pressed(MouseButton::Left) {
                 self.open(kind, &c.id);

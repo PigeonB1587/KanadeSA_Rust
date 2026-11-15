@@ -36,7 +36,7 @@ impl NativeInput {
             });
         match result {
             Ok(()) => self.pending = Some(rx),
-            Err(error) => tracing::warn!("Failed to open native search input: {error}"),
+            Err(error) => super::notifications::error(format!("Cannot open input dialog: {error}")),
         }
     }
 
@@ -49,11 +49,11 @@ impl NativeInput {
                 match result {
                     Ok(Ok(text)) => text,
                     Ok(Err(error)) => {
-                        tracing::warn!("Native search input failed: {error}");
+                        super::notifications::error(format!("Input dialog failed: {error}"));
                         None
                     }
                     Err(_) => {
-                        tracing::warn!("Native search input disconnected");
+                        super::notifications::error("Input dialog disconnected");
                         None
                     }
                 }

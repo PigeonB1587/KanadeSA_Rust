@@ -6,6 +6,8 @@ mod gui;
 mod logging;
 mod model;
 mod persistence;
+mod preferences;
+mod recorder;
 mod spine_renderer;
 mod sprite_material;
 mod verification;
@@ -22,6 +24,14 @@ fn window_conf() -> Conf {
         window_width: 1280,
         window_height: 720,
         high_dpi: true,
+        platform: miniquad::conf::Platform {
+            swap_interval: Some(if preferences::Preferences::load().vsync {
+                1
+            } else {
+                0
+            }),
+            ..Default::default()
+        },
         ..Default::default()
     }
 }
@@ -32,6 +42,10 @@ async fn main() {
     // Keep the guard alive so queued file logs are flushed on normal exit.
     let _log_guard = logging::init();
     tracing::info!("Starting KanadeSA_Rust");
+    tracing::info!(
+        "Requested VSync: {} (driver/compositor may override)",
+        preferences::Preferences::load().vsync
+    );
     gui::audio::init().await;
     let font_regular = load_ttf_font("fonts/Rubik/Rubik-Regular.ttf")
         .await
@@ -58,6 +72,20 @@ async fn main() {
     let mut booth = booth::Booth::new(character).expect("Cannot create booth");
     let mut booth_ui = gui::booth::BoothUi::default();
     if let Some(directory) = std::env::args()
+        .skip_while(|arg| arg != "--verify-recorder")
+        .nth(1)
+    {
+        verification::recorder(
+            &mut booth,
+            std::path::Path::new(&directory),
+            &font_regular,
+            &font_bold,
+        )
+        .await
+        .expect("Recorder verification failed");
+        return;
+    }
+    if let Some(directory) = std::env::args()
         .skip_while(|arg| arg != "--verify-booth")
         .nth(1)
     {
@@ -76,8 +104,7 @@ async fn main() {
     }
     if booth.save_directory.join("scene.json").exists() {
         if let Err(error) = booth.load() {
-            tracing::warn!("Cannot restore last scene: {error}");
-            booth_ui.status = error;
+            gui::notifications::error(format!("Cannot restore last scene: {error}"));
         }
     }
 
@@ -86,19 +113,22 @@ async fn main() {
     let mut preview_character: Option<Character> = None;
     let mut preview_source: Option<String> = None;
     let mut preview_transition = gui::widgets::Transition::default();
+    let mut preview_grid = gui::preview_grid::CoordinateGrid::default();
     let background = background::Background::new();
     let mut info = ui::Info::default();
     let mut settings = settings::Settings::default();
     let mut fps_frames = 0u32;
 
     loop {
+        gui::widgets::paint::update_theme(settings.light());
         clear_background(Color::from_rgba(24, 24, 32, 255));
         background.draw();
 
+        booth_ui.tick_recorder();
         booth.update(get_frame_time());
         let (canvas_width, canvas_height) = booth_ui.output_size(1280);
         if let Err(error) = booth.render(canvas_width, canvas_height, false) {
-            booth_ui.status = error;
+            gui::notifications::error(error);
         }
 
         gui_scale::begin();
@@ -125,12 +155,16 @@ async fn main() {
                         character.set_action(model::Action::Idle);
                         preview_character = Some(character);
                         preview_source = Some(source.id.clone());
+                        preview_grid = gui::preview_grid::CoordinateGrid::default();
                         selection.begin_preview();
                         info = ui::Info::default();
                     }
                     Err(error) => {
-                        booth_ui.status = error;
+                        gui::notifications::error(error);
                         booth_ui.preview = false;
+                        gui_scale::begin();
+                        gui::notifications::draw(&multilingual);
+                        set_default_camera();
                         next_frame().await;
                         continue;
                     }
@@ -159,9 +193,10 @@ async fn main() {
                 gui::widgets::PREVIEW_BACKDROP,
             );
             let _slide = preview_transition.slide();
+            preview_grid.draw(booth_ui.preview, preview_opacity, regular);
             set_default_camera();
             if let Err(error) = booth.draw_preview_entity(character, preview_opacity) {
-                booth_ui.status = error;
+                gui::notifications::error(error);
             }
             gui_scale::begin();
             ui::draw(character, regular, bold);
@@ -169,12 +204,8 @@ async fn main() {
             selection.pointer_blocked =
                 preview_blocked || settings_blocked || info.blocks_pointer();
             selection.draw(character, regular, bold).await;
-            info.draw(
-                character,
-                regular,
-                bold,
-                preview_blocked || settings_blocked || selection.captures_keyboard(),
-            );
+            // All Preview controls belong below the Info backdrop, including
+            // the frame that opens it. blocks_pointer also guards its exit.
             booth_ui.preview_close(
                 bold,
                 preview_blocked
@@ -182,8 +213,14 @@ async fn main() {
                     || selection.captures_keyboard()
                     || info.blocks_pointer(),
             );
+            info.draw(
+                character,
+                regular,
+                bold,
+                preview_blocked || settings_blocked || selection.captures_keyboard(),
+            );
             if let Err(error) = booth.selected_mut().unwrap().apply_preview(character) {
-                booth_ui.status = error;
+                gui::notifications::error(error);
             }
         } else {
             preview_character = None;
@@ -243,7 +280,7 @@ async fn main() {
                 character.clear_outfit();
             }
             if let Err(error) = booth.selected_mut().unwrap().apply_preview(character) {
-                booth_ui.status = error;
+                gui::notifications::error(error);
             }
         } else if !preview_visible
             && !booth_ui.preview
@@ -252,14 +289,15 @@ async fn main() {
             && !booth_ui.blocks_input()
         {
             if is_key_pressed(KeyCode::F12) {
-                let (width, height) = booth_ui.output_size(1920);
-                match booth.capture(width, height) {
-                    Ok(path) => booth_ui.status = format!("Photo saved: {}", path.display()),
-                    Err(error) => booth_ui.status = error,
-                }
+                booth_ui.take_photo(&mut booth);
             }
         }
 
+        // Fixed-color notifications are screen-space chrome, never captured in
+        // photos/GIFs and never dimmed/recolored by Preview or modal transitions.
+        gui_scale::begin();
+        gui::notifications::draw(&multilingual);
+        set_default_camera();
         next_frame().await;
 
         fps_frames += 1;

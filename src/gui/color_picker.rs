@@ -139,7 +139,7 @@ impl ColorPicker {
         for y in 0..48 {
             for x in 0..48 {
                 let c = rgb(self.hsv[0], x as f32 / 47.0, 1.0 - y as f32 / 47.0);
-                draw_rectangle(
+                widgets::paint::draw_swatch(
                     palette.x + x as f32 * palette.w / 48.0,
                     palette.y + y as f32 * palette.h / 48.0,
                     palette.w / 48.0 + 0.5,
@@ -150,7 +150,7 @@ impl ColorPicker {
         }
         for y in 0..96 {
             let c = rgb(y as f32 / 96.0, 1.0, 1.0);
-            draw_rectangle(
+            widgets::paint::draw_swatch(
                 hue.x,
                 hue.y + y as f32 * hue.h / 96.0,
                 hue.w,
@@ -161,7 +161,7 @@ impl ColorPicker {
         for x in 0..64 {
             let shade = if x / 2 % 2 == 0 { 0.35 } else { 0.55 };
             let a = x as f32 / 63.0;
-            draw_rectangle(
+            widgets::paint::draw_swatch(
                 alpha.x + x as f32 * alpha.w / 64.0,
                 alpha.y,
                 alpha.w / 64.0 + 0.5,

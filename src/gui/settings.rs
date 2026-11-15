@@ -20,8 +20,9 @@ pub const LANGUAGES: [(&str, &str); 12] = [
     ("brazilian", "Português (Brasil)"),
 ];
 
-#[derive(Default)]
 pub struct Settings {
+    preferences: crate::preferences::Preferences,
+    startup_vsync: bool,
     pub booth_mode: bool,
     open: bool,
     transition: super::widgets::Transition,
@@ -30,8 +31,32 @@ pub struct Settings {
     scroll: f32,
     content_drag: crate::drag_scroll::DragScroll,
     modal_this_frame: bool,
+    body_scroll: f32,
+    body_drag: crate::drag_scroll::DragScroll,
+}
+impl Default for Settings {
+    fn default() -> Self {
+        let preferences = crate::preferences::Preferences::load();
+        Self {
+            preferences,
+            startup_vsync: preferences.vsync,
+            booth_mode: false,
+            open: false,
+            transition: Default::default(),
+            dropdown: false,
+            dropdown_transition: Default::default(),
+            scroll: 0.0,
+            content_drag: Default::default(),
+            modal_this_frame: false,
+            body_scroll: 0.0,
+            body_drag: Default::default(),
+        }
+    }
 }
 impl Settings {
+    pub fn light(&self) -> bool {
+        self.preferences.light
+    }
     pub fn is_visible(&self) -> bool {
         self.open || self.transition.visible() || self.modal_this_frame
     }
@@ -41,6 +66,9 @@ impl Settings {
                 && self.button().contains(gui_scale::mouse()))
     }
     fn button(&self) -> Rect {
+        if self.booth_mode {
+            return super::layout::BoothLayout::new(gui_scale::size(), true).settings;
+        }
         Rect::new(
             gui_scale::size().x
                 - if gui_scale::compact() && !self.booth_mode {
@@ -119,8 +147,23 @@ impl Settings {
             self.toggle();
         }
         let mouse = if self.open { mouse } else { widgets::BLOCKED };
-        label("Language", x + 20.0, y + 65.0, 13, font, GRAY);
-        let field = Rect::new(x + 20.0, y + 76.0, width - 40.0, 34.0);
+        let body = Rect::new(x + 12.0, y + 48.0, width - 24.0, (height - 60.0).max(1.0));
+        let body_mouse = if !child_active && body.contains(mouse) {
+            mouse
+        } else {
+            widgets::BLOCKED
+        };
+        let tapped = widgets::scroll(
+            body,
+            body_mouse,
+            &mut self.body_scroll,
+            (310.0 - body.h).max(0.0),
+            &mut self.body_drag,
+        );
+        let content_y = y - self.body_scroll;
+        super::layout::clip(body);
+        label("Language", x + 20.0, content_y + 65.0, 13, font, GRAY);
+        let field = Rect::new(x + 20.0, content_y + 76.0, width - 40.0, 34.0);
         draw_rectangle(
             field.x,
             field.y,
@@ -142,10 +185,62 @@ impl Settings {
             font,
             GRAY,
         );
-        if self.open && click && field.contains(mouse) {
+        if self.open && tapped && field.contains(body_mouse) {
             super::audio::click();
             self.dropdown = !self.dropdown;
             self.content_drag.cancel();
+        }
+        for (i, title) in [
+            format!(
+                "VSync: {}{}",
+                if self.preferences.vsync { "on" } else { "off" },
+                if self.preferences.vsync != self.startup_vsync {
+                    " · restart required"
+                } else {
+                    ""
+                }
+            ),
+            format!(
+                "GUI theme: {}",
+                if self.preferences.light {
+                    "Day"
+                } else {
+                    "Dark"
+                }
+            ),
+        ]
+        .iter()
+        .enumerate()
+        {
+            let row = Rect::new(
+                x + 20.0,
+                content_y + 122.0 + i as f32 * 44.0,
+                width - 40.0,
+                36.0,
+            );
+            draw_rectangle(
+                row.x,
+                row.y,
+                row.w,
+                row.h,
+                Color::from_rgba(36, 37, 47, 255),
+            );
+            label(title, row.x + 10.0, row.y + 23.0, 13, font, WHITE);
+            if self.open && tapped && row.contains(body_mouse) {
+                super::audio::click();
+                if i == 0 {
+                    self.preferences.vsync = !self.preferences.vsync;
+                } else {
+                    self.preferences.light = !self.preferences.light;
+                }
+                match self.preferences.save() {
+                    Ok(()) if i == 0 => {
+                        super::notifications::warn("VSync setting saved · restart to apply")
+                    }
+                    Ok(()) => {}
+                    Err(e) => super::notifications::error(format!("Cannot save settings: {e}")),
+                }
+            }
         }
         for (i, line) in [
             format!("Version: {}", version::VERSION),
@@ -155,8 +250,16 @@ impl Settings {
         .iter()
         .enumerate()
         {
-            label(line, x + 20.0, y + 145.0 + i as f32 * 24.0, 12, font, GRAY);
+            label(
+                line,
+                x + 20.0,
+                content_y + 234.0 + i as f32 * 24.0,
+                12,
+                font,
+                GRAY,
+            );
         }
+        super::layout::end_clip();
         self.dropdown_transition.update(self.dropdown);
         if self.dropdown || self.dropdown_transition.visible() {
             let dropdown_panel = self.dropdown_transition.panel(

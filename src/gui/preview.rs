@@ -33,7 +33,7 @@ impl Info {
         let size = crate::gui_scale::size();
         let mouse = crate::gui_scale::mouse();
         (is_mouse_button_pressed(MouseButton::Left)
-            && Rect::new(size.x - 76.0, 10.0, 60.0, 32.0).contains(mouse))
+            && super::layout::preview_info_button(size).contains(mouse))
             || self.open
             || self.transition.visible()
             || self.modal_this_frame
@@ -45,7 +45,7 @@ impl Info {
         let size = crate::gui_scale::size();
         self.modal_this_frame = self.open || self.transition.visible();
         let mouse = crate::gui_scale::mouse();
-        let button = Rect::new(size.x - 76.0, 10.0, 60.0, 32.0);
+        let button = super::layout::preview_info_button(size);
         if !input_blocked && is_mouse_button_pressed(MouseButton::Left) && button.contains(mouse) {
             self.open = !self.open;
             super::audio::click();
@@ -259,6 +259,9 @@ pub fn draw(character: &Character, regular: &Font, bold: &Font) {
     let footer_h = if narrow { 54.0 } else { 58.0 };
     let panel = widgets::PREVIEW_SURFACE;
     if crate::gui_scale::compact() {
+        let back = super::layout::preview_back_button(size, true);
+        let title_width = (back.x - 32.0).max(0.0);
+        // The title ends before the shared Back/Info row, including short windows.
         draw_rectangle(0.0, 0.0, w, 74.0, panel);
         label(
             "CHARACTER PREVIEW",
@@ -267,17 +270,9 @@ pub fn draw(character: &Character, regular: &Font, bold: &Font) {
             10,
             regular,
             MUTED,
-            w - 32.0,
+            title_width,
         );
-        label(
-            character.name(),
-            16.0,
-            44.0,
-            18,
-            bold,
-            TEXT,
-            (w - 198.0).max(1.0),
-        );
+        label(character.name(), 16.0, 44.0, 18, bold, TEXT, title_width);
         label(
             character.animation_name(),
             16.0,

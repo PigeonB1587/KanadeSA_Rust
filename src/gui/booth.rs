@@ -1,4 +1,6 @@
 //! Touch-sized booth controls, a scrollable inspector and the retained Preview layer.
+use super::layout::{BoothLayout, CONTROL_HEIGHT, GAP, MARGIN, TOPBAR_HEIGHT};
+use super::notifications;
 use super::widgets::paint::{draw_line, draw_rectangle, draw_text_ex, draw_texture_ex};
 use super::{drag_scroll::DragScroll, input::NativeInput};
 use crate::{
@@ -10,6 +12,9 @@ use macroquad::prelude::*;
 const ACCENT: Color = Color::new(0.925, 0.604, 0.361, 1.0);
 const SURFACE: Color = Color::new(0.078, 0.082, 0.11, 0.97);
 const CONTROL: Color = Color::new(0.12, 0.125, 0.16, 1.0);
+const PANEL_PADDING: f32 = 8.0;
+const INSPECTOR_CONTROL_HEIGHT: f32 = 36.0;
+const ROW_STEP: f32 = INSPECTOR_CONTROL_HEIGHT + PANEL_PADDING;
 const RATIOS: [(&str, u32, u32); 8] = [
     ("16:9", 16, 9),
     ("16:10", 16, 10),
@@ -22,8 +27,13 @@ const RATIOS: [(&str, u32, u32); 8] = [
 ];
 
 pub struct BoothUi {
+    recorder: crate::recorder::Recorder,
+    photo_requested: bool,
+    photo_size: usize,
+    gif_size: usize,
+    gif_fps: usize,
+    gif_quality: usize,
     pub preview: bool,
-    pub status: String,
     ratio: usize,
     ratio_open: bool,
     ratio_transition: super::widgets::Transition,
@@ -58,8 +68,13 @@ enum InputKind {
 impl Default for BoothUi {
     fn default() -> Self {
         Self {
+            recorder: Default::default(),
+            photo_requested: false,
+            photo_size: 1,
+            gif_size: 1,
+            gif_fps: 1,
+            gif_quality: 1,
             preview: false,
-            status: String::new(),
             ratio: 0,
             ratio_open: false,
             ratio_transition: super::widgets::Transition::default(),
@@ -108,6 +123,66 @@ pub fn label(text: &str, x: f32, y: f32, size: u16, font: &Font, color: Color, w
         },
     );
 }
+
+pub fn control_label(text: &str, r: Rect, size: u16, font: &Font, color: Color, centered: bool) {
+    let mut fitted = text.to_owned();
+    let available = (r.w - if centered { 8.0 } else { 16.0 }).max(0.0);
+    while !fitted.is_empty() && measure_text(&fitted, Some(font), size, 1.0).width > available {
+        fitted.pop();
+    }
+    if fitted.is_empty() {
+        return;
+    }
+    let text = measure_text(&fitted, Some(font), size, 1.0);
+    draw_text_ex(
+        &fitted,
+        if centered {
+            r.x + (r.w - text.width) * 0.5
+        } else {
+            r.x + 8.0
+        },
+        r.y + (r.h - text.height) * 0.5 + text.offset_y,
+        TextParams {
+            font: Some(font),
+            font_size: size,
+            color,
+            ..Default::default()
+        },
+    );
+}
+
+fn button_text_color(enabled: bool, active: bool) -> Color {
+    if active {
+        ACCENT
+    } else if enabled {
+        WHITE
+    } else {
+        GRAY
+    }
+}
+
+fn centered_button(
+    title: &str,
+    r: Rect,
+    size: u16,
+    font: &Font,
+    mouse: Vec2,
+    enabled: bool,
+    active: bool,
+    fill: Color,
+) -> bool {
+    let clicked = button_with_fill("", r, font, mouse, enabled, active, fill);
+    control_label(
+        title,
+        r,
+        size,
+        font,
+        button_text_color(enabled, active),
+        true,
+    );
+    clicked
+}
+
 fn button(title: &str, r: Rect, font: &Font, mouse: Vec2, enabled: bool, active: bool) -> bool {
     button_with_fill(title, r, font, mouse, enabled, active, CONTROL)
 }
@@ -135,20 +210,13 @@ fn button_with_fill(
     if active {
         draw_rectangle(r.x, r.y + r.h - 2.0, r.w, 2.0, ACCENT);
     }
-    label(
+    control_label(
         title,
-        r.x + 8.0,
-        r.y + r.h * 0.5 + 5.0,
+        r,
         12,
         font,
-        if active {
-            ACCENT
-        } else if enabled {
-            WHITE
-        } else {
-            GRAY
-        },
-        r.w - 16.0,
+        button_text_color(enabled, active),
+        false,
     );
     // Inspector content commits taps on release so vertical scrolling never
     // changes a property. Toolbar and modal headers remain press buttons.
@@ -166,73 +234,39 @@ fn button_with_fill(
 thread_local! { static CONTENT_BUTTONS: std::cell::Cell<bool> = const { std::cell::Cell::new(false) }; }
 thread_local! { static CONTENT_TAP: std::cell::Cell<bool> = const { std::cell::Cell::new(false) }; }
 
-fn regions(size: Vec2, inspector: bool) -> (Rect, Rect) {
-    let side = size.x >= 700.0 || (size.x >= 460.0 && size.y < 500.0);
-    let panel = if side {
-        let width = (size.x * 0.42).clamp(220.0, 286.0);
-        let top = if size.x < 840.0 { 100.0 } else { 60.0 };
-        Rect::new(
-            size.x - width - 12.0,
-            top,
-            width,
-            (size.y - top - 12.0).max(1.0),
-        )
-    } else {
-        let top = (size.y * 0.40).max(166.0);
-        Rect::new(
-            12.0,
-            top,
-            (size.x - 24.0).max(1.0),
-            (size.y - top - 44.0).max(1.0),
-        )
-    };
-    let canvas = if !inspector {
-        Rect::new(
-            12.0,
-            100.0,
-            (size.x - 24.0).max(1.0),
-            (size.y - 144.0).max(1.0),
-        )
-    } else if side {
-        Rect::new(
-            12.0,
-            100.0,
-            (panel.x - 24.0).max(1.0),
-            (size.y - 144.0).max(1.0),
-        )
-    } else {
-        Rect::new(
-            12.0,
-            100.0,
-            (size.x - 24.0).max(1.0),
-            (panel.y - 108.0).max(1.0),
-        )
-    };
-    let aspect = 16.0 / 9.0;
-    let fitted = if canvas.w / canvas.h > aspect {
-        let w = canvas.h * aspect;
-        Rect::new(canvas.x + (canvas.w - w) * 0.5, canvas.y, w, canvas.h)
-    } else {
-        let h = canvas.w / aspect;
-        Rect::new(canvas.x, canvas.y + (canvas.h - h) * 0.5, canvas.w, h)
-    };
-    (fitted, panel)
-}
-
 impl BoothUi {
+    pub fn tick_recorder(&mut self) {
+        if let Some(result) = self.recorder.tick() {
+            match result {
+                Ok(path) => notifications::success(format!("GIF saved: {}", path.display())),
+                Err(error) if error == "Recording cancelled" => notifications::info(error),
+                Err(error) => notifications::error(error),
+            }
+        }
+    }
+    pub fn take_photo(&mut self, booth: &mut Booth) {
+        let (width, height) = self.output_size([1280, 1920, 2560][self.photo_size]);
+        match booth.capture(width, height) {
+            Ok(path) => notifications::success(format!("Photo saved: {}", path.display())),
+            Err(error) => notifications::error(error),
+        }
+    }
     fn draw_ratio_picker(&mut self, font: &Font, bold: &Font, mouse: Vec2, blocked: bool) {
         self.ratio_transition.update(self.ratio_open);
         if !self.ratio_open && !self.ratio_transition.visible() {
             return;
         }
         let size = super::layout::size();
+        let opener = BoothLayout::new(size, self.inspector).ratio;
         let panel = self.ratio_transition.panel(
             self.ratio_open,
             Rect::new(
-                120.0,
-                98.0,
+                opener.x,
+                opener.bottom() + GAP,
                 116.0,
-                (size.y - 110.0).min(RATIOS.len() as f32 * 34.0).max(1.0),
+                (size.y - opener.bottom() - GAP - MARGIN)
+                    .min(RATIOS.len() as f32 * CONTROL_HEIGHT)
+                    .max(1.0),
             ),
         );
         let mouse = self.ratio_transition.mouse(
@@ -246,7 +280,7 @@ impl BoothUi {
         if super::widgets::dismiss_except(
             panel,
             Rect::new(-10000.0, -10000.0, 0.0, 0.0),
-            Rect::new(120.0, 56.0, 78.0, 38.0),
+            opener,
             mouse,
         ) {
             self.ratio_open = false;
@@ -256,7 +290,7 @@ impl BoothUi {
             panel,
             mouse,
             &mut self.ratio_scroll,
-            (RATIOS.len() as f32 * 34.0 - panel.h).max(0.0),
+            (RATIOS.len() as f32 * CONTROL_HEIGHT - panel.h).max(0.0),
             &mut self.ratio_drag,
         );
         let _opacity = self.ratio_transition.scope();
@@ -265,9 +299,9 @@ impl BoothUi {
         for (i, (title, _, _)) in RATIOS.iter().enumerate() {
             let r = Rect::new(
                 panel.x,
-                panel.y + i as f32 * 34.0 - self.ratio_scroll,
+                panel.y + i as f32 * CONTROL_HEIGHT - self.ratio_scroll,
                 panel.w,
-                34.0,
+                CONTROL_HEIGHT,
             );
             if r.bottom() <= panel.y || r.y >= panel.bottom() {
                 continue;
@@ -276,14 +310,13 @@ impl BoothUi {
             if i == self.ratio || hit {
                 draw_rectangle(r.x, r.y, r.w, r.h, CONTROL);
             }
-            label(
+            control_label(
                 title,
-                r.x + 12.0,
-                r.y + 22.0,
+                r,
                 12,
                 bold,
                 if i == self.ratio { ACCENT } else { WHITE },
-                r.w - 24.0,
+                false,
             );
             if tapped && hit {
                 self.ratio = i;
@@ -308,37 +341,9 @@ impl BoothUi {
             || self.modal_this_frame
     }
     pub fn rects(&self) -> (Rect, Rect) {
-        let size = super::layout::size();
-        let (_, panel) = regions(size, self.inspector);
-        let side = size.x >= 700.0 || (size.x >= 460.0 && size.y < 500.0);
-        let right = if self.inspector && side {
-            panel.x - 12.0
-        } else {
-            size.x - 12.0
-        };
-        let bottom = if self.inspector && !side {
-            panel.y - 8.0
-        } else {
-            size.y - 44.0
-        };
-        let area = Rect::new(
-            12.0,
-            100.0,
-            (right - 12.0).max(1.0),
-            (bottom - 100.0).max(1.0),
-        );
+        let layout = BoothLayout::new(super::layout::size(), self.inspector);
         let (_, rw, rh) = RATIOS[self.ratio];
-        let scale = (area.w / rw as f32).min(area.h / rh as f32);
-        let (w, h) = (rw as f32 * scale, rh as f32 * scale);
-        (
-            Rect::new(
-                area.x + (area.w - w) * 0.5,
-                area.y + (area.h - h) * 0.5,
-                w,
-                h,
-            ),
-            panel,
-        )
+        (layout.canvas(rw as f32 / rh as f32), layout.inspector)
     }
     pub fn output_size(&self, longest: u32) -> (u32, u32) {
         let (_, w, h) = RATIOS[self.ratio];
@@ -381,12 +386,11 @@ impl BoothUi {
     fn result<T>(&mut self, result: Result<T, String>, success: &str) -> Option<T> {
         match result {
             Ok(value) => {
-                self.status = success.into();
+                notifications::success(success);
                 Some(value)
             }
             Err(error) => {
-                tracing::warn!("{error}");
-                self.status = error;
+                notifications::error(error);
                 None
             }
         }
@@ -425,47 +429,33 @@ impl BoothUi {
         } else {
             raw_mouse
         };
-        draw_rectangle(0.0, 0.0, size.x, 50.0, SURFACE);
-        let narrow = size.x < 840.0;
-        let button_w = if narrow { (size.x - 116.0) / 5.0 } else { 92.0 };
-        for (i, title) in ["+ Role", "- Role", "Preview", "Scene", "Inspect"]
-            .iter()
-            .enumerate()
-        {
-            let r = Rect::new(12.0 + i as f32 * button_w, 9.0, button_w - 4.0, 34.0);
+        let layout = BoothLayout::new(size, self.inspector);
+        draw_rectangle(0.0, 0.0, size.x, TOPBAR_HEIGHT, SURFACE);
+        let actions = ["+ Role", "- Role", "Preview", "Scene", "Inspect"];
+        let action_font_size = [12, 11, 10]
+            .into_iter()
+            .find(|size| {
+                actions.iter().zip(&layout.actions).all(|(title, rect)| {
+                    measure_text(title, Some(bold), *size, 1.0).width <= rect.w - 8.0
+                })
+            })
+            .unwrap_or(10);
+        for (i, title) in actions.iter().enumerate() {
+            let r = layout.actions[i];
             let enabled = match i {
                 1 | 2 => booth.selected.is_some(),
                 _ => true,
             };
-            let centered = i >= 2;
-            let clicked = button(
-                if centered { "" } else { title },
+            let clicked = centered_button(
+                title,
                 r,
+                action_font_size,
                 bold,
                 mouse,
                 enabled,
                 i == 4 && self.inspector,
+                CONTROL,
             );
-            if centered {
-                let text = measure_text(title, Some(bold), 12, 1.0);
-                draw_text_ex(
-                    title,
-                    r.x + (r.w - text.width) * 0.5,
-                    r.y + (r.h - text.height) * 0.5 + text.offset_y,
-                    TextParams {
-                        font: Some(bold),
-                        font_size: 12,
-                        color: if i == 4 && self.inspector {
-                            ACCENT
-                        } else if enabled {
-                            WHITE
-                        } else {
-                            GRAY
-                        },
-                        ..Default::default()
-                    },
-                );
-            }
             if clicked {
                 match i {
                     0 => {
@@ -484,100 +474,70 @@ impl BoothUi {
             }
         }
         let mut deferred = None;
-        let row_y = size.y - 34.0;
+        let footer = layout.footer;
+        let role_width = footer.w;
         let total = booth.active_count();
         if total > 0 {
             for (i, title) in ["<", ">"].iter().enumerate() {
-                if button(
+                if centered_button(
                     title,
-                    Rect::new(12.0 + i as f32 * 36.0, row_y, 32.0, 28.0),
+                    Rect::new(footer.x + i as f32 * (32.0 + GAP), footer.y, 32.0, footer.h),
+                    12,
                     font,
                     mouse,
                     true,
                     false,
+                    CONTROL,
                 ) {
                     let current = booth.selected.unwrap_or(0);
                     booth.selected = Some((current + if i == 0 { total - 1 } else { 1 }) % total);
                 }
             }
             let selected = booth.selected.unwrap_or(0);
-            label(
+            control_label(
                 &format!(
                     "Role {} / {} · {}",
                     selected + 1,
                     total,
                     booth.characters[selected].name()
                 ),
-                92.0,
-                row_y + 19.0,
+                Rect::new(
+                    footer.x + 72.0,
+                    footer.y,
+                    (role_width - 72.0).max(1.0),
+                    footer.h,
+                ),
                 12,
                 font,
                 WHITE,
-                (size.x * 0.48 - 92.0).max(1.0),
+                false,
             );
         } else {
-            label(
+            control_label(
                 "No roles · tap + Role to add",
-                12.0,
-                row_y + 19.0,
+                Rect::new(footer.x, footer.y, role_width, footer.h),
                 12,
                 font,
                 GRAY,
-                size.x * 0.5,
+                false,
             );
         }
         // Small windows wrap output controls into the toolbar's second row.
-        let right_w = if narrow { 59.0 } else { 86.0 };
-        let output_y = if narrow { 56.0 } else { 9.0 };
-        let output_right = if narrow {
-            size.x - 12.0
-        } else {
-            size.x - 106.0
-        };
-        for (i, title) in ["Save", "Load", "Photo"].iter().enumerate() {
-            let r = Rect::new(
-                output_right - (3 - i) as f32 * right_w,
-                output_y,
-                right_w - 4.0,
-                34.0,
+        for (i, title) in ["Save", "Load"].iter().enumerate() {
+            let r = layout.output[i];
+            let clicked = centered_button(
+                title,
+                r,
+                12,
+                bold,
+                mouse,
+                true,
+                false,
+                if layout.wrapped { SURFACE } else { CONTROL },
             );
-            let clicked = if narrow {
-                button(title, r, bold, mouse, true, false)
-            } else {
-                let clicked = button("", r, bold, mouse, true, false);
-                let text = measure_text(title, Some(bold), 12, 1.0);
-                draw_text_ex(
-                    title,
-                    r.x + (r.w - text.width) * 0.5,
-                    r.y + (r.h - text.height) * 0.5 + text.offset_y,
-                    TextParams {
-                        font: Some(bold),
-                        font_size: 12,
-                        color: WHITE,
-                        ..Default::default()
-                    },
-                );
-                clicked
-            };
             if clicked {
                 deferred = Some(i);
             }
-        }
-        if !self.status.is_empty() {
-            label(
-                &self.status,
-                210.0,
-                80.0,
-                11,
-                font,
-                ACCENT,
-                (if narrow {
-                    output_right - 3.0 * right_w
-                } else {
-                    self.rects().0.right()
-                } - 222.0)
-                    .max(1.0),
-            );
         }
         self.equipment.toolbar(booth, self.rects().0, font, mouse);
         self.handle_drag(booth, mouse, blocked || modal || self.equipment.is_open());
@@ -593,15 +553,16 @@ impl BoothUi {
                 },
             );
         }
-        let ratio_button = Rect::new(120.0, 56.0, 78.0, 38.0);
-        if button_with_fill(
+        let ratio_button = layout.ratio;
+        if centered_button(
             &format!("{}  v", RATIOS[self.ratio].0),
             ratio_button,
+            12,
             bold,
             mouse,
             true,
             false,
-            Color::new(0.078, 0.082, 0.11, 0.97),
+            SURFACE,
         ) {
             self.ratio_open = true;
         }
@@ -653,25 +614,19 @@ impl BoothUi {
                     let r = booth.load();
                     self.result(r, "Scene restored");
                 }
-                2 => {
-                    let (width, height) = self.output_size(1920);
-                    let r = booth.capture(width, height);
-                    if let Some(path) = self.result(r, "") {
-                        self.status = format!("Photo saved: {}", path.display());
-                    }
-                }
                 _ => {}
             }
+            super::layout::begin();
+        }
+        if self.photo_requested {
+            self.photo_requested = false;
+            self.take_photo(booth);
             super::layout::begin();
         }
     }
     pub fn preview_close(&mut self, font: &Font, blocked: bool) {
         let size = super::layout::size();
-        let r = if super::layout::compact() {
-            Rect::new((size.x - 242.0).max(0.0), 10.0, 158.0, 32.0)
-        } else {
-            Rect::new((size.x - 174.0).max(0.0), size.y - 40.0, 158.0, 32.0)
-        };
+        let r = super::layout::preview_back_button(size, super::layout::compact());
         let mouse = if blocked {
             vec2(-10000.0, -10000.0)
         } else {
@@ -686,11 +641,9 @@ impl BoothUi {
             false,
             Color::from_rgba(30, 31, 40, 255),
         );
-        let text = measure_text("Back to booth", Some(font), 13, 1.0);
-        label(
+        control_label(
             "Back to booth",
-            r.x + (r.w - text.width) * 0.5,
-            r.y + (r.h - text.height) * 0.5 + text.offset_y,
+            r,
             13,
             font,
             if r.contains(mouse) {
@@ -698,7 +651,7 @@ impl BoothUi {
             } else {
                 Color::new(0.90, 0.91, 0.94, 1.0)
             },
-            r.w - 24.0,
+            true,
         );
         if clicked || (!blocked && is_key_pressed(KeyCode::Escape)) {
             self.preview = false;
@@ -786,20 +739,27 @@ impl BoothUi {
         let background = booth.backgrounds[booth.background].clone();
         let (_, panel) = self.rects();
         draw_rectangle(panel.x, panel.y, panel.w, panel.h, SURFACE);
-        for (i, title) in ["Transform", "Animation", "Scene"].iter().enumerate() {
-            if button(
-                title,
-                Rect::new(
-                    panel.x + 8.0 + i as f32 * (panel.w - 16.0) / 3.0,
-                    panel.y + 8.0,
-                    (panel.w - 16.0) / 3.0 - 3.0,
-                    34.0,
-                ),
-                font,
-                mouse,
-                true,
-                self.tab == i,
-            ) {
+        let inner_width = panel.w - PANEL_PADDING * 2.0;
+        let tab_width = (inner_width - GAP * 2.0) / 3.0;
+        let titles = ["Transform", "Animation", "Recorder"];
+        let font_size = [11, 10, 9]
+            .into_iter()
+            .find(|size| {
+                titles.iter().enumerate().all(|(i, title)| {
+                    measure_text(title, Some(font), *size, 1.0).width
+                        + if i == 2 { 10.0 } else { 0.0 }
+                        <= tab_width - 8.0
+                })
+            })
+            .unwrap_or(9);
+        for (i, title) in titles.iter().enumerate() {
+            let rect = Rect::new(
+                panel.x + PANEL_PADDING + i as f32 * (tab_width + GAP),
+                panel.y + PANEL_PADDING,
+                tab_width,
+                CONTROL_HEIGHT,
+            );
+            if button("", rect, font, mouse, true, self.tab == i) {
                 self.tab = i;
                 self.scroll = 0.0;
                 self.scroll_drag.cancel();
@@ -807,12 +767,27 @@ impl BoothUi {
                 self.slider_start = None;
                 self.content_tap = None;
             }
+            let marker_width = if i == 2 { 10.0 } else { 0.0 };
+            let text = measure_text(title, Some(font), font_size, 1.0);
+            let start = rect.x + (rect.w - text.width - marker_width) * 0.5;
+            if i == 2 {
+                super::widgets::paint::draw_circle(start + 3.0, rect.y + rect.h * 0.5, 3.0, RED);
+            }
+            label(
+                title,
+                start + if i == 2 { 10.0 } else { 0.0 },
+                rect.y + (rect.h - text.height) * 0.5 + text.offset_y,
+                font_size,
+                font,
+                if self.tab == i { ACCENT } else { WHITE },
+                rect.w,
+            );
         }
         let area = Rect::new(
-            panel.x + 8.0,
-            panel.y + 50.0,
-            panel.w - 16.0,
-            (panel.h - 58.0).max(1.0),
+            panel.x + PANEL_PADDING,
+            panel.y + CONTROL_HEIGHT + PANEL_PADDING * 2.0,
+            inner_width,
+            (panel.h - CONTROL_HEIGHT - PANEL_PADDING * 3.0).max(1.0),
         );
         let max = (self.inspector_heights[self.tab] - area.h).max(0.0);
         self.scroll = self.scroll.clamp(0.0, max);
@@ -855,7 +830,143 @@ impl BoothUi {
         CONTENT_BUTTONS.with(|value| value.set(true));
         CONTENT_TAP.with(|value| value.set(tapped));
         if self.tab == 2 {
-            label("SCENE & OUTPUT", x, y + 19.0, 12, bold, GRAY, w);
+            label("PHOTO & GIF", x, y + 19.0, 12, bold, GRAY, w);
+            y += 32.0;
+            if button(
+                "Photo · PNG (F12)",
+                Rect::new(x, y, w, INSPECTOR_CONTROL_HEIGHT),
+                bold,
+                hit_mouse,
+                true,
+                false,
+            ) {
+                self.photo_requested = true;
+            }
+            y += ROW_STEP;
+            let can_record = booth.selected().is_some_and(|c| {
+                c.duration() > 0.0 && c.animation.tracks[c.animation.control_track].speed > 0.0
+            });
+            if button(
+                if self.recorder.busy() {
+                    "Cancel recording"
+                } else {
+                    "Record GIF"
+                },
+                Rect::new(x, y, w, INSPECTOR_CONTROL_HEIGHT),
+                font,
+                hit_mouse,
+                self.recorder.busy() || can_record,
+                self.recorder.busy(),
+            ) {
+                if self.recorder.busy() {
+                    self.recorder.cancel();
+                } else {
+                    let (width, height) = self.output_size([480, 720, 1080][self.gif_size]);
+                    let options = crate::recorder::Options {
+                        width,
+                        height,
+                        fps: [10, 20, 25, 50][self.gif_fps],
+                        colors: [64, 128, 256][self.gif_quality],
+                        dither: self.gif_quality > 0,
+                    };
+                    if let Err(error) =
+                        self.recorder
+                            .start(booth, options, std::path::Path::new("photos"))
+                    {
+                        notifications::error(error);
+                    }
+                }
+            }
+            y += 52.0;
+            let duration = booth.selected().map_or(0.0, |c| {
+                c.duration()
+                    / c.animation.tracks[c.animation.control_track]
+                        .speed
+                        .max(0.00001)
+            });
+            label(
+                &if self.recorder.busy() {
+                    self.recorder.progress.clone()
+                } else {
+                    format!("Duration: {duration:.2}s · selected role control track")
+                },
+                x,
+                y,
+                11,
+                font,
+                GRAY,
+                w,
+            );
+            y += 16.0;
+            label(
+                "GIF: ffmpeg required · exports to photos/",
+                x,
+                y,
+                11,
+                font,
+                GRAY,
+                w,
+            );
+            y += 20.0;
+            let titles = [
+                format!("Photo size: {} px", [1280, 1920, 2560][self.photo_size]),
+                format!(
+                    "GIF size: {} · {} px",
+                    ["Small", "Balanced", "Large"][self.gif_size],
+                    [480, 720, 1080][self.gif_size]
+                ),
+                format!("GIF frame rate: {} fps", [10, 20, 25, 50][self.gif_fps]),
+                format!(
+                    "GIF quality: {}",
+                    ["Small file", "Balanced", "Best"][self.gif_quality]
+                ),
+                format!(
+                    "Shadows: {}",
+                    if booth.render_options.shadows {
+                        "on"
+                    } else {
+                        "off"
+                    }
+                ),
+                format!(
+                    "Pets: {}",
+                    if booth.render_options.pets {
+                        "on"
+                    } else {
+                        "off"
+                    }
+                ),
+                format!(
+                    "Level gems: {}",
+                    if booth.render_options.gems {
+                        "on"
+                    } else {
+                        "off"
+                    }
+                ),
+            ];
+            for (i, title) in titles.iter().enumerate() {
+                if button(
+                    title,
+                    Rect::new(x, y, w, INSPECTOR_CONTROL_HEIGHT),
+                    font,
+                    hit_mouse,
+                    !self.recorder.busy(),
+                    false,
+                ) {
+                    match i {
+                        0 => self.photo_size = (self.photo_size + 1) % 3,
+                        1 => self.gif_size = (self.gif_size + 1) % 3,
+                        2 => self.gif_fps = (self.gif_fps + 1) % 4,
+                        3 => self.gif_quality = (self.gif_quality + 1) % 3,
+                        4 => booth.render_options.shadows = !booth.render_options.shadows,
+                        5 => booth.render_options.pets = !booth.render_options.pets,
+                        _ => booth.render_options.gems = !booth.render_options.gems,
+                    }
+                }
+                y += ROW_STEP;
+            }
+            label("SCENE & RENDER", x, y + 19.0, 12, bold, GRAY, w);
             y += 32.0;
             let name = booth.backgrounds[booth.background]
                 .img
@@ -864,7 +975,7 @@ impl BoothUi {
                 .unwrap_or("Color");
             if button(
                 &format!("Background: {name}"),
-                Rect::new(x, y, w, 36.0),
+                Rect::new(x, y, w, INSPECTOR_CONTROL_HEIGHT),
                 font,
                 hit_mouse,
                 true,
@@ -872,14 +983,14 @@ impl BoothUi {
             ) {
                 self.scene_picker = true;
             }
-            y += 46.0;
+            y += ROW_STEP;
             if button(
                 match booth.watermark {
                     Watermark::Hidden => "Watermark: hidden",
                     Watermark::Left => "Watermark: bottom left",
                     Watermark::Right => "Watermark: bottom right",
                 },
-                Rect::new(x, y, w, 36.0),
+                Rect::new(x, y, w, INSPECTOR_CONTROL_HEIGHT),
                 font,
                 hit_mouse,
                 true,
@@ -891,14 +1002,14 @@ impl BoothUi {
                     Watermark::Left => Watermark::Hidden,
                 };
             }
-            y += 46.0;
+            y += ROW_STEP;
             if button(
                 if booth.transparent {
-                    "Transparent PNG: on"
+                    "Transparent PNG / GIF: on"
                 } else {
-                    "Transparent PNG: off"
+                    "Transparent PNG / GIF: off"
                 },
-                Rect::new(x, y, w, 36.0),
+                Rect::new(x, y, w, INSPECTOR_CONTROL_HEIGHT),
                 font,
                 hit_mouse,
                 booth.backgrounds[booth.background].transparency_option,
@@ -917,7 +1028,7 @@ impl BoothUi {
                 w,
             );
             y += 20.0;
-            let (width, height) = self.output_size(1920);
+            let (width, height) = self.output_size([1280, 1920, 2560][self.photo_size]);
             label(
                 &format!("Photo: {width} × {height} · excludes GUI"),
                 x,
@@ -930,7 +1041,7 @@ impl BoothUi {
             y += 28.0;
             if button(
                 "Save folder…",
-                Rect::new(x, y, w, 36.0),
+                Rect::new(x, y, w, INSPECTOR_CONTROL_HEIGHT),
                 font,
                 hit_mouse,
                 true,
@@ -956,12 +1067,12 @@ impl BoothUi {
         } else if let Some(c) = booth.selected_mut() {
             if self.tab == 0 {
                 label(c.name(), x, y + 20.0, 14, bold, WHITE, w);
-                y += 30.0;
-                let tint = Rect::new(x, y, w, 36.0);
+                y += 32.0;
+                let tint = Rect::new(x, y, w, INSPECTOR_CONTROL_HEIGHT);
                 if button("Color Tint", tint, font, hit_mouse, true, false) {
                     self.color_picker.open(c.id.clone(), c.placement.color);
                 }
-                draw_rectangle(
+                super::widgets::paint::draw_swatch(
                     x + w - 34.0,
                     y + 5.0,
                     26.0,
@@ -973,7 +1084,7 @@ impl BoothUi {
                         c.placement.color[3],
                     ),
                 );
-                y += 48.0;
+                y += ROW_STEP;
                 let p = &mut c.placement;
                 slider(
                     "Left / right (scene units)",
@@ -1076,7 +1187,7 @@ impl BoothUi {
                     } else {
                         "Character mirror: on"
                     },
-                    Rect::new(x, y, w, 36.0),
+                    Rect::new(x, y, w, INSPECTOR_CONTROL_HEIGHT),
                     font,
                     hit_mouse,
                     true,
@@ -1084,14 +1195,14 @@ impl BoothUi {
                 ) {
                     p.face_right = !p.face_right;
                 }
-                y += 44.0;
+                y += ROW_STEP;
                 if button(
                     if p.pet_face_right {
                         "Pet mirror: off"
                     } else {
                         "Pet mirror: on"
                     },
-                    Rect::new(x, y, w, 36.0),
+                    Rect::new(x, y, w, INSPECTOR_CONTROL_HEIGHT),
                     font,
                     hit_mouse,
                     true,
@@ -1099,7 +1210,7 @@ impl BoothUi {
                 ) {
                     p.pet_face_right = !p.pet_face_right;
                 }
-                y += 44.0;
+                y += ROW_STEP;
                 let scale = perspective(&background, p.position[1]);
                 if button(
                     if p.pet_reference == ReferenceFrame::Character {
@@ -1107,7 +1218,7 @@ impl BoothUi {
                     } else {
                         "Pet frame: world"
                     },
-                    Rect::new(x, y, w, 36.0),
+                    Rect::new(x, y, w, INSPECTOR_CONTROL_HEIGHT),
                     font,
                     hit_mouse,
                     true,
@@ -1130,7 +1241,7 @@ impl BoothUi {
                         ReferenceFrame::Character
                     };
                 }
-                y += 44.0;
+                y += ROW_STEP;
                 slider(
                     "Pet X",
                     &mut p.pet_position[0],
@@ -1175,7 +1286,7 @@ impl BoothUi {
             } else {
                 if button(
                     &format!("Preset: {}  >", c.animation.action.label()),
-                    Rect::new(x, y, w, 36.0),
+                    Rect::new(x, y, w, INSPECTOR_CONTROL_HEIGHT),
                     font,
                     hit_mouse,
                     true,
@@ -1183,10 +1294,10 @@ impl BoothUi {
                 ) {
                     self.clip_picker = true;
                 }
-                y += 44.0;
+                y += ROW_STEP;
                 if button(
                     if c.animation.paused { "Play" } else { "Pause" },
-                    Rect::new(x, y, w, 36.0),
+                    Rect::new(x, y, w, INSPECTOR_CONTROL_HEIGHT),
                     font,
                     hit_mouse,
                     true,
@@ -1194,7 +1305,7 @@ impl BoothUi {
                 ) {
                     c.animation.paused = !c.animation.paused;
                 }
-                y += 44.0;
+                y += ROW_STEP;
                 let duration = c.duration();
                 let mut time = c.animation.tracks[c.animation.control_track].time;
                 if duration > 0.0 {
@@ -1235,7 +1346,7 @@ impl BoothUi {
                 );
                 if button(
                     if t.looping { "Loop: on" } else { "Loop: off" },
-                    Rect::new(x, y, w, 36.0),
+                    Rect::new(x, y, w, INSPECTOR_CONTROL_HEIGHT),
                     font,
                     hit_mouse,
                     true,
@@ -1243,6 +1354,7 @@ impl BoothUi {
                 ) {
                     t.looping = !t.looping;
                 }
+                y += ROW_STEP;
             }
         } else {
             label(
@@ -1254,6 +1366,7 @@ impl BoothUi {
                 GRAY,
                 w,
             );
+            y += INSPECTOR_CONTROL_HEIGHT;
         }
         self.inspector_heights[self.tab] = (y + self.scroll - area.y + 12.0).max(0.0);
         self.scroll = self
@@ -1422,16 +1535,29 @@ fn slider(
     start: &mut Option<(Vec2, f32)>,
 ) -> bool {
     let mut changed = false;
+    let value_text = format!("{value:.2}");
+    let value_width = measure_text(&value_text, Some(font), 11, 1.0).width;
     label(
-        &format!("{title}  {value:.2}"),
+        title,
         x,
         *y + 15.0,
         11,
         font,
         GRAY,
-        w,
+        (w - value_width - PANEL_PADDING).max(0.0),
+    );
+    label(
+        &value_text,
+        x + w - value_width,
+        *y + 15.0,
+        11,
+        font,
+        WHITE,
+        value_width + 1.0,
     );
     let hit = Rect::new(x, *y + 18.0, w, 26.0);
+    let track_x = x + 3.0;
+    let track_width = (w - 6.0).max(1.0);
     if is_mouse_button_pressed(MouseButton::Left) && hit.contains(mouse) {
         *active = Some(title.into());
         *start = Some((mouse, *value));
@@ -1447,15 +1573,21 @@ fn slider(
             *start = None;
             original
         } else {
-            min + ((mouse.x - x) / w).clamp(0.0, 1.0) * (max - min)
+            min + ((mouse.x - track_x) / track_width).clamp(0.0, 1.0) * (max - min)
         };
         changed = true;
     }
     let t = ((*value - min) / (max - min).max(0.00001)).clamp(0.0, 1.0);
-    draw_rectangle(x, *y + 30.0, w, 2.0, CONTROL);
-    draw_rectangle(x, *y + 30.0, w * t, 2.0, ACCENT);
-    draw_rectangle(x + w * t - 3.0, *y + 24.0, 6.0, 14.0, ACCENT);
-    *y += 49.0;
+    draw_rectangle(track_x, *y + 30.0, track_width, 2.0, CONTROL);
+    draw_rectangle(track_x, *y + 30.0, track_width * t, 2.0, ACCENT);
+    draw_rectangle(
+        track_x + track_width * t - 3.0,
+        *y + 24.0,
+        6.0,
+        14.0,
+        ACCENT,
+    );
+    *y += 48.0;
     changed
 }
 
@@ -1472,18 +1604,37 @@ mod tests {
             vec2(480.0, 720.0),
             vec2(1280.0, 720.0),
         ] {
-            let (canvas, panel) = regions(size, true);
-            assert!(!canvas.overlaps(&panel));
-            let equipment = super::super::equipment::EquipmentPicker::bar(canvas);
-            assert!(!equipment.overlaps(&canvas));
-            assert!(!equipment.overlaps(&panel));
-            let (full_canvas, _) = regions(size, false);
-            assert!(!equipment.overlaps(&full_canvas));
-            assert!((canvas.w / canvas.h - 16.0 / 9.0).abs() < 0.001);
-            for rect in [canvas, panel] {
-                assert!(rect.w > 0.0 && rect.h > 0.0);
-                assert!(rect.x >= 0.0 && rect.y >= 50.0);
-                assert!(rect.right() <= size.x && rect.bottom() <= size.y - 40.0);
+            for inspector in [true, false] {
+                let layout = BoothLayout::new(size, inspector);
+                let panel = layout.inspector;
+                for (_, rw, rh) in RATIOS {
+                    let aspect = rw as f32 / rh as f32;
+                    let canvas = layout.canvas(aspect);
+                    if inspector {
+                        assert!(!canvas.overlaps(&panel));
+                    }
+                    assert!(!layout.equipment.overlaps(&canvas));
+                    assert!(!layout.ratio.overlaps(&canvas));
+                    assert!((canvas.w / canvas.h - aspect).abs() < 0.001);
+                    for (rect, max_bottom) in [
+                        (canvas, layout.footer.y - MARGIN),
+                        (
+                            panel,
+                            if panel.x > MARGIN {
+                                size.y - 8.0
+                            } else {
+                                layout.footer.y - GAP
+                            },
+                        ),
+                    ] {
+                        assert!(rect.w > 0.0 && rect.h > 0.0);
+                        assert!(rect.x >= 0.0 && rect.y >= TOPBAR_HEIGHT);
+                        assert!(rect.right() <= size.x && rect.bottom() <= max_bottom + 0.001);
+                    }
+                    if inspector {
+                        assert!(!layout.footer.overlaps(&panel));
+                    }
+                }
             }
         }
     }
