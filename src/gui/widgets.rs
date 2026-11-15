@@ -222,6 +222,16 @@ pub mod paint {
     }
     fn text_color(color: Color) -> Color {
         let amount = LIGHT.with(Cell::get);
+        // Warm accents need a darker ink on Day's light-gray controls. Only
+        // text/icons use this mapping; artwork, swatches and borders keep hue.
+        if color.r > 0.6 && color.r > color.g && color.g > color.b + 0.12 && color.b < 0.5 {
+            return Color::new(
+                color.r + (0.48 - color.r) * amount,
+                color.g + (0.20 - color.g) * amount,
+                color.b + (0.055 - color.b) * amount,
+                color.a,
+            );
+        }
         let neutral = color.r.max(color.g).max(color.b) - color.r.min(color.g).min(color.b) < 0.10;
         if neutral && color.r > 0.4 {
             let l = if color.r > 0.8 { 0.12 } else { 0.28 };

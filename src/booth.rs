@@ -17,8 +17,6 @@ pub const UNITY_SCALE: f32 = 5.0 / 67.5;
 #[serde(rename_all = "camelCase")]
 pub struct Background {
     pub img: String,
-    // Retained for import/reference validation; the picker currently displays names.
-    #[allow(dead_code)]
     pub thumb: String,
     pub color: [f32; 3],
     #[serde(default)]
@@ -112,6 +110,8 @@ impl Default for RenderOptions {
     }
 }
 pub struct Booth {
+    pub project: Option<crate::project::Project>,
+    default_character: crate::model::CharacterData,
     pub render_options: RenderOptions,
     pub characters: Vec<Character>,
     pub selected: Option<usize>,
@@ -152,6 +152,8 @@ impl Booth {
         let target = render_target(1280, 720);
         target.texture.set_filter(FilterMode::Linear);
         Ok(Self {
+            project: None,
+            default_character: character.data(),
             render_options: RenderOptions::default(),
             language: character.wardrobe().language.clone(),
             characters: vec![character],
@@ -530,6 +532,10 @@ impl Booth {
     }
     pub fn load(&mut self) -> Result<(), String> {
         let (characters, scene) = crate::persistence::load(&self.save_directory)?;
+        self.restore_scene(characters, scene)
+    }
+    fn restore_scene(&mut self, characters: CharacterFile, scene: SceneFile) -> Result<(), String> {
+        crate::model::validate_pair(&characters, &scene)?;
         let background = self
             .backgrounds
             .iter()
@@ -554,8 +560,22 @@ impl Booth {
             .and_then(|id| restored.iter().position(|c| c.id == *id));
         // Stage the complete runtime before replacing the current scene.
         if restored.is_empty() {
+            // An empty project still needs an off-scene template. Never keep
+            // the previous project's appearance or equipment in that template.
+            let mut character = template.duplicate()?;
+            let mut data = self.default_character.clone();
+            data.id = crate::persistence::new_id();
+            character.restore(
+                &data,
+                crate::model::Placement {
+                    character_id: data.id.clone(),
+                    ..Default::default()
+                },
+            )?;
+            character.set_language(&self.language);
+            restored.push(character);
+            self.characters = restored;
             self.selected = None;
-            self.characters.truncate(1);
         } else {
             self.characters = restored;
             self.selected = selected.or(Some(0));
@@ -567,12 +587,163 @@ impl Booth {
     }
     pub fn capture(&mut self, width: u32, height: u32) -> Result<PathBuf, String> {
         // Unity PreviewCapture.GetFinalSavePath: local yyyyMMddHHmmss.png.
-        let path = PathBuf::from("photos").join(format!(
+        let path = self.project_directory()?.join("photos").join(format!(
             "{}.png",
             chrono::Local::now().format("%Y%m%d%H%M%S")
         ));
         self.capture_to(&path, width, height)?;
         Ok(path)
+    }
+    pub fn project_directory(&self) -> Result<PathBuf, String> {
+        self.project
+            .as_ref()
+            .map(|p| p.directory())
+            .ok_or_else(|| "Create or open a project first".into())
+    }
+    pub fn save_project(&mut self, ratio: &str) -> Result<(), String> {
+        let mut project = self
+            .project
+            .clone()
+            .ok_or("Create or open a project first")?;
+        if !crate::project::RATIOS.contains(&ratio) {
+            return Err("Invalid canvas ratio".into());
+        }
+        project.canvas_ratio = ratio.into();
+        project.character_count = self.active_count();
+        project.updated_at =
+            chrono::Utc::now().to_rfc3339_opts(chrono::SecondsFormat::Millis, true);
+        let directory = project.directory();
+        std::fs::create_dir_all(&directory).map_err(|e| e.to_string())?;
+        for folder in ["photos", "gifs"] {
+            std::fs::create_dir_all(directory.join(folder)).map_err(|e| e.to_string())?;
+        }
+        let (w, h) = ratio.split_once(':').ok_or("Invalid canvas ratio")?;
+        let (w, h): (u32, u32) = (
+            w.parse().map_err(|_| "Invalid ratio")?,
+            h.parse().map_err(|_| "Invalid ratio")?,
+        );
+        let longest = w.max(h);
+        let (width, height) = (480 * w / longest, 480 * h / longest);
+        // Render an overview, not an export: the green-screen background stays
+        // visible even when transparent output is enabled. No GUI is rendered.
+        let previous_target = self.target.clone();
+        let rendered = self.render(width, height, false);
+        let image = rendered
+            .as_ref()
+            .ok()
+            .map(|_| self.target.texture.get_texture_data());
+        self.target = previous_target;
+        set_default_camera();
+        rendered?;
+        let image = image.ok_or("Cannot render project overview")?;
+        let mut pixels = image.bytes;
+        let stride = width as usize * 4;
+        for y in 0..height as usize / 2 {
+            let (top, bottom) = pixels.split_at_mut((height as usize - 1 - y) * stride);
+            top[y * stride..(y + 1) * stride].swap_with_slice(&mut bottom[..stride]);
+        }
+        let pending = directory.join("thumbnail.pending.png");
+        image::save_buffer(&pending, &pixels, width, height, image::ColorType::Rgba8)
+            .map_err(|e| e.to_string())?;
+        std::fs::OpenOptions::new()
+            .write(true)
+            .open(&pending)
+            .and_then(|file| file.sync_all())
+            .map_err(|e| e.to_string())?;
+        let old_directory = std::mem::replace(&mut self.save_directory, directory.clone());
+        let saved = self.save();
+        self.save_directory = old_directory;
+        saved?;
+        project.write().map_err(|e| format!("Scene data saved, but project details could not be updated: {e}. Retry Save project before leaving."))?;
+        self.save_directory = directory;
+        self.project = Some(project);
+        std::fs::rename(pending, self.save_directory.join("thumbnail.png")).map_err(|e| {
+            format!(
+                "Project saved, but its overview could not be updated: {e}. Retry Save project."
+            )
+        })?;
+        Ok(())
+    }
+    pub fn open_project(&mut self, id: &str) -> Result<(), String> {
+        let project = crate::project::Project::read(id)?;
+        let previous = std::mem::replace(&mut self.save_directory, project.directory());
+        if let Err(error) = self.load() {
+            self.save_directory = previous;
+            return Err(error);
+        }
+        self.project = Some(project);
+        Ok(())
+    }
+    pub fn create_project(&mut self, name: &str) -> Result<(), String> {
+        let project = crate::project::Project::new(name)?;
+        let mut character = self.characters[0].duplicate()?;
+        let mut data = self.default_character.clone();
+        data.id = crate::persistence::new_id();
+        character.restore(
+            &data,
+            crate::model::Placement {
+                character_id: data.id.clone(),
+                ..Default::default()
+            },
+        )?;
+        let mut fresh = Self::new(character)?;
+        fresh.default_character = self.default_character.clone();
+        fresh.render_options = self.render_options;
+        fresh.set_language(self.language.clone());
+        fresh.project = Some(project);
+        fresh.save_project("16:9")?;
+        *self = fresh;
+        Ok(())
+    }
+    pub fn rename_project(&mut self, name: &str) -> Result<(), String> {
+        let mut project = self.project.clone().ok_or("No open project")?;
+        project.name = crate::project::clean_name(name)?;
+        project.write()?;
+        self.project = Some(project);
+        Ok(())
+    }
+    pub fn export_project(&mut self, path: &Path, ratio: &str) -> Result<PathBuf, String> {
+        let path = crate::project::export_path(path)?;
+        if std::fs::symlink_metadata(&path).is_ok() {
+            return Err("That file already exists; choose a different export path".into());
+        }
+        // Export exactly the saved creation, including the live stage ratio.
+        self.save_project(ratio)?;
+        let project = self.project.as_ref().ok_or("No open project")?;
+        let (characters, scene) = crate::persistence::load(&project.directory())?;
+        crate::project::ProjectFile::new(project, characters, scene)
+            .write_new(&path)
+            .map_err(|e| format!("Project saved, but export failed: {e}"))?;
+        Ok(path)
+    }
+    pub fn import_project(&mut self, path: &Path) -> Result<(), String> {
+        // Validate data and construct every runtime in isolation. Invalid input
+        // never changes the open project or writes into the source location.
+        let file = crate::project::ProjectFile::read(path)?;
+        let project = crate::project::Project::new(&file.name)?;
+        let character = self.characters[0].duplicate()?;
+        let mut imported = Self::new(character)?;
+        imported.default_character = self.default_character.clone();
+        imported.render_options = self.render_options;
+        imported.set_language(self.language.clone());
+        imported.restore_scene(file.characters, file.scene)?;
+        // Reserve a new private directory, then publish metadata only after a
+        // complete save. On failure remove only the directory we just created.
+        std::fs::create_dir_all(crate::project::ROOT).map_err(|e| e.to_string())?;
+        let directory = project.directory();
+        std::fs::create_dir(&directory).map_err(|e| e.to_string())?;
+        imported.project = Some(project);
+        if let Err(error) = imported.save_project(&file.canvas_ratio) {
+            if let Err(cleanup) = std::fs::remove_dir_all(&directory) {
+                tracing::warn!(
+                    "Cannot clean failed project import {}: {cleanup}",
+                    directory.display()
+                );
+            }
+            return Err(error);
+        }
+        *self = imported;
+        Ok(())
     }
     pub fn capture_to(&mut self, path: &Path, width: u32, height: u32) -> Result<(), String> {
         let pixels = self.capture_pixels(width, height)?;

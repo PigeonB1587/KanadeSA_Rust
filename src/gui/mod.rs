@@ -11,6 +11,8 @@ pub mod layout;
 pub mod notifications;
 pub mod preview;
 pub mod preview_grid;
+pub mod projects;
+pub mod scenes;
 pub mod selection;
 pub mod settings;
 pub mod widgets;

@@ -37,9 +37,10 @@ pub struct Settings {
 impl Default for Settings {
     fn default() -> Self {
         let preferences = crate::preferences::Preferences::load();
+        let startup_vsync = preferences.vsync;
         Self {
             preferences,
-            startup_vsync: preferences.vsync,
+            startup_vsync,
             booth_mode: false,
             open: false,
             transition: Default::default(),
@@ -54,6 +55,11 @@ impl Default for Settings {
     }
 }
 impl Settings {
+    pub fn capture_preferences(&self, preferences: &mut crate::preferences::Preferences) {
+        preferences.vsync = self.preferences.vsync;
+        preferences.light = self.preferences.light;
+    }
+
     pub fn light(&self) -> bool {
         self.preferences.light
     }
@@ -86,6 +92,25 @@ impl Settings {
         self.dropdown = false;
         self.content_drag.cancel();
     }
+    /// Paint alongside the toolbar, before any popup backdrops are drawn.
+    pub fn draw_button(button: Rect, bold: &Font) {
+        draw_rectangle(
+            button.x,
+            button.y,
+            button.w,
+            button.h,
+            Color::from_rgba(30, 31, 40, 255),
+        );
+        let text = measure_text("SETTINGS", Some(bold), 13, 1.0);
+        label(
+            "SETTINGS",
+            button.x + (button.w - text.width) * 0.5,
+            button.y + (button.h - text.height) * 0.5 + text.offset_y,
+            13,
+            bold,
+            WHITE,
+        );
+    }
     pub fn draw(
         &mut self,
         character: &mut Character,
@@ -107,22 +132,10 @@ impl Settings {
             self.toggle();
         }
         self.transition.update(self.open);
-        draw_rectangle(
-            button.x,
-            button.y,
-            button.w,
-            button.h,
-            Color::from_rgba(30, 31, 40, 255),
-        );
-        let text = measure_text("SETTINGS", Some(bold), 13, 1.0);
-        label(
-            "SETTINGS",
-            button.x + (button.w - text.width) * 0.5,
-            button.y + (button.h - text.height) * 0.5 + text.offset_y,
-            13,
-            bold,
-            WHITE,
-        );
+        // BoothUi paints its toolbar button underneath all booth popups.
+        if !self.booth_mode {
+            Self::draw_button(button, bold);
+        }
         if !self.open && !self.transition.visible() {
             self.dropdown_transition.update(false);
             return;
@@ -233,12 +246,8 @@ impl Settings {
                 } else {
                     self.preferences.light = !self.preferences.light;
                 }
-                match self.preferences.save() {
-                    Ok(()) if i == 0 => {
-                        super::notifications::warn("VSync setting saved · restart to apply")
-                    }
-                    Ok(()) => {}
-                    Err(e) => super::notifications::error(format!("Cannot save settings: {e}")),
+                if i == 0 {
+                    super::notifications::warn("VSync changed · restart to apply");
                 }
             }
         }

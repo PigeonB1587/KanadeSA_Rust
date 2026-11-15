@@ -7,6 +7,7 @@ mod logging;
 mod model;
 mod persistence;
 mod preferences;
+mod project;
 mod recorder;
 mod spine_renderer;
 mod sprite_material;
@@ -71,6 +72,7 @@ async fn main() {
     );
     let mut booth = booth::Booth::new(character).expect("Cannot create booth");
     let mut booth_ui = gui::booth::BoothUi::default();
+    booth_ui.set_project_font(multilingual.clone());
     if let Some(directory) = std::env::args()
         .skip_while(|arg| arg != "--verify-recorder")
         .nth(1)
@@ -102,10 +104,22 @@ async fn main() {
         }
         return;
     }
-    if booth.save_directory.join("scene.json").exists() {
-        if let Err(error) = booth.load() {
-            gui::notifications::error(format!("Cannot restore last scene: {error}"));
+    let mut editor_preferences = preferences::Preferences::load();
+    booth_ui.apply_preferences(&mut booth, &editor_preferences);
+    if let Some(id) = &editor_preferences.last_project {
+        if let Err(error) = booth.open_project(id) {
+            gui::notifications::error(format!("Cannot restore last project: {error}"));
         }
+    }
+    booth_ui.select_project_ratio(&booth);
+    if booth.project.is_none() {
+        booth_ui.open_projects();
+    } else {
+        booth_ui.capture_preferences(&booth, &mut editor_preferences);
+    }
+    // Also migrates the old theme/VSync file and removes scene-only preferences.
+    if let Err(error) = editor_preferences.save() {
+        gui::notifications::error(format!("Cannot save editor settings: {error}"));
     }
 
     let mut fps_started = std::time::Instant::now();
@@ -290,6 +304,19 @@ async fn main() {
         {
             if is_key_pressed(KeyCode::F12) {
                 booth_ui.take_photo(&mut booth);
+            }
+        }
+
+        // Observe only durable editor choices, not animation, scene data, popup
+        // transitions or scroll positions. Save in the same frame as each edit;
+        // saving a project never participates in this path.
+        let mut updated_preferences = editor_preferences.clone();
+        settings.capture_preferences(&mut updated_preferences);
+        booth_ui.capture_preferences(&booth, &mut updated_preferences);
+        if updated_preferences != editor_preferences {
+            editor_preferences = updated_preferences;
+            if let Err(error) = editor_preferences.save() {
+                gui::notifications::error(format!("Cannot save editor settings: {error}"));
             }
         }
 

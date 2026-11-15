@@ -1,8 +1,8 @@
 //! Touch-sized booth controls, a scrollable inspector and the retained Preview layer.
+use super::drag_scroll::DragScroll;
 use super::layout::{BoothLayout, CONTROL_HEIGHT, GAP, MARGIN, TOPBAR_HEIGHT};
 use super::notifications;
 use super::widgets::paint::{draw_line, draw_rectangle, draw_text_ex, draw_texture_ex};
-use super::{drag_scroll::DragScroll, input::NativeInput};
 use crate::{
     booth::{Booth, canvas_to_world, perspective, world_to_canvas},
     model::{ReferenceFrame, Watermark},
@@ -53,17 +53,13 @@ pub struct BoothUi {
     scene_picker: bool,
     scene_transition: super::widgets::Transition,
     preset_transition: super::widgets::Transition,
-    picker_scroll: f32,
-    picker_drag: DragScroll,
-    native_input: NativeInput,
-    input_kind: Option<InputKind>,
+    scene_gallery: super::scenes::SceneGallery,
+    projects: super::projects::Projects,
+    project_font: Option<Font>,
     clip_picker: bool,
     clip_scroll: f32,
     clip_drag: DragScroll,
     equipment: super::equipment::EquipmentPicker,
-}
-enum InputKind {
-    SaveDirectory,
 }
 impl Default for BoothUi {
     fn default() -> Self {
@@ -94,10 +90,9 @@ impl Default for BoothUi {
             scene_picker: false,
             scene_transition: super::widgets::Transition::default(),
             preset_transition: super::widgets::Transition::default(),
-            picker_scroll: 0.0,
-            picker_drag: DragScroll::default(),
-            native_input: NativeInput::default(),
-            input_kind: None,
+            scene_gallery: super::scenes::SceneGallery::default(),
+            projects: super::projects::Projects::default(),
+            project_font: None,
             clip_picker: false,
             clip_scroll: 0.0,
             clip_drag: DragScroll::default(),
@@ -235,6 +230,151 @@ thread_local! { static CONTENT_BUTTONS: std::cell::Cell<bool> = const { std::cel
 thread_local! { static CONTENT_TAP: std::cell::Cell<bool> = const { std::cell::Cell::new(false) }; }
 
 impl BoothUi {
+    pub fn set_project_font(&mut self, font: Font) {
+        self.project_font = Some(font);
+    }
+    pub fn select_project_ratio(&mut self, booth: &Booth) {
+        if let Some(project) = &booth.project {
+            self.ratio = RATIOS
+                .iter()
+                .position(|(name, _, _)| *name == project.canvas_ratio)
+                .unwrap_or(0);
+        }
+        self.actor_drag = None;
+        self.slider = None;
+        self.slider_start = None;
+        self.content_tap = None;
+        self.scroll_drag.cancel();
+        self.scroll = 0.0;
+    }
+    pub fn open_projects(&mut self) {
+        self.projects.open();
+    }
+    fn save_project(&mut self, booth: &mut Booth) -> bool {
+        if booth.project.is_none() {
+            self.projects.open();
+            return false;
+        }
+        let result = booth.save_project(RATIOS[self.ratio].0);
+        super::layout::begin();
+        let success = self
+            .result(result, "Project saved · overview updated")
+            .is_some();
+        if success {
+            self.projects.refresh();
+        }
+        success
+    }
+    fn project_action(
+        &mut self,
+        booth: &mut Booth,
+        action: super::projects::Action,
+        save_first: bool,
+    ) {
+        if save_first && !self.save_project(booth) {
+            return;
+        }
+        let switched = matches!(
+            &action,
+            super::projects::Action::Create(_)
+                | super::projects::Action::Open(_)
+                | super::projects::Action::Import(_)
+        );
+        let result = match action {
+            super::projects::Action::Create(name) => booth.create_project(&name),
+            super::projects::Action::Open(id) => booth.open_project(&id),
+            super::projects::Action::Rename(name) => booth.rename_project(&name),
+            super::projects::Action::Import(path) => {
+                booth.import_project(std::path::Path::new(&path))
+            }
+            super::projects::Action::Export(path) => {
+                let result =
+                    booth.export_project(std::path::Path::new(&path), RATIOS[self.ratio].0);
+                super::layout::begin();
+                match result {
+                    Ok(path) => {
+                        notifications::success(format!("Project exported: {}", path.display()));
+                        self.projects.finished(false);
+                    }
+                    Err(error) => {
+                        notifications::error(error);
+                        self.projects.refresh();
+                    }
+                }
+                return;
+            }
+        };
+        super::layout::begin();
+        if self
+            .result(
+                result,
+                if switched {
+                    "Project ready"
+                } else {
+                    "Project renamed"
+                },
+            )
+            .is_some()
+        {
+            if switched {
+                self.select_project_ratio(booth);
+            }
+            self.projects.finished(switched);
+        }
+    }
+    pub fn apply_preferences(
+        &mut self,
+        booth: &mut Booth,
+        preferences: &crate::preferences::Preferences,
+    ) {
+        self.inspector = preferences.inspector_visible;
+        self.tab = preferences.inspector_tab.min(2);
+        self.photo_size = [1280, 1920, 2560]
+            .iter()
+            .position(|value| *value == preferences.photo_longest)
+            .unwrap_or(1);
+        self.gif_size = [480, 720, 1080]
+            .iter()
+            .position(|value| *value == preferences.gif_longest)
+            .unwrap_or(1);
+        self.gif_fps = [10, 20, 25, 50]
+            .iter()
+            .position(|value| *value == preferences.gif_fps)
+            .unwrap_or(1);
+        self.gif_quality = [64, 128, 256]
+            .iter()
+            .position(|value| *value == preferences.gif_colors)
+            .unwrap_or(1);
+        booth.render_options.shadows = preferences.show_shadows;
+        booth.render_options.pets = preferences.show_pets;
+        booth.render_options.gems = preferences.show_gems;
+        if booth.characters[0]
+            .wardrobe()
+            .available_languages
+            .contains(&preferences.language)
+        {
+            booth.set_language(preferences.language.clone());
+        }
+    }
+
+    pub fn capture_preferences(
+        &self,
+        booth: &Booth,
+        preferences: &mut crate::preferences::Preferences,
+    ) {
+        preferences.inspector_visible = self.inspector;
+        preferences.inspector_tab = self.tab;
+        preferences.photo_longest = [1280, 1920, 2560][self.photo_size];
+        preferences.gif_longest = [480, 720, 1080][self.gif_size];
+        preferences.gif_fps = [10, 20, 25, 50][self.gif_fps];
+        preferences.gif_colors = [64, 128, 256][self.gif_quality];
+        preferences.show_shadows = booth.render_options.shadows;
+        preferences.show_pets = booth.render_options.pets;
+        preferences.show_gems = booth.render_options.gems;
+        preferences.language.clone_from(&booth.language);
+        preferences.last_project = booth.project.as_ref().map(|p| p.id.clone());
+    }
+
     pub fn tick_recorder(&mut self) {
         if let Some(result) = self.recorder.tick() {
             match result {
@@ -337,7 +477,7 @@ impl BoothUi {
             || self.preset_transition.visible()
             || self.clip_picker
             || self.equipment.is_open()
-            || self.native_input.active()
+            || self.projects.visible()
             || self.modal_this_frame
     }
     pub fn rects(&self) -> (Rect, Rect) {
@@ -395,21 +535,6 @@ impl BoothUi {
             }
         }
     }
-    fn poll_input(&mut self, booth: &mut Booth) {
-        if let Some(text) = self.native_input.poll() {
-            match self.input_kind.take() {
-                Some(InputKind::SaveDirectory) => {
-                    if !text.trim().is_empty() {
-                        booth.save_directory = std::path::PathBuf::from(text.trim());
-                    }
-                }
-                None => {}
-            }
-        }
-        if !self.native_input.active() {
-            self.input_kind = None;
-        }
-    }
     pub fn draw(&mut self, booth: &mut Booth, font: &Font, bold: &Font, blocked: bool) {
         self.modal_this_frame = self.scene_picker
             || self.ratio_open
@@ -419,8 +544,7 @@ impl BoothUi {
             || self.preset_transition.visible()
             || self.clip_picker
             || self.equipment.is_open()
-            || self.native_input.active();
-        self.poll_input(booth);
+            || self.projects.visible();
         let size = super::layout::size();
         let raw_mouse = super::layout::mouse();
         let modal = self.blocks_input();
@@ -431,6 +555,32 @@ impl BoothUi {
         };
         let layout = BoothLayout::new(size, self.inspector);
         draw_rectangle(0.0, 0.0, size.x, TOPBAR_HEIGHT, SURFACE);
+        super::settings::Settings::draw_button(layout.settings, bold);
+        let title_left = layout.ratio.right() + MARGIN;
+        let title_right = if layout.wrapped {
+            layout.output[0].x
+        } else {
+            layout.inspector.x
+        };
+        if title_right - title_left > 80.0 {
+            control_label(
+                booth
+                    .project
+                    .as_ref()
+                    .map(|project| project.name.as_str())
+                    .unwrap_or("Choose a project"),
+                Rect::new(
+                    title_left,
+                    layout.ratio.y,
+                    title_right - title_left - GAP,
+                    CONTROL_HEIGHT,
+                ),
+                13,
+                self.project_font.as_ref().unwrap_or(font),
+                ACCENT,
+                false,
+            );
+        }
         let actions = ["+ Role", "- Role", "Preview", "Scene", "Inspect"];
         let action_font_size = [12, 11, 10]
             .into_iter()
@@ -466,7 +616,7 @@ impl BoothUi {
                     2 => self.preview = true,
                     3 => {
                         self.scene_picker = true;
-                        self.picker_drag.cancel();
+                        self.scene_gallery.open();
                     }
                     4 => self.inspector = !self.inspector,
                     _ => {}
@@ -523,15 +673,15 @@ impl BoothUi {
             );
         }
         // Small windows wrap output controls into the toolbar's second row.
-        for (i, title) in ["Save", "Load"].iter().enumerate() {
+        for (i, title) in ["Projects", "Save project"].iter().enumerate() {
             let r = layout.output[i];
             let clicked = centered_button(
                 title,
                 r,
-                12,
+                if layout.wrapped { 10 } else { 11 },
                 bold,
                 mouse,
-                true,
+                !self.recorder.busy(),
                 false,
                 if layout.wrapped { SURFACE } else { CONTROL },
             );
@@ -566,14 +716,15 @@ impl BoothUi {
         ) {
             self.ratio_open = true;
         }
-        self.draw_ratio_picker(font, bold, raw_mouse, blocked);
-        self.color_picker.draw(booth, font, bold, blocked);
+        self.draw_ratio_picker(font, bold, raw_mouse, blocked || self.projects.visible());
+        self.color_picker
+            .draw(booth, font, bold, blocked || self.projects.visible());
         if self.scene_picker || self.scene_transition.visible() {
             self.draw_scene_picker(
                 booth,
                 font,
                 bold,
-                if blocked || self.native_input.active() {
+                if blocked || self.projects.visible() {
                     vec2(-10000.0, -10000.0)
                 } else {
                     raw_mouse
@@ -585,7 +736,7 @@ impl BoothUi {
                 booth,
                 font,
                 bold,
-                if blocked || self.native_input.active() {
+                if blocked || self.projects.visible() {
                     vec2(-10000.0, -10000.0)
                 } else {
                     raw_mouse
@@ -596,7 +747,7 @@ impl BoothUi {
             booth,
             font,
             bold,
-            if blocked || self.native_input.active() {
+            if blocked || self.projects.visible() {
                 vec2(-10000.0, -10000.0)
             } else {
                 raw_mouse
@@ -607,17 +758,33 @@ impl BoothUi {
         if let Some(action) = deferred {
             match action {
                 0 => {
-                    let r = booth.save();
-                    self.result(r, "Saved characters.json + scene.json");
+                    self.projects.open();
                 }
                 1 => {
-                    let r = booth.load();
-                    self.result(r, "Scene restored");
+                    self.save_project(booth);
                 }
                 _ => {}
             }
             super::layout::begin();
         }
+        if self.projects.visible() {
+            if let Some((action, save_first)) = self.projects.draw(
+                booth,
+                font,
+                bold,
+                self.project_font.as_ref().unwrap_or(font),
+                if blocked {
+                    super::widgets::BLOCKED
+                } else {
+                    raw_mouse
+                },
+                self.recorder.busy(),
+            ) {
+                self.project_action(booth, action, save_first);
+                super::layout::begin();
+            }
+        }
+        self.modal_this_frame |= self.projects.visible();
         if self.photo_requested {
             self.photo_requested = false;
             self.take_photo(booth);
@@ -869,10 +1036,10 @@ impl BoothUi {
                         colors: [64, 128, 256][self.gif_quality],
                         dither: self.gif_quality > 0,
                     };
-                    if let Err(error) =
-                        self.recorder
-                            .start(booth, options, std::path::Path::new("photos"))
-                    {
+                    let result = booth.project_directory().and_then(|directory| {
+                        self.recorder.start(booth, options, &directory.join("gifs"))
+                    });
+                    if let Err(error) = result {
                         notifications::error(error);
                     }
                 }
@@ -899,7 +1066,7 @@ impl BoothUi {
             );
             y += 16.0;
             label(
-                "GIF: ffmpeg required · exports to photos/",
+                "GIF: ffmpeg required · project/gifs/",
                 x,
                 y,
                 11,
@@ -968,11 +1135,7 @@ impl BoothUi {
             }
             label("SCENE & RENDER", x, y + 19.0, 12, bold, GRAY, w);
             y += 32.0;
-            let name = booth.backgrounds[booth.background]
-                .img
-                .split('/')
-                .nth(1)
-                .unwrap_or("Color");
+            let name = super::scenes::name(&booth.backgrounds[booth.background]);
             if button(
                 &format!("Background: {name}"),
                 Rect::new(x, y, w, INSPECTOR_CONTROL_HEIGHT),
@@ -982,6 +1145,7 @@ impl BoothUi {
                 false,
             ) {
                 self.scene_picker = true;
+                self.scene_gallery.open();
             }
             y += ROW_STEP;
             if button(
@@ -1039,24 +1203,13 @@ impl BoothUi {
                 w,
             );
             y += 28.0;
-            if button(
-                "Save folder…",
-                Rect::new(x, y, w, INSPECTOR_CONTROL_HEIGHT),
-                font,
-                hit_mouse,
-                true,
-                false,
-            ) {
-                self.input_kind = Some(InputKind::SaveDirectory);
-                self.native_input.open_with(
-                    "Save folder",
-                    "Folder for characters.json and scene.json",
-                    &booth.save_directory.to_string_lossy(),
-                );
-            }
-            y += 58.0;
+            label("PROJECT OUTPUT", x, y + 19.0, 12, bold, GRAY, w);
+            y += 44.0;
             label(
-                &booth.save_directory.to_string_lossy(),
+                &booth
+                    .project_directory()
+                    .map(|p| p.to_string_lossy().into_owned())
+                    .unwrap_or_else(|_| "Create a project to export".into()),
                 x,
                 y,
                 11,
@@ -1382,77 +1535,24 @@ impl BoothUi {
     }
     fn draw_scene_picker(&mut self, booth: &mut Booth, font: &Font, bold: &Font, mouse: Vec2) {
         let size = super::layout::size();
-        let w = (size.x - 32.0).min(420.0);
-        let h = (size.y - 56.0).max(1.0);
-        let x = (size.x - w) * 0.5;
-        let panel = self
-            .scene_transition
-            .panel(self.scene_picker, Rect::new(x, 28.0, w, h));
-        let y = panel.y;
+        let panel = self.scene_transition.panel(
+            self.scene_picker,
+            super::scenes::SceneGallery::panel(size, booth.backgrounds.len()),
+        );
         self.scene_transition.backdrop();
         let mut mouse = self.scene_transition.mouse(self.scene_picker, mouse);
         let _opacity = self.scene_transition.scope();
-        draw_rectangle(x, y, w, h, super::widgets::SURFACE);
+        draw_rectangle(panel.x, panel.y, panel.w, panel.h, super::widgets::SURFACE);
         let close = super::widgets::popup_header(panel, "Booth scenes", font, bold);
         if super::widgets::dismiss(panel, close, mouse) {
             self.scene_picker = false;
-            self.picker_drag.cancel();
+            self.scene_gallery.cancel();
             mouse = super::widgets::BLOCKED;
         }
-        let area = Rect::new(x + 12.0, y + 50.0, w - 24.0, (h - 62.0).max(1.0));
-        let max = (booth.backgrounds.len() as f32 * 42.0 - area.h).max(0.0);
-        let tap = super::widgets::scroll(
-            area,
-            mouse,
-            &mut self.picker_scroll,
-            max,
-            &mut self.picker_drag,
-        );
-        let mut chosen = None;
-        super::layout::clip(area);
-        for (i, bg) in booth.backgrounds.iter().enumerate() {
-            let r = Rect::new(
-                area.x,
-                area.y + i as f32 * 42.0 - self.picker_scroll,
-                area.w,
-                38.0,
-            );
-            if r.bottom() <= area.y || r.y >= area.bottom() {
-                continue;
-            }
-            let name = if i == 0 {
-                "Green screen"
-            } else {
-                bg.img.split('/').nth(1).unwrap_or(&bg.img)
-            };
-            draw_rectangle(
-                r.x,
-                r.y,
-                r.w,
-                r.h,
-                if i == booth.background {
-                    Color::from_rgba(53, 44, 41, 255)
-                } else {
-                    CONTROL
-                },
-            );
-            label(
-                name,
-                r.x + 10.0,
-                r.y + 25.0,
-                14,
-                font,
-                if i == booth.background { ACCENT } else { WHITE },
-                r.w - 20.0,
-            );
-            if tap && area.contains(mouse) && r.contains(mouse) {
-                chosen = Some(i);
-            }
-        }
-        super::layout::end_clip();
-        if let Some(index) = chosen {
+        if let Some(index) = self.scene_gallery.draw(panel, booth, font, bold, mouse) {
             booth.switch_background(index);
             self.scene_picker = false;
+            self.scene_gallery.cancel();
             super::audio::click();
         }
     }

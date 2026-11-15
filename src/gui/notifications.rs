@@ -4,6 +4,8 @@
 use macroquad::prelude::*;
 use std::{cell::RefCell, collections::VecDeque};
 
+// Phira's OUT_TIME and cubic easing; its extra 0.2 UI units correspond to
+// one tenth of the viewport width (the normalized horizontal span is 2).
 const MOTION_TIME: f64 = 0.8;
 const MAX_MESSAGES: usize = 4;
 const PADDING: f32 = 12.0;
@@ -149,8 +151,8 @@ pub fn draw(font: &Font) {
         board
             .messages
             .retain(|msg| now < msg.time + msg.kind.duration() + MOTION_TIME);
-        let width = (size.x - PADDING * 2.0).min(420.0).max(1.0);
-        let text_width = (width - ICON_WIDTH - PADDING * 2.0).max(1.0);
+        let max_width = (size.x - PADDING * 2.0).min(420.0).max(1.0);
+        let text_width = (max_width - ICON_WIDTH - PADDING * 2.0).max(1.0);
         let mut target = 0.0;
         let top = super::layout::TOPBAR_HEIGHT + PADDING;
         super::layout::clip(Rect::new(
@@ -161,13 +163,19 @@ pub fn draw(font: &Font) {
         ));
         for msg in &mut board.messages {
             let lines = wrap(&msg.content, font, text_width);
+            // Like Phira, short messages occupy only their measured width.
+            let content_width = lines
+                .iter()
+                .map(|line| measure_text(line, Some(font), FONT_SIZE, 1.0).width)
+                .fold(0.0_f32, f32::max);
+            let width = (content_width + ICON_WIDTH + PADDING * 2.0).min(max_width);
             let height = (lines.len() as f32 * LINE_HEIGHT + PADDING * 2.0).max(48.0);
             let elapsed = now - msg.time;
             let exit = ((elapsed - msg.kind.duration()) / MOTION_TIME).clamp(0.0, 1.0) as f32;
             let enter = (elapsed / MOTION_TIME).clamp(0.0, 1.0) as f32;
             let travel = (1.0 - enter).powi(3) + 1.0 - (1.0 - exit).powi(3);
             let alpha = 1.0 - exit;
-            let x = size.x - PADDING - width + (width + PADDING) * travel;
+            let x = size.x - PADDING - width + (width + size.x * 0.1) * travel;
             msg.position += (target - msg.position) * (1.0 - 0.5_f32.powf(dt / 0.1));
             let y = top + msg.position;
             if exit == 0.0 {
